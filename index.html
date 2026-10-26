@@ -132,6 +132,7 @@
 
     .companion.hologram {
       border: 2px solid var(--glow);
+      background: rgba(22, 139, 255, 0.25);
       background: color-mix(in srgb, var(--glow), transparent 75%);
       border-radius: 30%;
     }
@@ -519,6 +520,10 @@
       ]
     };
 
+    function isValidPersonality(value) {
+      return Object.prototype.hasOwnProperty.call(greetings, value);
+    }
+
     function showScreen(screenId) {
       document.querySelectorAll(".screen").forEach((screen) => {
         screen.classList.toggle("active", screen.id === screenId);
@@ -559,7 +564,17 @@
       $("companionName").textContent =
         design.name.trim() || "Your BRIANIAC Companion";
 
-      $("greeting").textContent = greetings[design.personality][0];
+      if (!isValidPersonality(design.personality)) {
+        design.personality = defaults.personality;
+      }
+
+      const personalityOptions = greetings[design.personality] || greetings[defaults.personality];
+      if (personalityOptions && personalityOptions[helloCount] !== undefined) {
+        $("greeting").textContent = personalityOptions[helloCount];
+      } else {
+        helloCount = 0;
+        $("greeting").textContent = personalityOptions[0];
+      }
     }
 
     function openCustomisation() {
@@ -584,6 +599,11 @@
       design.personality = $("personalityInput").value;
       design.name = $("nameInput").value.trim().slice(0, 30);
 
+      if (!isValidPersonality(design.personality)) {
+        design.personality = defaults.personality;
+      }
+
+      helloCount = 0;
       updateAll();
     }
 
@@ -628,7 +648,7 @@
         design.arms = defaults.arms;
       }
 
-      if (!Object.hasOwn(greetings, design.personality)) {
+      if (!isValidPersonality(design.personality)) {
         design.personality = defaults.personality;
       }
 
@@ -652,13 +672,14 @@
     $("customiseBtn").addEventListener("click", openCustomisation);
 
     $("helloBtn").addEventListener("click", () => {
-      const options = greetings[design.personality];
+      const options = greetings[design.personality] || greetings[defaults.personality];
+      if (!options || options.length === 0) return;
+
       helloCount = (helloCount + 1) % options.length;
       $("greeting").textContent = options[helloCount];
     });
 
-
-    [    
+    [
       "colourInput",
       "bodyInput",
       "eyesInput",
@@ -687,6 +708,7 @@
 
     $("resetBtn").addEventListener("click", () => {
       design = { ...defaults };
+      helloCount = 0;
       openCustomisation();
 
       $("statusMessage").textContent =
@@ -712,4 +734,4 @@
   </script>
 
 </body>
-</html>
+  </html>
