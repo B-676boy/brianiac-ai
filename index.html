@@ -524,6 +524,15 @@
       return Object.prototype.hasOwnProperty.call(greetings, value);
     }
 
+    function hasSavedDesign() {
+      try {
+        return Boolean(localStorage.getItem("brianiacDesign"));
+      } catch (error) {
+        console.warn("Saved design could not be checked.", error);
+        return false;
+      }
+    }
+
     function showScreen(screenId) {
       document.querySelectorAll(".screen").forEach((screen) => {
         screen.classList.toggle("active", screen.id === screenId);
@@ -723,13 +732,10 @@
     loadSavedDesign();
     updateAll();
 
-    try {
-      if (localStorage.getItem("brianiacDesign")) {
-        $("customiseInvite").textContent =
-          "Welcome back! Your saved companion design has been loaded.";
-      }
-    } catch (error) {
-      console.warn("Saved design could not be checked.", error);
+    if (hasSavedDesign()) {
+      showScreen("mainScreen");
+      $("customiseInvite").textContent =
+        "Welcome back! Your saved companion design has been loaded.";
     }
   </script>
 
