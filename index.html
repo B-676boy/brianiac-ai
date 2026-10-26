@@ -1,314 +1,667 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BRIANIAC AI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071329">
+  <title>BRIANIAC AI</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    :root {
+      --glow: #168bff;
+      --background: #071329;
+      --panel: #10213d;
+      --text: #f4f8ff;
+      --muted: #b7c6df;
+    }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle, #10294c, #030711 75%);
-  color: white;
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-h1 {
-  color: #55eaff;
-  text-shadow: 0 0 15px #00bfff;
-  letter-spacing: 2px;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px 16px;
+      background:
+        radial-gradient(ellipse at top, #153c70 0%, transparent 55%),
+        var(--background);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-.character {
-  width: 230px;
-  height: 230px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 25%, #5dfaff, #0874db 45%, #041b58 80%);
-  border: 4px solid #55eaff;
-  box-shadow: 0 0 25px #00cfff, inset 0 0 25px #8dfaff;
-  position: relative;
-  animation: float 3s ease-in-out infinite;
-}
+    button,
+    input,
+    select {
+      font: inherit;
+    }
 
-.eyes {
-  display: flex;
-  justify-content: center;
-  gap: 35px;
-  position: absolute;
-  top: 65px;
-  width: 100%;
-}
+    button {
+      min-height: 46px;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-.eye {
-  width: 43px;
-  height: 54px;
-  background: white;
-  border-radius: 50%;
-  position: relative;
-  box-shadow: 0 0 12px #aafaff;
-}
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid #ffffff;
+      outline-offset: 3px;
+    }
 
-.eye::after {
-  content: "";
-  position: absolute;
-  width: 23px;
-  height: 30px;
-  background: #06152c;
-  border-radius: 50%;
-  left: 10px;
-  top: 13px;
-}
+    .primary {
+      background: var(--glow);
+      color: #fff;
+    }
 
-.eye::before {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  background: white;
-  border-radius: 50%;
-  left: 13px;
-  top: 17px;
-  z-index: 1;
-}
+    .secondary {
+      background: #203653;
+      color: #fff;
+      border: 1px solid #49617f;
+    }
 
-.mouth {
-  width: 65px;
-  height: 30px;
-  background: #07152c;
-  border-radius: 8px 8px 35px 35px;
-  border-bottom: 6px solid #ff6b9d;
-  position: absolute;
-  bottom: 52px;
-  left: 50%;
-  transform: translateX(-50%);
-}
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+    }
 
-.arm {
-  position: absolute;
-  top: 125px;
-  width: 48px;
-  height: 13px;
-  background: #55eaff;
-  border-radius: 20px;
-  box-shadow: 0 0 10px #00cfff;
-}
+    .screen.active {
+      display: block;
+    }
 
-.left-arm {
-  left: -43px;
-  transform: rotate(-25deg);
-}
+    h1 {
+      font-size: clamp(28px, 6vw, 42px);
+      margin: 12px 0;
+      letter-spacing: 2px;
+    }
 
-.right-arm {
-  right: -43px;
-  transform: rotate(25deg);
-}
+    h2 {
+      margin-top: 12px;
+    }
 
-.hello {
-  margin-top: 35px;
-  font-size: 18px;
-  text-align: center;
-  color: #d5faff;
-}
+    p {
+      line-height: 1.6;
+      color: var(--muted);
+    }
 
-button {
-  margin-top: 18px;
-  padding: 12px 24px;
-  border: 1px solid #55eaff;
-  border-radius: 25px;
-  background: #082e54;
-  color: white;
-  font-size: 16px;
-}
+    .card {
+      margin: 22px auto;
+      padding: 22px;
+      border: 1px solid #294365;
+      border-radius: 20px;
+      background: rgba(16, 33, 61, 0.88);
+    }
 
-button:active {
-  background: #075c91;
-}
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-</style>
+    /* Companion */
+
+    .companion-stage {
+      min-height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .companion {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 25%, #ffffff 0%, var(--glow) 17%, #061a46 78%);
+      box-shadow:
+        0 0 22px var(--glow),
+        0 0 65px color-mix(in srgb, var(--glow), transparent 45%);
+      animation: float 3s ease-in-out infinite;
+      transition: all 0.25s ease;
+    }
+
+    .companion.hologram {
+      border: 2px solid var(--glow);
+      background: color-mix(in srgb, var(--glow), transparent 75%);
+      border-radius: 30%;
+    }
+
+    .companion.robot {
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, #9eabc0, #344b69 55%, #101c30);
+      border: 3px solid var(--glow);
+    }
+
+    .arms {
+      position: absolute;
+      top: 82px;
+      left: -42px;
+      width: 260px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .arm {
+      width: 36px;
+      height: 12px;
+      border-radius: 20px;
+      background: var(--glow);
+      box-shadow: 0 0 12px var(--glow);
+    }
+
+    .no-arms .arms {
+      display: none;
+    }
+
+    .eyes {
+      position: absolute;
+      top: 53px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 27px;
+    }
+
+    .eye {
+      width: 23px;
+      height: 34px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #fff;
+      position: relative;
+    }
+
+    .eye::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 15px;
+      top: 10px;
+      left: 7px;
+      border-radius: 50%;
+      background: #071329;
+    }
+
+    .round-eyes .eye {
+      width: 30px;
+      height: 30px;
+    }
+
+    .round-eyes .eye::after {
+      top: 9px;
+      left: 9px;
+      width: 12px;
+      height: 12px;
+    }
+
+    .square-eyes .eye {
+      border-radius: 5px;
+      height: 25px;
+    }
+
+    .serious .eye {
+      height: 17px;
+      margin-top: 8px;
+      border-radius: 8px 8px 3px 3px;
+    }
+
+    .serious .eye::after {
+      top: 4px;
+      height: 8px;
+    }
+
+    .mouth {
+      position: absolute;
+      left: 50%;
+      top: 112px;
+      width: 43px;
+      height: 20px;
+      transform: translateX(-50%);
+      border-bottom: 4px solid white;
+      border-radius: 0 0 50% 50%;
+    }
+
+    .serious .mouth {
+      width: 34px;
+      height: 3px;
+      top: 122px;
+      border-bottom: 3px solid white;
+      border-radius: 0;
+    }
+
+    .playful .mouth {
+      width: 32px;
+      height: 15px;
+      border-bottom-width: 5px;
+      transform: translateX(-50%) rotate(-10deg);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Customisation controls */
+
+    .control {
+      margin: 18px 0;
+      text-align: left;
+    }
+
+    .control label {
+      display: block;
+      margin-bottom: 9px;
+      font-weight: bold;
+    }
+
+    .control select,
+    .control input[type="color"] {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #49617f;
+      border-radius: 10px;
+      padding: 8px;
+      background: #071329;
+      color: #fff;
+    }
+
+    .control input[type="color"] {
+      height: 54px;
+      cursor: pointer;
+    }
+
+    .status {
+      min-height: 24px;
+      color: #bce9ff;
+    }
+
+    footer {
+      margin-top: 36px;
+      color: #91a7c6;
+      font-size: 13px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<h1>BRIANIAC AI</h1>
 
-<div class="character" aria-label="BRIANIAC AI smiling character">
-  <div class="eyes">
-    <div class="eye"></div>
-    <div class="eye"></div>
-  </div>
+  <!-- Welcome screen -->
+  <section id="welcomeScreen" class="screen active">
+    <h1>BRIANIAC AI</h1>
+    <p>Your AI companion. Your design. Your experience.</p>
 
-  <div class="mouth"></div>
-  <div class="arm left-arm"></div>
-  <div class="arm right-arm"></div>
-</div>
+    <div class="card">
+      <div class="companion-stage">
+        <div class="companion" id="welcomeCompanion">
+          <div class="arms">
+            <span class="arm"></span>
+            <span class="arm"></span>
+          </div>
+          <div class="eyes">
+            <span class="eye"></span>
+            <span class="eye"></span>
+          </div>
+          <div class="mouth"></div>
+        </div>
+      </div>
 
-<div class="hello" id="message">
-  Hello! I'm BRIANIAC AI. 👋
-</div>
+      <h2>Meet your new companion</h2>
+      <p>
+        Start with the original BRIANIAC AI, or create a companion
+        that reflects your personal style.
+      </p>
 
-<button id="helloButton">Say Hello!</button>
+      <div class="button-row">
+        <button class="primary" id="createBtn">
+          Create My Companion
+        </button>
 
-<script>
-const messages = [
-  "Hello! I'm BRIANIAC AI. 👋",
-  "It's nice to meet you! 😊",
-  "I'm ready to learn and grow! 🧠",
-  "Let's build something amazing! 🚀"
-];
+        <button class="secondary" id="meetBtn">
+          Meet BRIANIAC AI First
+        </button>
+      </div>
+    </div>
+  </section>
 
-let messageIndex = 0;
+  <!-- Main companion screen -->
+  <section id="mainScreen" class="screen">
+    <h1>BRIANIAC AI</h1>
+    <p>Your personal companion</p>
 
-document.getElementById("helloButton").addEventListener("click", function() {
-  messageIndex = (messageIndex + 1) % messages.length;
-  document.getElementById("message").textContent = messages[messageIndex];
-});
-</script>
-  <!-- BRIANIAC AI CUSTOMIZATION -->
-<style>
-  #customiseBtn {
-    margin: 12px;
-    padding: 12px 20px;
-    border: 1px solid #00d9ff;
-    border-radius: 12px;
-    background: #071b35;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-  }
+    <div class="card">
+      <div class="companion-stage">
+        <div class="companion" id="mainCompanion">
+          <div class="arms">
+            <span class="arm"></span>
+            <span class="arm"></span>
+          </div>
+          <div class="eyes">
+            <span class="eye"></span>
+            <span class="eye"></span>
+          </div>
+          <div class="mouth"></div>
+        </div>
+      </div>
 
-  #customisePanel {
-    display: none;
-    max-width: 360px;
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #00d9ff;
-    border-radius: 16px;
-    background: #071b35;
-    color: white;
-    text-align: center;
-  }
+      <h2 id="companionName">Your BRIANIAC Companion</h2>
+      <p id="greeting" aria-live="polite">
+        Hello! I'm happy to meet you.
+      </p>
 
-  #customisePanel button {
-    margin: 6px;
-    padding: 10px 14px;
-    border: 1px solid #00d9ff;
-    border-radius: 10px;
-    background: #102b4c;
-    color: white;
-    cursor: pointer;
-  }
+      <div class="button-row">
+        <button class="primary" id="helloBtn">Say Hello!</button>
+        <button class="secondary" id="customiseBtn">
+          Customise My Companion
+        </button>
+      </div>
 
-  #customisePanel button:focus {
-    outline: 2px solid white;
-  }
+      <p id="customiseInvite">
+        You can change your companion's appearance whenever you like.
+      </p>
+    </div>
+  </section>
 
-  #customiseStatus {
-    color: #7fffd4;
-  }
-</style>
+  <!-- Customisation screen -->
+  <section id="customiseScreen" class="screen">
+    <h1>Design Your Companion</h1>
+    <p>Make BRIANIAC AI feel more like yours.</p>
 
-<div style="text-align:center;">
-  <button id="customiseBtn" type="button">
-    🎨 Customise My Companion
-  </button>
-</div>
+    <div class="card">
+      <h2>Live Preview</h2>
 
-<section id="customisePanel" aria-labelledby="customiseTitle">
-  <h2 id="customiseTitle">Customise BRIANIAC AI</h2>
-  <p>Choose your companion's glow colour.</p>
+      <div class="companion-stage">
+        <div class="companion" id="previewCompanion">
+          <div class="arms">
+            <span class="arm"></span>
+            <span class="arm"></span>
+          </div>
+          <div class="eyes">
+            <span class="eye"></span>
+            <span class="eye"></span>
+          </div>
+          <div class="mouth"></div>
+        </div>
+      </div>
 
-  <button type="button" data-glow="#00d9ff">Electric Blue</button>
-  <button type="button" data-glow="#a855f7">Purple</button>
-  <button type="button" data-glow="#00ff99">Neon Green</button>
-  <button type="button" data-glow="#ff4da6">Pink</button>
+      <div class="control">
+        <label for="colourInput">Companion Colour</label>
+        <input id="colourInput" type="color" value="#168bff">
+      </div>
 
-  <p>
-    <button id="saveDesignBtn" type="button">💾 Save My Design</button>
-    <button id="closeCustomiseBtn" type="button">Close</button>
-  </p>
+      <div class="control">
+        <label for="bodyInput">Body Style</label>
+        <select id="bodyInput">
+          <option value="hybrid">Classic Glow</option>
+          <option value="hologram">Hologram</option>
+          <option value="robot">Robot</option>
+        </select>
+      </div>
 
-  <p id="customiseStatus" aria-live="polite"></p>
-</section>
+      <div class="control">
+        <label for="eyesInput">Eye Style</label>
+        <select id="eyesInput">
+          <option value="normal">Normal Eyes</option>
+          <option value="round-eyes">Round Eyes</option>
+          <option value="square-eyes">Square Eyes</option>
+        </select>
+      </div>
 
-<script>
-(function () {
-  const openBtn = document.getElementById("customiseBtn");
-  const panel = document.getElementById("customisePanel");
-  const closeBtn = document.getElementById("closeCustomiseBtn");
-  const saveBtn = document.getElementById("saveDesignBtn");
-  const status = document.getElementById("customiseStatus");
+      <div class="control">
+        <label for="faceInput">Facial Expression</label>
+        <select id="faceInput">
+          <option value="friendly">Friendly Smile</option>
+          <option value="serious">Serious</option>
+          <option value="playful">Playful</option>
+        </select>
+      </div>
 
-  let chosenGlow = "#00d9ff";
+      <div class="control">
+        <label for="armsInput">Arms</label>
+        <select id="armsInput">
+          <option value="yes">Show Arms</option>
+          <option value="no-arms">Hide Arms</option>
+        </select>
+      </div>
 
-  function applyGlow(colour) {
-    chosenGlow = colour;
+      <div class="control">
+        <label for="personalityInput">Personality</label>
+        <select id="personalityInput">
+          <option value="friendly">Friendly</option>
+          <option value="playful">Playful</option>
+          <option value="calm">Calm</option>
+          <option value="serious">Serious</option>
+        </select>
+      </div>
 
-    // Find the existing glowing character.
-    // These selectors cover several common character designs.
-    const character = document.querySelector(
-      "#character, .character, #orb, .orb, .robot, .companion"
-    );
+      <div class="control">
+        <label for="nameInput">Companion Name</label>
+        <input
+          id="nameInput"
+          type="text"
+          maxlength="30"
+          placeholder="Give your companion a name"
+          style="width:100%;min-height:46px;padding:10px;border-radius:10px;"
+        >
+      </div>
 
-    if (character) {
-      character.style.setProperty("--glow-color", colour);
-      character.style.boxShadow = "0 0 25px " + colour;
-      character.style.borderColor = colour;
-      status.textContent = "Colour preview updated!";
-    } else {
-      status.textContent =
-        "Colour selected. We may need to connect it to your character's exact element.";
+      <div class="button-row">
+        <button class="primary" id="saveBtn">Save My Design</button>
+        <button class="secondary" id="resetBtn">Reset Design</button>
+        <button class="secondary" id="backBtn">Back to Companion</button>
+      </div>
+
+      <p id="statusMessage" class="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <footer>
+    BRIANIAC AI · Built for your imagination
+  </footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const defaults = {
+      colour: "#168bff",
+      body: "hybrid",
+      eyes: "normal",
+      face: "friendly",
+      arms: "yes",
+      personality: "friendly",
+      name: ""
+    };
+
+    let design = { ...defaults };
+    let helloCount = 0;
+
+    const greetings = {
+      friendly: [
+        "Hello! I'm happy to meet you.",
+        "It's great to see you again!",
+        "I'm here whenever you want to explore."
+      ],
+      playful: [
+        "Hey! Ready for something fun?",
+        "My circuits are feeling playful today!",
+        "What adventure shall we imagine?"
+      ],
+      calm: [
+        "Hello. Take your time; I'm here with you.",
+        "Let's make today a little easier.",
+        "One step at a time. We've got this."
+      ],
+      serious: [
+        "Hello. Ready to focus on your goals?",
+        "Let's work through your next challenge.",
+        "I'm ready when you are."
+      ]
+    };
+
+    function showScreen(screenId) {
+      document.querySelectorAll(".screen").forEach((screen) => {
+        screen.classList.toggle("active", screen.id === screenId);
+      });
+
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
-  }
 
-  openBtn.addEventListener("click", function () {
-    panel.style.display = "block";
-    status.textContent = "";
-    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  });
+    function applyToCompanion(element) {
+      element.style.setProperty("--glow", design.colour);
 
-  closeBtn.addEventListener("click", function () {
-    panel.style.display = "none";
-  });
+      element.classList.remove(
+        "hybrid", "hologram", "robot",
+        "normal", "round-eyes", "square-eyes",
+        "friendly", "serious", "playful", "no-arms"
+      );
 
-  panel.querySelectorAll("[data-glow]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      applyGlow(button.getAttribute("data-glow"));
+      element.classList.add(design.body);
+
+      if (design.eyes !== "normal") {
+        element.classList.add(design.eyes);
+      }
+
+      element.classList.add(design.face);
+
+      if (design.arms === "no-arms") {
+        element.classList.add("no-arms");
+      }
+    }
+
+    function updateAll() {
+      document.documentElement.style.setProperty("--glow", design.colour);
+
+      applyToCompanion($("welcomeCompanion"));
+      applyToCompanion($("mainCompanion"));
+      applyToCompanion($("previewCompanion"));
+
+      $("companionName").textContent =
+        design.name.trim() || "Your BRIANIAC Companion";
+
+      $("greeting").textContent = greetings[design.personality][0];
+    }
+
+    function openCustomisation() {
+      $("colourInput").value = design.colour;
+      $("bodyInput").value = design.body;
+      $("eyesInput").value = design.eyes;
+      $("faceInput").value = design.face;
+      $("armsInput").value = design.arms;
+      $("personalityInput").value = design.personality;
+      $("nameInput").value = design.name;
+
+      updateAll();
+      showScreen("customiseScreen");
+    }
+
+    function readControls() {
+      design.colour = $("colourInput").value;
+      design.body = $("bodyInput").value;
+      design.eyes = $("eyesInput").value;
+      design.face = $("faceInput").value;
+      design.arms = $("armsInput").value;
+      design.personality = $("personalityInput").value;
+      design.name = $("nameInput").value.trim().slice(0, 30);
+
+      updateAll();
+    }
+
+    function loadSavedDesign() {
+      try {
+        const saved = localStorage.getItem("brianiacDesign");
+
+        if (saved) {
+          const parsed = JSON.parse(saved);
+
+          if (parsed && typeof parsed === "object") {
+            design = {
+              ...defaults,
+              ...parsed
+            };
+          }
+        }
+      } catch (error) {
+        console.warn("Could not load the saved design.", error);
+        design = { ...defaults };
+      }
+
+      const validColours = /^#[0-9a-fA-F]{6}$/;
+
+      if (!validColours.test(design.colour)) {
+        design.colour = defaults.colour;
+      }
+
+      if (!["hybrid", "hologram", "robot"].includes(design.body)) {
+        design.body = defaults.body;
+      }
+
+      if (!["normal", "round-eyes", "square-eyes"].includes(design.eyes)) {
+        design.eyes = defaults.eyes;
+      }
+
+      if (!["friendly", "serious", "playful"].includes(design.face)) {
+        design.face = defaults.face;
+      }
+
+      if (!["yes", "no-arms"].includes(design.arms)) {
+        design.arms = defaults.arms;
+      }
+
+      if (!Object.hasOwn(greetings, design.personality)) {
+        design.personality = defaults.personality;
+      }
+
+      if (typeof design.name !== "string") {
+        design.name = "";
+      }
+
+      design.name = design.name.slice(0, 30);
+    }
+
+    $("createBtn").addEventListener("click", () => {
+      openCustomisation();
     });
-  });
 
-  // Restore a previously saved colour.
-  try {
-    const savedGlow = localStorage.getItem("brianiacGlow");
-    if (savedGlow && /^#[0-9a-fA-F]{6}$/.test(savedGlow)) {
-      applyGlow(savedGlow);
-    }
-  } catch (error) {
-    // The customization screen still works if storage is unavailable.
-  }
+    $("meetBtn").addEventListener("click", () => {
+      showScreen("mainScreen");
+      $("customiseInvite").textContent =
+        "Welcome! You can customise your companion whenever you're ready.";
+    });
 
-  saveBtn.addEventListener("click", function () {
-    try {
-      localStorage.setItem("brianiacGlow", chosenGlow);
-      status.textContent = "Your design has been saved!";
-    } catch (error) {
-      status.textContent =
-        "Your browser could not save the design. Please check browser settings.";
-    }
-  });
-})();
-</script>
-</body>
-</html>
+    $("customiseBtn").addEventListener("click", openCustomisation);
+
+    $("helloBtn").addEventListener("click", () => {
+      const options = greetings[design.personality];
+      helloCount = (helloCount + 1) % options.length;
+      $("greeting").textContent = options[helloCount];
+    });
+
+    [
+      "colourInput",
+      "bodyInput",
+      "eyesInput",
+      "faceInput",
+      "armsInput",
+      "personalityInput",
