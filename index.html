@@ -494,6 +494,11 @@
       name: ""
     };
 
+    const STORAGE_KEYS = {
+      design: "brianiacDesign",
+      welcomeSeen: "brianiacWelcomeSeen"
+    };
+
     let design = { ...defaults };
     let helloCount = 0;
 
@@ -526,10 +531,27 @@
 
     function hasSavedDesign() {
       try {
-        return Boolean(localStorage.getItem("brianiacDesign"));
+        return Boolean(localStorage.getItem(STORAGE_KEYS.design));
       } catch (error) {
         console.warn("Saved design could not be checked.", error);
         return false;
+      }
+    }
+
+    function hasSeenWelcome() {
+      try {
+        return localStorage.getItem(STORAGE_KEYS.welcomeSeen) === "true";
+      } catch (error) {
+        console.warn("Welcome flag could not be checked.", error);
+        return false;
+      }
+    }
+
+    function setWelcomeSeen(value = true) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.welcomeSeen, String(value));
+      } catch (error) {
+        console.warn("Could not save welcome flag.", error);
       }
     }
 
@@ -587,6 +609,7 @@
     }
 
     function openCustomisation() {
+      setWelcomeSeen(true);
       $("colourInput").value = design.colour;
       $("bodyInput").value = design.body;
       $("eyesInput").value = design.eyes;
@@ -618,7 +641,7 @@
 
     function loadSavedDesign() {
       try {
-        const saved = localStorage.getItem("brianiacDesign");
+        const saved = localStorage.getItem(STORAGE_KEYS.design);
 
         if (saved) {
           const parsed = JSON.parse(saved);
@@ -669,10 +692,12 @@
     }
 
     $("createBtn").addEventListener("click", () => {
+      setWelcomeSeen(true);
       openCustomisation();
     });
 
     $("meetBtn").addEventListener("click", () => {
+      setWelcomeSeen(true);
       showScreen("mainScreen");
       $("customiseInvite").textContent =
         "Welcome! You can customise your companion whenever you're ready.";
@@ -705,7 +730,8 @@
       readControls();
 
       try {
-        localStorage.setItem("brianiacDesign", JSON.stringify(design));
+        setWelcomeSeen(true);
+        localStorage.setItem(STORAGE_KEYS.design, JSON.stringify(design));
         $("statusMessage").textContent =
           "Your design has been saved on this browser!";
         showScreen("mainScreen");
@@ -732,10 +758,15 @@
     loadSavedDesign();
     updateAll();
 
-    if (hasSavedDesign()) {
+    if (hasSavedDesign() || hasSeenWelcome()) {
       showScreen("mainScreen");
-      $("customiseInvite").textContent =
-        "Welcome back! Your saved companion design has been loaded.";
+      if (hasSavedDesign()) {
+        $("customiseInvite").textContent =
+          "Welcome back! Your saved companion design has been loaded.";
+      } else {
+        $("customiseInvite").textContent =
+          "Welcome! You can customise your companion whenever you're ready.";
+      }
     }
   </script>
 
