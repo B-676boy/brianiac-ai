@@ -176,5 +176,139 @@ document.getElementById("helloButton").addEventListener("click", function() {
   document.getElementById("message").textContent = messages[messageIndex];
 });
 </script>
+  <!-- BRIANIAC AI CUSTOMIZATION -->
+<style>
+  #customiseBtn {
+    margin: 12px;
+    padding: 12px 20px;
+    border: 1px solid #00d9ff;
+    border-radius: 12px;
+    background: #071b35;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  #customisePanel {
+    display: none;
+    max-width: 360px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #00d9ff;
+    border-radius: 16px;
+    background: #071b35;
+    color: white;
+    text-align: center;
+  }
+
+  #customisePanel button {
+    margin: 6px;
+    padding: 10px 14px;
+    border: 1px solid #00d9ff;
+    border-radius: 10px;
+    background: #102b4c;
+    color: white;
+    cursor: pointer;
+  }
+
+  #customisePanel button:focus {
+    outline: 2px solid white;
+  }
+
+  #customiseStatus {
+    color: #7fffd4;
+  }
+</style>
+
+<div style="text-align:center;">
+  <button id="customiseBtn" type="button">
+    🎨 Customise My Companion
+  </button>
+</div>
+
+<section id="customisePanel" aria-labelledby="customiseTitle">
+  <h2 id="customiseTitle">Customise BRIANIAC AI</h2>
+  <p>Choose your companion's glow colour.</p>
+
+  <button type="button" data-glow="#00d9ff">Electric Blue</button>
+  <button type="button" data-glow="#a855f7">Purple</button>
+  <button type="button" data-glow="#00ff99">Neon Green</button>
+  <button type="button" data-glow="#ff4da6">Pink</button>
+
+  <p>
+    <button id="saveDesignBtn" type="button">💾 Save My Design</button>
+    <button id="closeCustomiseBtn" type="button">Close</button>
+  </p>
+
+  <p id="customiseStatus" aria-live="polite"></p>
+</section>
+
+<script>
+(function () {
+  const openBtn = document.getElementById("customiseBtn");
+  const panel = document.getElementById("customisePanel");
+  const closeBtn = document.getElementById("closeCustomiseBtn");
+  const saveBtn = document.getElementById("saveDesignBtn");
+  const status = document.getElementById("customiseStatus");
+
+  let chosenGlow = "#00d9ff";
+
+  function applyGlow(colour) {
+    chosenGlow = colour;
+
+    // Find the existing glowing character.
+    // These selectors cover several common character designs.
+    const character = document.querySelector(
+      "#character, .character, #orb, .orb, .robot, .companion"
+    );
+
+    if (character) {
+      character.style.setProperty("--glow-color", colour);
+      character.style.boxShadow = "0 0 25px " + colour;
+      character.style.borderColor = colour;
+      status.textContent = "Colour preview updated!";
+    } else {
+      status.textContent =
+        "Colour selected. We may need to connect it to your character's exact element.";
+    }
+  }
+
+  openBtn.addEventListener("click", function () {
+    panel.style.display = "block";
+    status.textContent = "";
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+
+  closeBtn.addEventListener("click", function () {
+    panel.style.display = "none";
+  });
+
+  panel.querySelectorAll("[data-glow]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      applyGlow(button.getAttribute("data-glow"));
+    });
+  });
+
+  // Restore a previously saved colour.
+  try {
+    const savedGlow = localStorage.getItem("brianiacGlow");
+    if (savedGlow && /^#[0-9a-fA-F]{6}$/.test(savedGlow)) {
+      applyGlow(savedGlow);
+    }
+  } catch (error) {
+    // The customization screen still works if storage is unavailable.
+  }
+
+  saveBtn.addEventListener("click", function () {
+    try {
+      localStorage.setItem("brianiacGlow", chosenGlow);
+      status.textContent = "Your design has been saved!";
+    } catch (error) {
+      status.textContent =
+        "Your browser could not save the design. Please check browser settings.";
+    }
+  });
+})();
+</script>
 </body>
-  </html>
+</html>
