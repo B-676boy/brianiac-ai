@@ -657,10 +657,59 @@
       $("greeting").textContent = options[helloCount];
     });
 
-    [
+
+    [    
       "colourInput",
       "bodyInput",
       "eyesInput",
       "faceInput",
       "armsInput",
-      "personalityInput"
+      "personalityInput",
+      "nameInput"
+    ].forEach((id) => {
+      $(id).addEventListener("input", readControls);
+      $(id).addEventListener("change", readControls);
+    });
+
+    $("saveBtn").addEventListener("click", () => {
+      readControls();
+
+      try {
+        localStorage.setItem("brianiacDesign", JSON.stringify(design));
+        $("statusMessage").textContent =
+          "Your design has been saved on this browser!";
+        showScreen("mainScreen");
+      } catch (error) {
+        $("statusMessage").textContent =
+          "Saving is unavailable in this browser. Your current design is still available.";
+      }
+    });
+
+    $("resetBtn").addEventListener("click", () => {
+      design = { ...defaults };
+      openCustomisation();
+
+      $("statusMessage").textContent =
+        "Default design restored. Save it if you want to keep it.";
+    });
+
+    $("backBtn").addEventListener("click", () => {
+      readControls();
+      showScreen("mainScreen");
+    });
+
+    loadSavedDesign();
+    updateAll();
+
+    try {
+      if (localStorage.getItem("brianiacDesign")) {
+        $("customiseInvite").textContent =
+          "Welcome back! Your saved companion design has been loaded.";
+      }
+    } catch (error) {
+      console.warn("Saved design could not be checked.", error);
+    }
+  </script>
+
+</body>
+</html>
