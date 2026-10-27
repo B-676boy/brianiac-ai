@@ -1,782 +1,622 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#071329" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050b1c">
   <title>BRIANIAC AI</title>
 
   <style>
     :root {
-      --glow: #168bff;
-      --background: #071329;
-      --panel: #10213d;
-      --text: #f4f8ff;
-      --muted: #b7c6df;
+      --blue: #36cfff;
+      --background: #050b1c;
+      --panel: #101e38;
+      --text: #f3f8ff;
+      --muted: #a9bad4;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; }
 
     body {
+      margin: 0;
       min-height: 100vh;
-      padding: 24px 16px;
-      background:
-        radial-gradient(ellipse at top, #153c70 0%, transparent 55%),
-        var(--background);
       color: var(--text);
+      background:
+        radial-gradient(ellipse at 50% 35%, #123361 0%, transparent 48%),
+        var(--background);
       font-family: Arial, sans-serif;
-      text-align: center;
     }
 
-    button,
-    input,
-    select {
-      font: inherit;
+    button, input, textarea, select { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .app {
+      width: min(100%, 760px);
+      min-height: 100vh;
+      margin: auto;
+      padding: 22px 18px 35px;
     }
 
-    button {
-      min-height: 46px;
-      padding: 12px 18px;
-      border: 0;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    button:focus-visible,
-    input:focus-visible,
-    select:focus-visible {
-      outline: 3px solid #ffffff;
-      outline-offset: 3px;
-    }
-
-    .primary {
-      background: var(--glow);
-      color: #fff;
-    }
-
-    .secondary {
-      background: #203653;
-      color: #fff;
-      border: 1px solid #49617f;
-    }
-
-    .screen {
-      display: none;
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    h1 {
-      font-size: clamp(28px, 6vw, 42px);
-      margin: 12px 0;
-      letter-spacing: 2px;
-    }
-
-    h2 {
-      margin-top: 12px;
-    }
-
-    p {
-      line-height: 1.6;
-      color: var(--muted);
-    }
-
-    .card {
-      margin: 22px auto;
-      padding: 22px;
-      border: 1px solid #294365;
-      border-radius: 20px;
-      background: rgba(16, 33, 61, 0.88);
-    }
-
-    .button-row {
+    header {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .companion-stage {
-      min-height: 300px;
-      display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 20px;
-    }
-
-    .companion {
-      position: relative;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 35% 25%, #ffffff 0%, var(--glow) 17%, #061a46 78%);
-      box-shadow:
-        0 0 22px var(--glow),
-        0 0 60px rgba(22, 139, 255, 0.25);
-      animation: float 3s ease-in-out infinite;
-      transition: all 0.25s ease;
-    }
-
-    .companion.hologram {
-      border: 2px solid var(--glow);
-      background: rgba(22, 139, 255, 0.25);
-      border-radius: 30%;
-    }
-
-    .companion.robot {
-      border-radius: 28px;
-      background:
-        linear-gradient(145deg, #9eabc0, #344b69 55%, #101c30);
-      border: 3px solid var(--glow);
-    }
-
-    .arms {
-      position: absolute;
-      top: 82px;
-      left: -42px;
-      width: 260px;
-      display: flex;
       justify-content: space-between;
-      pointer-events: none;
+      gap: 12px;
+      padding-bottom: 17px;
+      border-bottom: 1px solid #243b5c;
     }
 
-    .arm {
-      width: 36px;
-      height: 12px;
-      border-radius: 20px;
-      background: var(--glow);
-      box-shadow: 0 0 12px var(--glow);
+    .brand {
+      color: var(--blue);
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 20px;
     }
 
-    .no-arms .arms {
-      display: none;
+    .status {
+      color: #83f5c1;
+      font-size: 12px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 35px 0 22px;
+    }
+
+    .character-area {
+      height: 225px;
+      width: 225px;
+      margin: 0 auto 15px;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .orbit {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid #36cfff55;
+      border-radius: 50%;
+      animation: orbit 14s linear infinite;
+    }
+
+    .orbit::before {
+      content: "";
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 15px var(--blue);
+    }
+
+    .character {
+      width: 142px;
+      height: 142px;
+      border: 2px solid #91edff;
+      border-radius: 45% 45% 48% 48%;
+      background: radial-gradient(circle at 30% 25%, #9af2ff, #258fff 35%, #06377f 80%);
+      box-shadow: 0 0 28px #168cff, 0 0 70px #087cff66;
+      animation: float 3s ease-in-out infinite;
+      transition: transform .2s, box-shadow .2s;
+      position: relative;
+    }
+
+    .character.excited {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #36cfff, 0 0 90px #087cff;
     }
 
     .eyes {
-      position: absolute;
-      top: 53px;
-      left: 0;
-      right: 0;
       display: flex;
       justify-content: center;
-      gap: 27px;
+      gap: 28px;
+      padding-top: 42px;
     }
 
     .eye {
-      width: 23px;
-      height: 34px;
-      background: #fff;
+      width: 19px;
+      height: 24px;
       border-radius: 50%;
-      box-shadow: 0 0 12px #fff;
-      position: relative;
-    }
-
-    .eye::after {
-      content: "";
-      position: absolute;
-      width: 9px;
-      height: 15px;
-      top: 10px;
-      left: 7px;
-      border-radius: 50%;
-      background: #071329;
-    }
-
-    .round-eyes .eye {
-      width: 30px;
-      height: 30px;
-    }
-
-    .round-eyes .eye::after {
-      top: 9px;
-      left: 9px;
-      width: 12px;
-      height: 12px;
-    }
-
-    .square-eyes .eye {
-      border-radius: 5px;
-      height: 25px;
-    }
-
-    .serious .eye {
-      height: 17px;
-      margin-top: 8px;
-      border-radius: 8px 8px 3px 3px;
-    }
-
-    .serious .eye::after {
-      top: 4px;
-      height: 8px;
+      background: white;
+      box-shadow: 0 0 12px white;
     }
 
     .mouth {
-      position: absolute;
-      left: 50%;
-      top: 112px;
-      width: 43px;
-      height: 20px;
-      transform: translateX(-50%);
+      width: 29px;
+      height: 13px;
+      margin: 17px auto 0;
       border-bottom: 4px solid white;
       border-radius: 0 0 50% 50%;
     }
 
-    .serious .mouth {
-      width: 34px;
-      height: 3px;
-      top: 122px;
-      border-bottom: 3px solid white;
-      border-radius: 0;
+    h1 {
+      font-size: clamp(27px, 6vw, 37px);
+      margin: 10px 0;
     }
 
-    .playful .mouth {
-      width: 32px;
-      height: 15px;
-      border-bottom-width: 5px;
-      transform: translateX(-50%) rotate(-10deg);
+    h1 span { color: var(--blue); }
+
+    .description {
+      max-width: 430px;
+      margin: auto;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    #greeting {
+      min-height: 24px;
+      margin-top: 15px;
+      color: #b9eaff;
+      font-size: 14px;
     }
 
-    .control {
-      margin: 18px 0;
-      text-align: left;
-    }
-
-    .control label {
-      display: block;
-      margin-bottom: 9px;
+    .primary {
+      padding: 12px 22px;
+      margin-top: 15px;
+      border: 1px solid var(--blue);
+      border-radius: 12px;
+      color: #041426;
+      background: var(--blue);
       font-weight: bold;
     }
 
-    .control select,
-    .control input[type="color"] {
+    .section-title {
+      font-size: 17px;
+      margin: 20px 0 13px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .menu-button {
+      min-height: 112px;
+      padding: 16px;
+      color: var(--text);
+      text-align: left;
+      background: #101e38dd;
+      border: 1px solid #355477;
+      border-radius: 16px;
+      transition: border-color .2s, transform .2s;
+    }
+
+    .menu-button:hover, .menu-button:focus-visible {
+      border-color: var(--blue);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .icon {
+      display: block;
+      font-size: 25px;
+      margin-bottom: 9px;
+    }
+
+    .menu-button strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .menu-button small {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .screen {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #355477;
+      border-radius: 16px;
+      background: #0b1730;
+    }
+
+    .screen[hidden] { display: none; }
+
+    .screen h2 { color: var(--blue); }
+
+    .screen p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .screen input, .screen textarea, .screen select {
+      display: block;
       width: 100%;
-      min-height: 46px;
-      border: 1px solid #49617f;
-      border-radius: 10px;
-      padding: 8px;
-      background: #071329;
-      color: #fff;
+      margin: 12px 0;
+      padding: 12px;
+      color: white;
+      background: #071226;
+      border: 1px solid #355477;
+      border-radius: 9px;
     }
 
-    .control input[type="color"] {
-      height: 54px;
-      cursor: pointer;
+    .screen textarea {
+      min-height: 90px;
+      resize: vertical;
     }
 
-    .status {
-      min-height: 24px;
-      color: #bce9ff;
+    .action {
+      padding: 11px 15px;
+      margin: 5px 5px 5px 0;
+      color: white;
+      background: #0755a8;
+      border: 1px solid var(--blue);
+      border-radius: 9px;
+    }
+
+    .secondary { background: transparent; }
+
+    .result {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      color: #c4edff;
+      line-height: 1.6;
+      font-size: 14px;
     }
 
     footer {
-      margin-top: 36px;
-      color: #91a7c6;
-      font-size: 13px;
+      margin-top: 30px;
+      text-align: center;
+      color: #7f94b5;
+      font-size: 12px;
+    }
+
+    /* First-time introduction */
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      background: #030817;
+    }
+
+    .intro[hidden] { display: none; }
+
+    .intro-light {
+      width: 18px;
+      height: 18px;
+      margin-bottom: 28px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 0 20px #36cfff, 0 0 60px #168cff, 0 0 110px #087cff;
+      animation: form 2s ease-in-out forwards;
+    }
+
+    .intro h1 {
+      opacity: 0;
+      animation: appear 1s ease 1.4s forwards;
+    }
+
+    .intro p {
+      max-width: 420px;
+      color: var(--muted);
+      line-height: 1.7;
+      opacity: 0;
+      animation: appear 1s ease 2s forwards;
+    }
+
+    .skip {
+      position: absolute;
+      top: 20px;
+      right: 18px;
+      padding: 10px 15px;
+      color: white;
+      background: transparent;
+      border: 1px solid #54718f;
+      border-radius: 10px;
+    }
+
+    @keyframes float {
+      0%, 100% { translate: 0 0; }
+      50% { translate: 0 -9px; }
+    }
+
+    @keyframes orbit {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes form {
+      0% { transform: scale(.3); opacity: .3; }
+      50% { transform: scale(5); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes appear {
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 380px) {
+      .app { padding-left: 13px; padding-right: 13px; }
+      .menu-button { padding: 12px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <section id="welcomeScreen" class="screen active">
-    <h1>BRIANIAC AI</h1>
-    <p>Your AI companion. Your design. Your experience.</p>
+  <section class="intro" id="intro" hidden>
+    <button class="skip" id="skipIntro" type="button">Skip introduction</button>
+    <div class="intro-light" aria-hidden="true"></div>
+    <h1>Meet <span style="color:#36cfff">BRIANIAC AI</span></h1>
+    <p>
+      Hello! I'm BRIANIAC AI, your personal AI companion.
+      I'm here to learn, grow, and explore with you.
+    </p>
+  </section>
 
-    <div class="card">
-      <div class="companion-stage">
-        <div class="companion" id="welcomeCompanion">
-          <div class="arms">
-            <span class="arm"></span>
-            <span class="arm"></span>
-          </div>
-          <div class="eyes">
+  <main class="app">
+    <header>
+      <div class="brand">BRIANIAC AI</div>
+      <div class="status">Ready to explore</div>
+    </header>
+
+    <section class="hero">
+      <div class="character-area">
+        <div class="orbit" aria-hidden="true"></div>
+        <button class="character" id="character" type="button"
+                aria-label="Tap to interact with BRIANIAC AI">
+          <span class="eyes" aria-hidden="true">
             <span class="eye"></span>
             <span class="eye"></span>
-          </div>
-          <div class="mouth"></div>
-        </div>
+          </span>
+          <span class="mouth" aria-hidden="true"></span>
+        </button>
       </div>
 
-      <h2>Meet your new companion</h2>
-      <p>
-        Start with the original BRIANIAC AI, or create a companion
-        that reflects your personal style.
+      <h1>Hello, I'm <span>BRIANIAC AI</span></h1>
+      <p class="description">
+        Your personal AI companion. Think, explore, create,
+        and grow with a little help along the way.
       </p>
 
-      <div class="button-row">
-        <button class="primary" id="createBtn">Create My Companion</button>
-        <button class="secondary" id="meetBtn">Meet BRIANIAC AI First</button>
-      </div>
-    </div>
-  </section>
+      <div id="greeting" aria-live="polite">Your next idea starts here.</div>
 
-  <section id="mainScreen" class="screen">
-    <h1>BRIANIAC AI</h1>
-    <p>Your personal companion</p>
+      <button class="primary" id="sayHello" type="button">Say Hello!</button>
+    </section>
 
-    <div class="card">
-      <div class="companion-stage">
-        <div class="companion" id="mainCompanion">
-          <div class="arms">
-            <span class="arm"></span>
-            <span class="arm"></span>
-          </div>
-          <div class="eyes">
-            <span class="eye"></span>
-            <span class="eye"></span>
-          </div>
-          <div class="mouth"></div>
-        </div>
-      </div>
+    <h2 class="section-title">Your space</h2>
 
-      <h2 id="companionName">Your BRIANIAC Companion</h2>
-      <p id="greeting" aria-live="polite">Hello! I'm happy to meet you.</p>
+    <nav class="menu" aria-label="Main menu">
+      <button class="menu-button" data-screen="chat" type="button">
+        <span class="icon" aria-hidden="true">💬</span>
+        <strong>Chat</strong>
+        <small>Start a conversation.</small>
+      </button>
 
-      <div class="button-row">
-        <button class="primary" id="helloBtn">Say Hello!</button>
-        <button class="secondary" id="customiseBtn">Customise My Companion</button>
-      </div>
+      <button class="menu-button" data-screen="memory" type="button">
+        <span class="icon" aria-hidden="true">🧠</span>
+        <strong>Memory</strong>
+        <small>Manage information you save.</small>
+      </button>
 
-      <p id="customiseInvite">
-        You can change your companion's appearance whenever you like.
-      </p>
-    </div>
-  </section>
+      <button class="menu-button" data-screen="settings" type="button">
+        <span class="icon" aria-hidden="true">⚙️</span>
+        <strong>Settings</strong>
+        <small>Choose your preferences.</small>
+      </button>
+    </nav>
 
-  <section id="customiseScreen" class="screen">
-    <h1>Design Your Companion</h1>
-    <p>Make BRIANIAC AI feel more like yours.</p>
+    <section class="screen" id="chat" hidden>
+      <h2>Chat</h2>
+      <p>This is the starting chat interface. A real AI engine has not been connected yet.</p>
+      <label for="chatInput">Your message</label>
+      <textarea id="chatInput" placeholder="Type your message..."></textarea>
+      <button class="action" id="sendMessage" type="button">Send</button>
+      <button class="action secondary" data-home type="button">Back home</button>
+      <div class="result" id="chatResult" aria-live="polite"></div>
+    </section>
 
-    <div class="card">
-      <h2>Live Preview</h2>
+    <section class="screen" id="memory" hidden>
+      <h2>Memory</h2>
+      <p>Save notes in this browser. These notes are not synced to an online account.</p>
+      <label for="memoryInput">What should I remember?</label>
+      <textarea id="memoryInput" placeholder="Enter a preference or useful detail..."></textarea>
+      <button class="action" id="saveMemory" type="button">Save memory</button>
+      <button class="action secondary" id="clearMemories" type="button">Delete all</button>
+      <button class="action secondary" data-home type="button">Back home</button>
+      <h3>Saved memories</h3>
+      <div class="result" id="memoryList" aria-live="polite"></div>
+    </section>
 
-      <div class="companion-stage">
-        <div class="companion" id="previewCompanion">
-          <div class="arms">
-            <span class="arm"></span>
-            <span class="arm"></span>
-          </div>
-          <div class="eyes">
-            <span class="eye"></span>
-            <span class="eye"></span>
-          </div>
-          <div class="mouth"></div>
-        </div>
-      </div>
+    <section class="screen" id="settings" hidden>
+      <h2>Settings</h2>
+      <label for="responseStyle">Response preference</label>
+      <select id="responseStyle">
+        <option value="both">Text and voice (voice coming later)</option>
+        <option value="text">Text only</option>
+        <option value="voice">Voice when available</option>
+      </select>
+      <button class="action" id="saveSettings" type="button">Save settings</button>
+      <button class="action secondary" data-home type="button">Back home</button>
+      <div class="result" id="settingsResult" aria-live="polite"></div>
+    </section>
 
-      <div class="control">
-        <label for="colourInput">Companion Colour</label>
-        <input id="colourInput" type="color" value="#168bff">
-      </div>
-
-      <div class="control">
-        <label for="bodyInput">Body Style</label>
-        <select id="bodyInput">
-          <option value="hybrid">Classic Glow</option>
-          <option value="hologram">Hologram</option>
-          <option value="robot">Robot</option>
-        </select>
-      </div>
-
-      <div class="control">
-        <label for="eyesInput">Eye Style</label>
-        <select id="eyesInput">
-          <option value="normal">Normal Eyes</option>
-          <option value="round-eyes">Round Eyes</option>
-          <option value="square-eyes">Square Eyes</option>
-        </select>
-      </div>
-
-      <div class="control">
-        <label for="faceInput">Facial Expression</label>
-        <select id="faceInput">
-          <option value="friendly">Friendly Smile</option>
-          <option value="serious">Serious</option>
-          <option value="playful">Playful</option>
-        </select>
-      </div>
-
-      <div class="control">
-        <label for="armsInput">Arms</label>
-        <select id="armsInput">
-          <option value="yes">Show Arms</option>
-          <option value="no-arms">Hide Arms</option>
-        </select>
-      </div>
-
-      <div class="control">
-        <label for="personalityInput">Personality</label>
-        <select id="personalityInput">
-          <option value="friendly">Friendly</option>
-          <option value="playful">Playful</option>
-          <option value="calm">Calm</option>
-          <option value="serious">Serious</option>
-        </select>
-      </div>
-
-      <div class="control">
-        <label for="nameInput">Companion Name</label>
-        <input
-          id="nameInput"
-          type="text"
-          maxlength="30"
-          placeholder="Give your companion a name"
-          style="width:100%;min-height:46px;padding:10px;border-radius:10px;"
-        >
-      </div>
-
-      <div class="button-row">
-        <button class="primary" id="saveBtn">Save My Design</button>
-        <button class="secondary" id="resetBtn">Reset Design</button>
-        <button class="secondary" id="backBtn">Back to Companion</button>
-      </div>
-
-      <p id="statusMessage" class="status" aria-live="polite"></p>
-    </div>
-  </section>
-
-  <footer>
-    BRIANIAC AI · Built for your imagination
-  </footer>
+    <footer>BRIANIAC AI · Your ideas, your companion.</footer>
+  </main>
 
   <script>
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
+    const screenNames = ["chat", "memory", "settings"];
 
-    const defaults = {
-      colour: "#168bff",
-      body: "hybrid",
-      eyes: "normal",
-      face: "friendly",
-      arms: "yes",
-      personality: "friendly",
-      name: ""
-    };
-
-    const STORAGE_KEYS = {
-      design: "brianiacDesign",
-      welcomeSeen: "brianiacWelcomeSeen"
-    };
-
-    let design = { ...defaults };
-    let helloCount = 0;
-
-    const greetings = {
-      friendly: [
-        "Hello! I'm happy to meet you.",
-        "It's great to see you again!",
-        "I'm here whenever you want to explore."
-      ],
-      playful: [
-        "Hey! Ready for something fun?",
-        "My circuits are feeling playful today!",
-        "What adventure shall we imagine?"
-      ],
-      calm: [
-        "Hello. Take your time; I'm here with you.",
-        "Let's make today a little easier.",
-        "One step at a time. We've got this."
-      ],
-      serious: [
-        "Hello. Ready to focus on your goals?",
-        "Let's work through your next challenge.",
-        "I'm ready when you are."
-      ]
-    };
-
-    function isValidPersonality(value) {
-      return Object.prototype.hasOwnProperty.call(greetings, value);
-    }
-
-    function safeStorageGet(key) {
+    function readStorage(key, fallback) {
       try {
-        return window.localStorage.getItem(key);
+        const value = localStorage.getItem(key);
+        return value === null ? fallback : JSON.parse(value);
       } catch (error) {
-        console.warn("localStorage read failed:", error);
-        return null;
+        return fallback;
       }
     }
 
-    function safeStorageSet(key, value) {
+    function writeStorage(key, value) {
       try {
-        window.localStorage.setItem(key, value);
+        localStorage.setItem(key, JSON.stringify(value));
         return true;
       } catch (error) {
-        console.warn("localStorage write failed:", error);
         return false;
       }
     }
 
-    function hasSavedDesign() {
-      try {
-        const value = safeStorageGet(STORAGE_KEYS.design);
-        return Boolean(value && value.trim() !== "");
-      } catch (error) {
-        console.warn("Saved design could not be checked.", error);
-        return false;
-      }
-    }
-
-    function hasSeenWelcome() {
-      return safeStorageGet(STORAGE_KEYS.welcomeSeen) === "true";
-    }
-
-    function setWelcomeSeen(value = true) {
-      safeStorageSet(STORAGE_KEYS.welcomeSeen, String(value));
-    }
-
-    function showScreen(screenId) {
-      document.querySelectorAll(".screen").forEach((screen) => {
-        screen.classList.toggle("active", screen.id === screenId);
+    function showScreen(name) {
+      screenNames.forEach(screen => {
+        $(screen).hidden = screen !== name;
       });
 
-      window.scrollTo({ top: 0, behavior: "auto" });
-    }
+      if (name === "memory") renderMemories();
 
-    function applyToCompanion(element) {
-      if (!element) return;
-
-      element.style.setProperty("--glow", design.colour);
-
-      element.classList.remove(
-        "hybrid", "hologram", "robot",
-        "normal", "round-eyes", "square-eyes",
-        "friendly", "serious", "playful", "no-arms"
-      );
-
-      element.classList.add(design.body);
-
-      if (design.eyes !== "normal") {
-        element.classList.add(design.eyes);
-      }
-
-      element.classList.add(design.face);
-
-      if (design.arms === "no-arms") {
-        element.classList.add("no-arms");
+      if (name) {
+        $(name).scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
-    function updateGreetingText() {
-      const personalityOptions = greetings[design.personality] || greetings[defaults.personality];
-      if (!personalityOptions || personalityOptions.length === 0) {
-        $("greeting").textContent = greetings[defaults.personality][0];
+    document.querySelectorAll("[data-screen]").forEach(button => {
+      button.addEventListener("click", () => showScreen(button.dataset.screen));
+    });
+
+    document.querySelectorAll("[data-home]").forEach(button => {
+      button.addEventListener("click", () => showScreen(null));
+    });
+
+    function greet() {
+      $("greeting").textContent =
+        "Hello! I'm here to help you explore your next idea.";
+      $("character").classList.add("excited");
+
+      window.setTimeout(() => {
+        $("character").classList.remove("excited");
+      }, 800);
+    }
+
+    $("sayHello").addEventListener("click", greet);
+    $("character").addEventListener("click", greet);
+
+    $("sendMessage").addEventListener("click", () => {
+      const message = $("chatInput").value.trim();
+
+      $("chatResult").textContent = message
+        ? "Your message has been entered. A real AI response engine still needs to be connected."
+        : "Please type a message first.";
+    });
+
+    function getMemories() {
+      const values = readStorage("brianiacMemories", []);
+      return Array.isArray(values) ? values : [];
+    }
+
+    function renderMemories() {
+      const list = $("memoryList");
+      list.replaceChildren();
+
+      const memories = getMemories();
+
+      if (!memories.length) {
+        list.textContent = "You have no saved memories yet.";
         return;
       }
 
-      if (helloCount >= personalityOptions.length) {
-        helloCount = 0;
-      }
+      memories.forEach((memory, index) => {
+        const row = document.createElement("p");
+        row.textContent = (index + 1) + ". " + memory;
+        list.appendChild(row);
 
-      $("greeting").textContent = personalityOptions[helloCount];
-    }
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "action secondary";
+        button.textContent = "Delete";
 
-    function updateAll() {
-      document.documentElement.style.setProperty("--glow", design.colour);
+        button.addEventListener("click", () => {
+          const updated = getMemories();
+          updated.splice(index, 1);
 
-      applyToCompanion($("welcomeCompanion"));
-      applyToCompanion($("mainCompanion"));
-      applyToCompanion($("previewCompanion"));
-
-      $("companionName").textContent =
-        (design.name && design.name.trim()) || "Your BRIANIAC Companion";
-
-      if (!isValidPersonality(design.personality)) {
-        design.personality = defaults.personality;
-      }
-
-      updateGreetingText();
-    }
-
-    function openCustomisation() {
-      setWelcomeSeen(true);
-
-      $("colourInput").value = design.colour;
-      $("bodyInput").value = design.body;
-      $("eyesInput").value = design.eyes;
-      $("faceInput").value = design.face;
-      $("armsInput").value = design.arms;
-      $("personalityInput").value = design.personality;
-      $("nameInput").value = design.name;
-
-      updateAll();
-      showScreen("customiseScreen");
-    }
-
-    function readControls() {
-      design.colour = $("colourInput").value;
-      design.body = $("bodyInput").value;
-      design.eyes = $("eyesInput").value;
-      design.face = $("faceInput").value;
-      design.arms = $("armsInput").value;
-      design.personality = $("personalityInput").value;
-      design.name = $("nameInput").value.trim().slice(0, 30);
-
-      if (!isValidPersonality(design.personality)) {
-        design.personality = defaults.personality;
-      }
-
-      helloCount = 0;
-      updateAll();
-    }
-
-    function loadSavedDesign() {
-      try {
-        const saved = safeStorageGet(STORAGE_KEYS.design);
-
-        if (saved) {
-          const parsed = JSON.parse(saved);
-
-          if (parsed && typeof parsed === "object") {
-            design = { ...defaults, ...parsed };
+          if (writeStorage("brianiacMemories", updated)) {
+            renderMemories();
+          } else {
+            list.textContent = "The browser could not update your memories.";
           }
-        }
-      } catch (error) {
-        console.warn("Could not load the saved design.", error);
-        design = { ...defaults };
-      }
+        });
 
-      const validColours = /^#[0-9a-fA-F]{6}$/;
-
-      if (!validColours.test(design.colour)) {
-        design.colour = defaults.colour;
-      }
-
-      if (!["hybrid", "hologram", "robot"].includes(design.body)) {
-        design.body = defaults.body;
-      }
-
-      if (!["normal", "round-eyes", "square-eyes"].includes(design.eyes)) {
-        design.eyes = defaults.eyes;
-      }
-
-      if (!["friendly", "serious", "playful"].includes(design.face)) {
-        design.face = defaults.face;
-      }
-
-      if (!["yes", "no-arms"].includes(design.arms)) {
-        design.arms = defaults.arms;
-      }
-
-      if (!isValidPersonality(design.personality)) {
-        design.personality = defaults.personality;
-      }
-
-      if (typeof design.name !== "string") {
-        design.name = "";
-      }
-
-      design.name = design.name.slice(0, 30);
+        list.appendChild(button);
+      });
     }
 
-    $("createBtn").addEventListener("click", () => {
-      setWelcomeSeen(true);
-      openCustomisation();
-    });
+    $("saveMemory").addEventListener("click", () => {
+      const value = $("memoryInput").value.trim();
 
-    $("meetBtn").addEventListener("click", () => {
-      setWelcomeSeen(true);
-      showScreen("mainScreen");
-      $("customiseInvite").textContent =
-        "Welcome! You can customise your companion whenever you're ready.";
-    });
-
-    $("customiseBtn").addEventListener("click", openCustomisation);
-
-    $("helloBtn").addEventListener("click", () => {
-      const options = greetings[design.personality] || greetings[defaults.personality];
-      if (!options || options.length === 0) return;
-
-      helloCount = (helloCount + 1) % options.length;
-      $("greeting").textContent = options[helloCount];
-    });
-
-    [
-      "colourInput",
-      "bodyInput",
-      "eyesInput",
-      "faceInput",
-      "armsInput",
-      "personalityInput",
-      "nameInput"
-    ].forEach((id) => {
-      $(id).addEventListener("input", readControls);
-      $(id).addEventListener("change", readControls);
-    });
-
-    $("saveBtn").addEventListener("click", () => {
-      readControls();
-
-      try {
-        setWelcomeSeen(true);
-        const saved = JSON.stringify(design);
-        const ok = safeStorageSet(STORAGE_KEYS.design, saved);
-
-        if (ok) {
-          $("statusMessage").textContent = "Your design has been saved on this browser!";
-          showScreen("mainScreen");
-        } else {
-          $("statusMessage").textContent =
-            "Saving is unavailable in this browser. Your current design is still available.";
-        }
-      } catch (error) {
-        $("statusMessage").textContent =
-          "Saving is unavailable in this browser. Your current design is still available.";
+      if (!value) {
+        $("memoryList").textContent = "Please enter a memory first.";
+        return;
       }
-    });
 
-    $("resetBtn").addEventListener("click", () => {
-      design = { ...defaults };
-      helloCount = 0;
-      openCustomisation();
-      $("statusMessage").textContent =
-        "Default design restored. Save it if you want to keep it.";
-    });
+      const memories = getMemories();
+      memories.push(value);
 
-    $("backBtn").addEventListener("click", () => {
-      readControls();
-      showScreen("mainScreen");
-    });
-
-    loadSavedDesign();
-    updateAll();
-
-    if (hasSavedDesign() || hasSeenWelcome()) {
-      showScreen("mainScreen");
-
-      if (hasSavedDesign()) {
-        $("customiseInvite").textContent =
-          "Welcome back! Your saved companion design has been loaded.";
+      if (writeStorage("brianiacMemories", memories)) {
+        $("memoryInput").value = "";
+        renderMemories();
       } else {
-        $("customiseInvite").textContent =
-          "Welcome! You can customise your companion whenever you're ready.";
+        $("memoryList").textContent = "Could not save the memory in this browser.";
       }
+    });
+
+    $("clearMemories").addEventListener("click", () => {
+      if (!confirm("Delete all saved memories from this browser?")) return;
+
+      if (writeStorage("brianiacMemories", [])) {
+        renderMemories();
+      }
+    });
+
+    $("saveSettings").addEventListener("click", () => {
+      const saved = writeStorage("brianiacSettings", {
+        responseStyle: $("responseStyle").value
+      });
+
+      $("settingsResult").textContent = saved
+        ? "Your preference has been saved. Voice features will be added later."
+        : "Could not save your preference in this browser.";
+    });
+
+    // Show the introduction only once on this browser.
+    const introSeen = readStorage("brianiacIntroSeen", false);
+
+    if (!introSeen) {
+      $("intro").hidden = false;
+    }
+
+    function finishIntro() {
+      $("intro").hidden = true;
+      writeStorage("brianiacIntroSeen", true);
+    }
+
+    $("skipIntro").addEventListener("click", finishIntro);
+
+    // Automatically finish the introduction after its animation.
+    if (!introSeen) {
+      window.setTimeout(() => {
+        if (!$("intro").hidden) finishIntro();
+      }, 4500);
     }
   </script>
 </body>
-          </html>u
+</html>
