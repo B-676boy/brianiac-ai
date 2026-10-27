@@ -1,462 +1,611 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050b1c">
   <title>BRIANIAC AI</title>
 
   <style>
     :root {
       --blue: #36cfff;
-      --background: #050b1c;
-      --panel: #101e38;
-      --text: #f3f8ff;
-      --muted: #a9bad4;
+      --bg: #050816;
+      --panel: #101a32;
+      --text: #f4f8ff;
+      --muted: #aab8d3;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      color: var(--text);
-      background:
-        radial-gradient(ellipse at 50% 35%, #123361 0%, transparent 48%),
-        var(--background);
       font-family: Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(
+        circle at 50% 25%,
+        #14264a 0%,
+        var(--bg) 55%
+      );
     }
 
-    button, input, textarea, select { font: inherit; }
-
-    button { cursor: pointer; }
-
-    .app {
-      width: min(100%, 760px);
-      min-height: 100vh;
-      margin: auto;
-      padding: 22px 18px 35px;
+    button, input, select, textarea {
+      font: inherit;
     }
 
-    header {
+    button {
+      cursor: pointer;
+    }
+
+    .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding-bottom: 17px;
-      border-bottom: 1px solid #243b5c;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.09);
     }
 
     .brand {
       color: var(--blue);
+      font-size: 19px;
       font-weight: 800;
       letter-spacing: 2px;
-      font-size: 20px;
+      text-shadow: 0 0 12px var(--blue);
     }
 
-    .status {
-      color: #83f5c1;
-      font-size: 12px;
+    .menu-button, .secondary-button {
+      color: var(--text);
+      background: #182441;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    .menu {
+      display: none;
+      gap: 8px;
+      padding: 12px 20px;
+      flex-wrap: wrap;
+      background: rgba(5,8,22,.95);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .menu.open {
+      display: flex;
+    }
+
+    .menu button {
+      color: var(--text);
+      background: #14213d;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      padding: 10px 13px;
+    }
+
+    main {
+      width: min(100% - 32px, 760px);
+      margin: 0 auto;
+      padding: 30px 0 55px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
     }
 
     .hero {
       text-align: center;
-      padding: 35px 0 22px;
+      padding: 15px 0 25px;
+    }
+
+    .character-brand {
+      color: var(--blue);
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 800;
+      letter-spacing: 4px;
+      margin: 0 0 24px;
+      text-shadow: 0 0 15px var(--blue);
     }
 
     .character-area {
-      height: 225px;
-      width: 225px;
-      margin: 0 auto 15px;
-      display: grid;
-      place-items: center;
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 25px;
+      width: min(100%, 330px);
+      aspect-ratio: 1;
     }
 
     .orbit {
       position: absolute;
-      width: 220px;
-      height: 220px;
-      border: 1px solid #36cfff55;
+      width: 92%;
+      height: 92%;
+      border: 1px solid rgba(54,207,255,.35);
       border-radius: 50%;
-      animation: orbit 14s linear infinite;
+      box-shadow: 0 0 30px rgba(54,207,255,.12);
+      animation: orbit 12s linear infinite;
     }
 
-    .orbit::before {
+    .orbit::before, .orbit::after {
       content: "";
       position: absolute;
-      top: 24px;
-      left: 28px;
       width: 9px;
       height: 9px;
-      border-radius: 50%;
       background: var(--blue);
+      border-radius: 50%;
       box-shadow: 0 0 15px var(--blue);
     }
 
-    .character {
-      width: 142px;
-      height: 142px;
-      border: 2px solid #91edff;
-      border-radius: 45% 45% 48% 48%;
-      background: radial-gradient(circle at 30% 25%, #9af2ff, #258fff 35%, #06377f 80%);
-      box-shadow: 0 0 28px #168cff, 0 0 70px #087cff66;
-      animation: float 3s ease-in-out infinite;
-      transition: transform .2s, box-shadow .2s;
-      position: relative;
+    .orbit::before {
+      top: 12%;
+      left: 15%;
     }
 
-    .character.excited {
-      transform: scale(1.1);
-      box-shadow: 0 0 40px #36cfff, 0 0 90px #087cff;
+    .orbit::after {
+      right: 8%;
+      bottom: 25%;
+    }
+
+    .character {
+      width: 70%;
+      height: 70%;
+      border: 2px solid var(--blue);
+      border-radius: 50%;
+      background: radial-gradient(
+        circle at 35% 25%,
+        #203e69,
+        #0b1430 65%
+      );
+      box-shadow:
+        0 0 25px var(--blue),
+        inset 0 0 35px rgba(54,207,255,.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: float 3s ease-in-out infinite;
+      position: relative;
     }
 
     .eyes {
       display: flex;
       justify-content: center;
-      gap: 28px;
-      padding-top: 42px;
+      gap: 34px;
+      margin-bottom: 22px;
     }
 
     .eye {
       width: 19px;
-      height: 24px;
+      height: 29px;
       border-radius: 50%;
-      background: white;
-      box-shadow: 0 0 12px white;
+      background: var(--blue);
+      box-shadow: 0 0 15px var(--blue);
+      animation: blink 5s infinite;
     }
 
     .mouth {
-      width: 29px;
-      height: 13px;
-      margin: 17px auto 0;
-      border-bottom: 4px solid white;
+      width: 45px;
+      height: 17px;
+      border-bottom: 4px solid var(--blue);
       border-radius: 0 0 50% 50%;
+      filter: drop-shadow(0 0 6px var(--blue));
+    }
+        h1 {
+      font-size: clamp(25px, 6vw, 35px);
+      margin: 15px 0 10px;
     }
 
-    h1 {
-      font-size: clamp(27px, 6vw, 37px);
-      margin: 10px 0;
-    }
-
-    h1 span { color: var(--blue); }
-
-    .description {
-      max-width: 430px;
-      margin: auto;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    #greeting {
-      min-height: 24px;
-      margin-top: 15px;
-      color: #b9eaff;
-      font-size: 14px;
-    }
-
-    .primary {
-      padding: 12px 22px;
-      margin-top: 15px;
-      border: 1px solid var(--blue);
-      border-radius: 12px;
-      color: #041426;
-      background: var(--blue);
-      font-weight: bold;
-    }
-
-    .section-title {
-      font-size: 17px;
-      margin: 20px 0 13px;
-    }
-
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 13px;
-    }
-
-    .menu-button {
-      min-height: 112px;
-      padding: 16px;
-      color: var(--text);
-      text-align: left;
-      background: #101e38dd;
-      border: 1px solid #355477;
-      border-radius: 16px;
-      transition: border-color .2s, transform .2s;
-    }
-
-    .menu-button:hover, .menu-button:focus-visible {
-      border-color: var(--blue);
-      transform: translateY(-2px);
-      outline: none;
-    }
-
-    .icon {
-      display: block;
-      font-size: 25px;
-      margin-bottom: 9px;
-    }
-
-    .menu-button strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .menu-button small {
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .screen {
-      margin-top: 20px;
-      padding: 20px;
-      border: 1px solid #355477;
-      border-radius: 16px;
-      background: #0b1730;
-    }
-
-    .screen[hidden] { display: none; }
-
-    .screen h2 { color: var(--blue); }
-
-    .screen p {
+    .subtitle {
       color: var(--muted);
       line-height: 1.6;
+      margin: 0 auto 22px;
+      max-width: 520px;
     }
 
-    .screen input, .screen textarea, .screen select {
+    .primary-button {
+      color: #04101b;
+      background: var(--blue);
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font-weight: 800;
+      box-shadow: 0 0 18px rgba(54,207,255,.22);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .panel {
+      background: rgba(16,26,50,.9);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+    }
+
+    .field {
+      margin: 18px 0;
+    }
+
+    .field label {
       display: block;
-      width: 100%;
-      margin: 12px 0;
-      padding: 12px;
-      color: white;
-      background: #071226;
-      border: 1px solid #355477;
-      border-radius: 9px;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
 
-    .screen textarea {
-      min-height: 90px;
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      color: var(--text);
+      background: #081126;
+      border: 1px solid #334464;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .field input[type="color"] {
+      height: 48px;
+      padding: 4px;
+    }
+
+    .field textarea {
+      min-height: 100px;
       resize: vertical;
     }
 
-    .action {
-      padding: 11px 15px;
-      margin: 5px 5px 5px 0;
-      color: white;
-      background: #0755a8;
-      border: 1px solid var(--blue);
-      border-radius: 9px;
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
     }
 
-    .secondary { background: transparent; }
+    .chat-log,
+    .memory-list {
+      display: grid;
+      gap: 10px;
+      margin: 15px 0;
+    }
 
-    .result {
-      white-space: pre-wrap;
+    .chat-message,
+    .memory-item {
+      background: #0a142b;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 12px;
+      line-height: 1.5;
       overflow-wrap: anywhere;
-      color: #c4edff;
-      line-height: 1.6;
+    }
+
+    .chat-message strong {
+      color: var(--blue);
+    }
+
+    .status {
+      color: var(--muted);
       font-size: 14px;
+      min-height: 20px;
+      margin-top: 10px;
+    }
+
+    .intro {
+      text-align: center;
+      padding: 45px 10px;
+    }
+
+    .intro .character-area {
+      width: min(100%, 250px);
     }
 
     footer {
-      margin-top: 30px;
+      color: #8796b4;
       text-align: center;
-      color: #7f94b5;
-      font-size: 12px;
-    }
-
-    /* First-time introduction */
-    .intro {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
-      background: #030817;
-    }
-
-    .intro[hidden] { display: none; }
-
-    .intro-light {
-      width: 18px;
-      height: 18px;
-      margin-bottom: 28px;
-      border-radius: 50%;
-      background: white;
-      box-shadow: 0 0 20px #36cfff, 0 0 60px #168cff, 0 0 110px #087cff;
-      animation: form 2s ease-in-out forwards;
-    }
-
-    .intro h1 {
-      opacity: 0;
-      animation: appear 1s ease 1.4s forwards;
-    }
-
-    .intro p {
-      max-width: 420px;
-      color: var(--muted);
-      line-height: 1.7;
-      opacity: 0;
-      animation: appear 1s ease 2s forwards;
-    }
-
-    .skip {
-      position: absolute;
-      top: 20px;
-      right: 18px;
-      padding: 10px 15px;
-      color: white;
-      background: transparent;
-      border: 1px solid #54718f;
-      border-radius: 10px;
+      font-size: 13px;
+      padding: 25px 15px;
     }
 
     @keyframes float {
-      0%, 100% { translate: 0 0; }
-      50% { translate: 0 -9px; }
+      0%, 100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-9px);
+      }
     }
 
     @keyframes orbit {
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
-    @keyframes form {
-      0% { transform: scale(.3); opacity: .3; }
-      50% { transform: scale(5); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
+    @keyframes blink {
+      0%, 44%, 48%, 100% {
+        transform: scaleY(1);
+      }
 
-    @keyframes appear {
-      to { opacity: 1; }
-    }
-
-    @media (max-width: 380px) {
-      .app { padding-left: 13px; padding-right: 13px; }
-      .menu-button { padding: 12px; }
+      46% {
+        transform: scaleY(.12);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: .01ms !important;
         animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <section class="intro" id="intro" hidden>
-    <button class="skip" id="skipIntro" type="button">Skip introduction</button>
-    <div class="intro-light" aria-hidden="true"></div>
-    <h1>Meet <span style="color:#36cfff">BRIANIAC AI</span></h1>
-    <p>
-      Hello! I'm BRIANIAC AI, your personal AI companion.
-      I'm here to learn, grow, and explore with you.
-    </p>
-  </section>
+  <header class="topbar">
+    <div class="brand" id="brand">BRIANIAC AI</div>
 
-  <main class="app">
-    <header>
-      <div class="brand">BRIANIAC AI</div>
-      <div class="status">Ready to explore</div>
-    </header>
+    <button class="menu-button" id="menuToggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu">
+      ☰ Menu
+    </button>
+  </header>
 
-    <section class="hero">
+  <nav class="menu" id="menu" aria-label="Main menu">
+    <button type="button" data-screen="home">Home</button>
+    <button type="button" data-screen="chat">Chat</button>
+    <button type="button" data-screen="memory">Memory</button>
+    <button type="button" data-screen="personalise">Personalise</button>
+    <button type="button" data-screen="settings">Settings</button>
+  </nav>
+
+  <main>
+        <section class="screen intro" id="intro">
+      <div class="character-brand">BRIANIAC AI</div>
+
       <div class="character-area">
-        <div class="orbit" aria-hidden="true"></div>
-        <button class="character" id="character" type="button"
-                aria-label="Tap to interact with BRIANIAC AI">
-          <span class="eyes" aria-hidden="true">
-            <span class="eye"></span>
-            <span class="eye"></span>
-          </span>
-          <span class="mouth" aria-hidden="true"></span>
-        </button>
+        <div class="orbit"></div>
+        <div class="character">
+          <div class="eyes">
+            <div class="eye"></div>
+            <div class="eye"></div>
+          </div>
+          <div class="mouth"></div>
+        </div>
       </div>
 
-      <h1>Hello, I'm <span>BRIANIAC AI</span></h1>
-      <p class="description">
-        Your personal AI companion. Think, explore, create,
-        and grow with a little help along the way.
+      <h1>Meet BRIANIAC AI</h1>
+      <p class="subtitle">
+        Your digital companion is ready to begin.
       </p>
 
-      <div id="greeting" aria-live="polite">Your next idea starts here.</div>
+      <div class="button-row">
+        <button class="primary-button" id="startButton" type="button">
+          Let's Begin
+        </button>
 
-      <button class="primary" id="sayHello" type="button">Say Hello!</button>
+        <button class="secondary-button" id="skipIntro" type="button">
+          Skip
+        </button>
+      </div>
     </section>
 
-    <h2 class="section-title">Your space</h2>
+    <section class="screen" id="home">
+      <div class="hero">
+        <h2 class="character-brand">BRIANIAC AI</h2>
 
-    <nav class="menu" aria-label="Main menu">
-      <button class="menu-button" data-screen="chat" type="button">
-        <span class="icon" aria-hidden="true">💬</span>
-        <strong>Chat</strong>
-        <small>Start a conversation.</small>
-      </button>
+        <div class="character-area">
+          <div class="orbit"></div>
 
-      <button class="menu-button" data-screen="memory" type="button">
-        <span class="icon" aria-hidden="true">🧠</span>
-        <strong>Memory</strong>
-        <small>Manage information you save.</small>
-      </button>
+          <div class="character" id="character">
+            <div class="eyes">
+              <div class="eye"></div>
+              <div class="eye"></div>
+            </div>
+            <div class="mouth"></div>
+          </div>
+        </div>
 
-      <button class="menu-button" data-screen="settings" type="button">
-        <span class="icon" aria-hidden="true">⚙️</span>
-        <strong>Settings</strong>
-        <small>Choose your preferences.</small>
-      </button>
-    </nav>
+        <h1>Hello, I'm <span id="heroName">BRIANIAC AI</span></h1>
 
-    <section class="screen" id="chat" hidden>
-      <h2>Chat</h2>
-      <p>This is the starting chat interface. A real AI engine has not been connected yet.</p>
-      <label for="chatInput">Your message</label>
-      <textarea id="chatInput" placeholder="Type your message..."></textarea>
-      <button class="action" id="sendMessage" type="button">Send</button>
-      <button class="action secondary" data-home type="button">Back home</button>
-      <div class="result" id="chatResult" aria-live="polite"></div>
+        <p class="subtitle" id="homeSubtitle">
+          Your digital companion is ready.
+          Let's build something awesome.
+        </p>
+
+        <div class="button-row">
+          <button class="primary-button" id="sayHello" type="button">
+            Say Hello!
+          </button>
+
+          <button class="secondary-button" type="button" data-screen="chat">
+            Open Chat
+          </button>
+        </div>
+
+        <p class="status" id="homeStatus" aria-live="polite"></p>
+      </div>
     </section>
 
-    <section class="screen" id="memory" hidden>
-      <h2>Memory</h2>
-      <p>Save notes in this browser. These notes are not synced to an online account.</p>
-      <label for="memoryInput">What should I remember?</label>
-      <textarea id="memoryInput" placeholder="Enter a preference or useful detail..."></textarea>
-      <button class="action" id="saveMemory" type="button">Save memory</button>
-      <button class="action secondary" id="clearMemories" type="button">Delete all</button>
-      <button class="action secondary" data-home type="button">Back home</button>
-      <h3>Saved memories</h3>
-      <div class="result" id="memoryList" aria-live="polite"></div>
+    <section class="screen" id="chat">
+      <div class="panel">
+        <h2>Chat with <span id="chatName">BRIANIAC AI</span></h2>
+
+        <p class="muted">
+          This is the first version of the chat interface.
+          It currently uses simple local responses and is not
+          connected to an online AI model yet.
+        </p>
+
+        <div class="chat-log" id="chatLog" aria-live="polite">
+          <div class="chat-message">
+            <strong>BRIANIAC AI:</strong>
+            Hello! What would you like to talk about?
+          </div>
+        </div>
+
+        <form id="chatForm">
+          <div class="field">
+            <label for="chatInput">Your message</label>
+
+            <textarea id="chatInput"
+              placeholder="Type your message here..."
+              required></textarea>
+          </div>
+
+          <button class="primary-button" type="submit">
+            Send Message
+          </button>
+        </form>
+
+        <p class="status" id="chatStatus" aria-live="polite"></p>
+      </div>
+    </section>
+        <section class="screen" id="memory">
+      <div class="panel">
+        <h2>Memory</h2>
+
+        <p class="muted">
+          Save notes in this browser. They stay on this device
+          and are not automatically shared with an online AI model.
+          Avoid storing passwords or sensitive information here.
+        </p>
+
+        <form id="memoryForm">
+          <div class="field">
+            <label for="memoryInput">Something to remember</label>
+            <textarea id="memoryInput"
+              placeholder="Write a note..."
+              required></textarea>
+          </div>
+
+          <button class="primary-button" type="submit">
+            Save Memory
+          </button>
+        </form>
+
+        <div class="memory-list" id="memoryList"></div>
+
+        <button class="secondary-button" id="clearMemory" type="button">
+          Clear All Memories
+        </button>
+
+        <p class="status" id="memoryStatus" aria-live="polite"></p>
+      </div>
     </section>
 
-    <section class="screen" id="settings" hidden>
-      <h2>Settings</h2>
-      <label for="responseStyle">Response preference</label>
-      <select id="responseStyle">
-        <option value="both">Text and voice (voice coming later)</option>
-        <option value="text">Text only</option>
-        <option value="voice">Voice when available</option>
-      </select>
-      <button class="action" id="saveSettings" type="button">Save settings</button>
-      <button class="action secondary" data-home type="button">Back home</button>
-      <div class="result" id="settingsResult" aria-live="polite"></div>
+    <section class="screen" id="personalise">
+      <div class="panel">
+        <h2>Personalise Your Companion</h2>
+
+        <p class="muted">
+          Change your companion's display name and glow colour.
+          The BRIANIAC AI label above the character will stay the same.
+        </p>
+
+        <form id="personaliseForm">
+          <div class="field">
+            <label for="assistantName">Companion display name</label>
+            <input id="assistantName"
+              type="text"
+              placeholder="Enter a name"
+              maxlength="40"
+              required>
+          </div>
+
+          <div class="field">
+            <label for="assistantColor">Character glow colour</label>
+            <input id="assistantColor" type="color" value="#36cfff">
+          </div>
+
+          <button class="primary-button" type="submit">
+            Save Personalisation
+          </button>
+
+          <button class="secondary-button" id="resetAppearance" type="button">
+            Reset
+          </button>
+        </form>
+
+        <p class="status" id="personaliseStatus" aria-live="polite"></p>
+      </div>
     </section>
 
-    <footer>BRIANIAC AI · Your ideas, your companion.</footer>
+    <section class="screen" id="settings">
+      <div class="panel">
+        <h2>Settings</h2>
+
+        <p class="muted">
+          Choose how the demo assistant phrases its replies.
+        </p>
+
+        <form id="settingsForm">
+          <div class="field">
+            <label for="responseStyle">Response style</label>
+
+            <select id="responseStyle">
+              <option value="friendly">Friendly</option>
+              <option value="professional">Professional</option>
+              <option value="concise">Concise</option>
+            </select>
+          </div>
+
+          <button class="primary-button" type="submit">
+            Save Settings
+          </button>
+        </form>
+
+        <p class="status" id="settingsStatus" aria-live="polite"></p>
+
+        <hr style="border-color:rgba(255,255,255,.12); margin:24px 0;">
+
+        <h3>About BRIANIAC AI</h3>
+
+        <p class="muted">
+          BRIANIAC AI is your personal digital companion project.
+          This version provides the interface and basic demo replies.
+          A real AI model can be connected in a later version.
+        </p>
+      </div>
+    </section>
   </main>
 
-  <script>
-    const $ = id => document.getElementById(id);
-    const screenNames = ["chat", "memory", "settings"];
+  <footer>
+    BRIANIAC AI · Your project, one step at a time.
+  </footer>
+    <script>
+    const DEFAULT_APPEARANCE = {
+      name: "BRIANIAC AI",
+      color: "#36cfff"
+    };
+
+    const APPEARANCE_KEY = "brianiacAppearance";
+    const INTRO_KEY = "brianiacIntroSeen";
+    const MEMORY_KEY = "brianiacMemories";
+    const SETTINGS_KEY = "brianiacSettings";
+
+    const screens = document.querySelectorAll(".screen");
+    const menu = document.getElementById("menu");
+    const menuToggle = document.getElementById("menuToggle");
 
     function readStorage(key, fallback) {
       try {
@@ -476,147 +625,336 @@
       }
     }
 
-    function showScreen(name) {
-      screenNames.forEach(screen => {
-        $(screen).hidden = screen !== name;
-      });
+    function showScreen(screenName) {
+      const target = document.getElementById(screenName);
+      if (!target) return;
 
-      if (name === "memory") renderMemories();
+      screens.forEach(screen => screen.classList.remove("active"));
+      target.classList.add("active");
 
-      if (name) {
-        $(name).scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+      menu.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     document.querySelectorAll("[data-screen]").forEach(button => {
-      button.addEventListener("click", () => showScreen(button.dataset.screen));
+      button.addEventListener("click", () => {
+        showScreen(button.dataset.screen);
+      });
     });
 
-    document.querySelectorAll("[data-home]").forEach(button => {
-      button.addEventListener("click", () => showScreen(null));
+    menuToggle.addEventListener("click", () => {
+      const isOpen = menu.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
     });
 
-    function greet() {
-      $("greeting").textContent =
-        "Hello! I'm here to help you explore your next idea.";
-      $("character").classList.add("excited");
+    function startApp() {
+      try {
+        localStorage.setItem(INTRO_KEY, "true");
+      } catch (error) {}
 
-      window.setTimeout(() => {
-        $("character").classList.remove("excited");
-      }, 800);
+      showScreen("home");
     }
 
-    $("sayHello").addEventListener("click", greet);
-    $("character").addEventListener("click", greet);
+    document.getElementById("startButton")
+      .addEventListener("click", startApp);
 
-    $("sendMessage").addEventListener("click", () => {
-      const message = $("chatInput").value.trim();
+    document.getElementById("skipIntro")
+      .addEventListener("click", startApp);
 
-      $("chatResult").textContent = message
-        ? "Your message has been entered. A real AI response engine still needs to be connected."
-        : "Please type a message first.";
-    });
+    function getAppearance() {
+      const saved = readStorage(
+        APPEARANCE_KEY,
+        DEFAULT_APPEARANCE
+      );
+
+      return {
+        name: typeof saved.name === "string" && saved.name.trim()
+          ? saved.name.trim()
+          : DEFAULT_APPEARANCE.name,
+
+        color: saved && /^#[0-9a-fA-F]{6}$/.test(saved.color)
+          ? saved.color
+          : DEFAULT_APPEARANCE.color
+      };
+    }
+
+    function applyAppearance(appearance) {
+      const safeName = appearance.name || DEFAULT_APPEARANCE.name;
+
+      const safeColor = /^#[0-9a-fA-F]{6}$/.test(appearance.color)
+        ? appearance.color
+        : DEFAULT_APPEARANCE.color;
+
+      document.documentElement.style.setProperty(
+        "--blue",
+        safeColor
+      );
+
+      document.getElementById("brand").textContent = "BRIANIAC AI";
+      document.getElementById("heroName").textContent = safeName;
+      document.getElementById("chatName").textContent = safeName;
+      document.getElementById("assistantName").value = safeName;
+      document.getElementById("assistantColor").value = safeColor;
+    }
+
+    document.getElementById("personaliseForm")
+      .addEventListener("submit", event => {
+        event.preventDefault();
+
+        const name = document.getElementById("assistantName")
+          .value.trim();
+
+        const color = document.getElementById("assistantColor").value;
+
+        if (!name) {
+          document.getElementById("personaliseStatus").textContent =
+            "Please enter a name first.";
+          return;
+        }
+
+        const appearance = { name, color };
+        const saved = writeStorage(APPEARANCE_KEY, appearance);
+
+        applyAppearance(appearance);
+
+        document.getElementById("personaliseStatus").textContent =
+          saved
+            ? "Personalisation saved!"
+            : "Applied for this session, but browser storage is unavailable.";
+      });
+
+    document.getElementById("resetAppearance")
+      .addEventListener("click", () => {
+        writeStorage(APPEARANCE_KEY, DEFAULT_APPEARANCE);
+        applyAppearance(DEFAULT_APPEARANCE);
+
+        document.getElementById("personaliseStatus").textContent =
+          "Default appearance restored.";
+      });
+
+    document.getElementById("sayHello")
+      .addEventListener("click", () => {
+        const name = getAppearance().name;
+
+        document.getElementById("homeStatus").textContent =
+          "Hello from " + name +
+          "! I'm ready to help you build something awesome.";
+      });
 
     function getMemories() {
-      const values = readStorage("brianiacMemories", []);
-      return Array.isArray(values) ? values : [];
+      const memories = readStorage(MEMORY_KEY, []);
+      return Array.isArray(memories) ? memories : [];
     }
 
     function renderMemories() {
-      const list = $("memoryList");
+      const list = document.getElementById("memoryList");
       list.replaceChildren();
 
       const memories = getMemories();
 
-      if (!memories.length) {
-        list.textContent = "You have no saved memories yet.";
+      if (memories.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "muted";
+        empty.textContent = "No memories saved yet.";
+        list.appendChild(empty);
         return;
       }
 
       memories.forEach((memory, index) => {
-        const row = document.createElement("p");
-        row.textContent = (index + 1) + ". " + memory;
-        list.appendChild(row);
+        const item = document.createElement("div");
+        item.className = "memory-item";
 
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "action secondary";
-        button.textContent = "Delete";
+        const text = document.createElement("p");
+        text.textContent = memory;
+        item.appendChild(text);
 
-        button.addEventListener("click", () => {
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "secondary-button";
+        removeButton.textContent = "Delete";
+
+        removeButton.addEventListener("click", () => {
           const updated = getMemories();
           updated.splice(index, 1);
 
-          if (writeStorage("brianiacMemories", updated)) {
-            renderMemories();
-          } else {
-            list.textContent = "The browser could not update your memories.";
-          }
+          const saved = writeStorage(MEMORY_KEY, updated);
+          renderMemories();
+
+          document.getElementById("memoryStatus").textContent =
+            saved
+              ? "Memory deleted."
+              : "Could not update browser storage.";
         });
 
-        list.appendChild(button);
+        item.appendChild(removeButton);
+        list.appendChild(item);
       });
     }
 
-    $("saveMemory").addEventListener("click", () => {
-      const value = $("memoryInput").value.trim();
+    document.getElementById("memoryForm")
+      .addEventListener("submit", event => {
+        event.preventDefault();
 
-      if (!value) {
-        $("memoryList").textContent = "Please enter a memory first.";
-        return;
-      }
+        const input = document.getElementById("memoryInput");
+        const note = input.value.trim();
 
-      const memories = getMemories();
-      memories.push(value);
+        if (!note) return;
 
-      if (writeStorage("brianiacMemories", memories)) {
-        $("memoryInput").value = "";
+        const memories = getMemories();
+        memories.push(note);
+
+        const saved = writeStorage(MEMORY_KEY, memories);
+
+        input.value = "";
         renderMemories();
+
+        document.getElementById("memoryStatus").textContent =
+          saved
+            ? "Memory saved on this device."
+            : "Could not save. Browser storage may be unavailable.";
+      });
+
+    document.getElementById("clearMemory")
+      .addEventListener("click", () => {
+        if (!confirm("Are you sure you want to delete all saved memories?")) {
+          return;
+        }
+
+        const saved = writeStorage(MEMORY_KEY, []);
+        renderMemories();
+
+        document.getElementById("memoryStatus").textContent =
+          saved
+            ? "All memories cleared."
+            : "Could not update browser storage.";
+      });
+
+    function getSettings() {
+      const saved = readStorage(
+        SETTINGS_KEY,
+        { style: "friendly" }
+      );
+
+      const allowed = [
+        "friendly",
+        "professional",
+        "concise"
+      ];
+
+      return {
+        style: saved && allowed.includes(saved.style)
+          ? saved.style
+          : "friendly"
+      };
+    }
+
+    document.getElementById("settingsForm")
+      .addEventListener("submit", event => {
+        event.preventDefault();
+
+        const style = document.getElementById("responseStyle").value;
+        const saved = writeStorage(SETTINGS_KEY, { style });
+
+        document.getElementById("settingsStatus").textContent =
+          saved
+            ? "Settings saved."
+            : "Could not save settings in browser storage.";
+      });
+
+    function makeChatReply(message) {
+      const text = message.toLowerCase();
+      const style = getSettings().style;
+
+      let reply;
+
+      if (/\b(hello|hi|hey)\b/.test(text)) {
+        reply = "Hello! It's good to talk with you. What shall we work on?";
+      } else if (
+        text.includes("your name") ||
+        text.includes("who are you")
+      ) {
+        reply = "I'm " + getAppearance().name +
+          ", your BRIANIAC AI companion.";
+      } else if (text.includes("help")) {
+        reply = "Tell me what you're trying to do, and we can break it into smaller steps.";
+      } else if (text.includes("thank")) {
+        reply = "You're welcome! Let's keep building.";
       } else {
-        $("memoryList").textContent = "Could not save the memory in this browser.";
+        reply = "I received your message. This chat is currently a basic demo, so I don't have a real AI model connected yet.";
       }
-    });
 
-    $("clearMemories").addEventListener("click", () => {
-      if (!confirm("Delete all saved memories from this browser?")) return;
-
-      if (writeStorage("brianiacMemories", [])) {
-        renderMemories();
+      if (style === "concise") {
+        reply = reply.split(".")[0] + ".";
+      } else if (style === "professional") {
+        reply = "Thank you for your message. " + reply;
       }
-    });
 
-    $("saveSettings").addEventListener("click", () => {
-      const saved = writeStorage("brianiacSettings", {
-        responseStyle: $("responseStyle").value
+      return reply;
+    }
+
+    document.getElementById("chatForm")
+      .addEventListener("submit", event => {
+        event.preventDefault();
+
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        const log = document.getElementById("chatLog");
+
+        const userMessage = document.createElement("div");
+        userMessage.className = "chat-message";
+
+        const userLabel = document.createElement("strong");
+        userLabel.textContent = "You: ";
+
+        userMessage.appendChild(userLabel);
+        userMessage.appendChild(
+          document.createTextNode(message)
+        );
+
+        log.appendChild(userMessage);
+
+        const replyMessage = document.createElement("div");
+        replyMessage.className = "chat-message";
+
+        const assistantLabel = document.createElement("strong");
+        assistantLabel.textContent = getAppearance().name + ": ";
+
+        replyMessage.appendChild(assistantLabel);
+        replyMessage.appendChild(
+          document.createTextNode(makeChatReply(message))
+        );
+
+        log.appendChild(replyMessage);
+        input.value = "";
+
+        document.getElementById("chatStatus").textContent =
+          "Demo response generated. A real AI connection has not been added yet.";
+
+        replyMessage.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
       });
 
-      $("settingsResult").textContent = saved
-        ? "Your preference has been saved. Voice features will be added later."
-        : "Could not save your preference in this browser.";
-    });
+    applyAppearance(getAppearance());
 
-    // Show the introduction only once on this browser.
-    const introSeen = readStorage("brianiacIntroSeen", false);
+    document.getElementById("responseStyle").value =
+      getSettings().style;
 
-    if (!introSeen) {
-      $("intro").hidden = false;
-    }
+    renderMemories();
 
-    function finishIntro() {
-      $("intro").hidden = true;
-      writeStorage("brianiacIntroSeen", true);
-    }
+    let introSeen = false;
 
-    $("skipIntro").addEventListener("click", finishIntro);
+    try {
+      introSeen = localStorage.getItem(INTRO_KEY) === "true";
+    } catch (error) {}
 
-    // Automatically finish the introduction after its animation.
-    if (!introSeen) {
-      window.setTimeout(() => {
-        if (!$("intro").hidden) finishIntro();
-      }, 4500);
-    }
+    showScreen(introSeen ? "home" : "intro");
   </script>
 </body>
 </html>
