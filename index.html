@@ -2,621 +2,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#050b1c">
-  <title>BRIANIAC AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050b1c">
+<title>BRIANIAC AI</title>
 
-  <style>
-    :root {
-      --blue: #36cfff;
-      --background: #050b1c;
-      --panel: #101e38;
-      --text: #f3f8ff;
-      --muted: #a9bad4;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        radial-gradient(ellipse at 50% 35%, #123361 0%, transparent 48%),
-        var(--background);
-      font-family: Arial, sans-serif;
-    }
-
-    button, input, textarea, select { font: inherit; }
-
-    button { cursor: pointer; }
-
-    .app {
-      width: min(100%, 760px);
-      min-height: 100vh;
-      margin: auto;
-      padding: 22px 18px 35px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding-bottom: 17px;
-      border-bottom: 1px solid #243b5c;
-    }
-
-    .brand {
-      color: var(--blue);
-      font-weight: 800;
-      letter-spacing: 2px;
-      font-size: 20px;
-    }
-
-    .status {
-      color: #83f5c1;
-      font-size: 12px;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 35px 0 22px;
-    }
-
-    .character-area {
-      height: 225px;
-      width: 225px;
-      margin: 0 auto 15px;
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-
-    .orbit {
-      position: absolute;
-      width: 220px;
-      height: 220px;
-      border: 1px solid #36cfff55;
-      border-radius: 50%;
-      animation: orbit 14s linear infinite;
-    }
-
-    .orbit::before {
-      content: "";
-      position: absolute;
-      top: 24px;
-      left: 28px;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--blue);
-      box-shadow: 0 0 15px var(--blue);
-    }
-
-    .character {
-      width: 142px;
-      height: 142px;
-      border: 2px solid #91edff;
-      border-radius: 45% 45% 48% 48%;
-      background: radial-gradient(circle at 30% 25%, #9af2ff, #258fff 35%, #06377f 80%);
-      box-shadow: 0 0 28px #168cff, 0 0 70px #087cff66;
-      animation: float 3s ease-in-out infinite;
-      transition: transform .2s, box-shadow .2s;
-      position: relative;
-    }
-
-    .character.excited {
-      transform: scale(1.1);
-      box-shadow: 0 0 40px #36cfff, 0 0 90px #087cff;
-    }
-
-    .eyes {
-      display: flex;
-      justify-content: center;
-      gap: 28px;
-      padding-top: 42px;
-    }
-
-    .eye {
-      width: 19px;
-      height: 24px;
-      border-radius: 50%;
-      background: white;
-      box-shadow: 0 0 12px white;
-    }
-
-    .mouth {
-      width: 29px;
-      height: 13px;
-      margin: 17px auto 0;
-      border-bottom: 4px solid white;
-      border-radius: 0 0 50% 50%;
-    }
-
-    h1 {
-      font-size: clamp(27px, 6vw, 37px);
-      margin: 10px 0;
-    }
-
-    h1 span { color: var(--blue); }
-
-    .description {
-      max-width: 430px;
-      margin: auto;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    #greeting {
-      min-height: 24px;
-      margin-top: 15px;
-      color: #b9eaff;
-      font-size: 14px;
-    }
-
-    .primary {
-      padding: 12px 22px;
-      margin-top: 15px;
-      border: 1px solid var(--blue);
-      border-radius: 12px;
-      color: #041426;
-      background: var(--blue);
-      font-weight: bold;
-    }
-
-    .section-title {
-      font-size: 17px;
-      margin: 20px 0 13px;
-    }
-
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 13px;
-    }
-
-    .menu-button {
-      min-height: 112px;
-      padding: 16px;
-      color: var(--text);
-      text-align: left;
-      background: #101e38dd;
-      border: 1px solid #355477;
-      border-radius: 16px;
-      transition: border-color .2s, transform .2s;
-    }
-
-    .menu-button:hover, .menu-button:focus-visible {
-      border-color: var(--blue);
-      transform: translateY(-2px);
-      outline: none;
-    }
-
-    .icon {
-      display: block;
-      font-size: 25px;
-      margin-bottom: 9px;
-    }
-
-    .menu-button strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .menu-button small {
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .screen {
-      margin-top: 20px;
-      padding: 20px;
-      border: 1px solid #355477;
-      border-radius: 16px;
-      background: #0b1730;
-    }
-
-    .screen[hidden] { display: none; }
-
-    .screen h2 { color: var(--blue); }
-
-    .screen p {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .screen input, .screen textarea, .screen select {
-      display: block;
-      width: 100%;
-      margin: 12px 0;
-      padding: 12px;
-      color: white;
-      background: #071226;
-      border: 1px solid #355477;
-      border-radius: 9px;
-    }
-
-    .screen textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .action {
-      padding: 11px 15px;
-      margin: 5px 5px 5px 0;
-      color: white;
-      background: #0755a8;
-      border: 1px solid var(--blue);
-      border-radius: 9px;
-    }
-
-    .secondary { background: transparent; }
-
-    .result {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      color: #c4edff;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    footer {
-      margin-top: 30px;
-      text-align: center;
-      color: #7f94b5;
-      font-size: 12px;
-    }
-
-    /* First-time introduction */
-    .intro {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
-      background: #030817;
-    }
-
-    .intro[hidden] { display: none; }
-
-    .intro-light {
-      width: 18px;
-      height: 18px;
-      margin-bottom: 28px;
-      border-radius: 50%;
-      background: white;
-      box-shadow: 0 0 20px #36cfff, 0 0 60px #168cff, 0 0 110px #087cff;
-      animation: form 2s ease-in-out forwards;
-    }
-
-    .intro h1 {
-      opacity: 0;
-      animation: appear 1s ease 1.4s forwards;
-    }
-
-    .intro p {
-      max-width: 420px;
-      color: var(--muted);
-      line-height: 1.7;
-      opacity: 0;
-      animation: appear 1s ease 2s forwards;
-    }
-
-    .skip {
-      position: absolute;
-      top: 20px;
-      right: 18px;
-      padding: 10px 15px;
-      color: white;
-      background: transparent;
-      border: 1px solid #54718f;
-      border-radius: 10px;
-    }
-
-    @keyframes float {
-      0%, 100% { translate: 0 0; }
-      50% { translate: 0 -9px; }
-    }
-
-    @keyframes orbit {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes form {
-      0% { transform: scale(.3); opacity: .3; }
-      50% { transform: scale(5); opacity: 1; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes appear {
-      to { opacity: 1; }
-    }
-
-    @media (max-width: 380px) {
-      .app { padding-left: 13px; padding-right: 13px; }
-      .menu-button { padding: 12px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-      }
-    }
-  </style>
+<style>
+:root {
+  --blue: #36cfff;
+  --bg: #050b1c;
+  --panel: #101e38;
+  --text: #f3f8ff;
+  --muted: #a9bad4;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background: radial-gradient(ellipse at 50% 35%, #123361, transparent 55%), var(--bg);
+  font-family: Arial, sans-serif;
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+.app { width: min(100%, 760px); margin: auto; padding: 22px 18px 35px; }
+header { display:flex; justify-content:space-between; align-items:center; gap:12px; padding-bottom:17px; border-bottom:1px solid #243b5c; }
+.brand { color:var(--blue); font-weight:800; letter-spacing:2px; font-size:20px; }
+.status { color:#83f5c1; font-size:12px; }
+.hero { text-align:center; padding:35px 0 22px; }
+.character-area { height:225px; width:225px; margin:0 auto 15px; display:grid; place-items:center; position:relative; }
+.orbit { position:absolute; width:220px; height:220px; border:1px solid #36cfff55; border-radius:50%; animation:orbit 14s linear infinite; }
+.orbit:before { content:""; position:absolute; top:24px; left:28px; width:9px; height:9px; border-radius:50%; background:var(--blue); box-shadow:0 0 15px var(--blue); }
+.character {
+  width:142px; height:142px; border:2px solid #91edff;
+  border-radius:45% 45% 48% 48%;
+  background:radial-gradient(circle at 30% 25%, #9af2ff, #258fff 35%, #06377f 80%);
+  box-shadow:0 0 28px #168cff, 0 0 70px #087cff66;
+  animation:float 3s ease-in-out infinite; transition:.2s;
+}
+.character.excited { transform:scale(1.1); box-shadow:0 0 40px var(--blue),0 0 90px #087cff; }
+.eyes { display:flex; justify-content:center; gap:28px; padding-top:42px; }
+.eye { width:19px; height:24px; border-radius:50%; background:white; box-shadow:0 0 12px white; }
+.mouth { width:29px; height:13px; margin:17px auto 0; border-bottom:4px solid white; border-radius:0 0 50% 50%; }
+h1 { font-size:clamp(27px,6vw,37px); margin:10px 0; }
+h1 span { color:var(--blue); }
+.description { max-width:430px; margin:auto; color:var(--muted); line-height:1.7; font-size:15px; }
+#greeting { min-height:24px; margin-top:15px; color:#b9eaff; font-size:14px; }
+.primary { padding:12px 22px; margin-top:15px; border:1px solid var(--blue); border-radius:12px; color:#041426; background:var(--blue); font-weight:bold; }
+.section-title { font-size:17px; margin:20px 0 13px; }
+.menu { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; }
+.menu-button { min-height:112px; padding:16px; color:var(--text); text-align:left; background:#101e38dd; border:1px solid #355477; border-radius:16px; transition:.2s; }
+.menu-button:hover, .menu-button:focus-visible { border-color:var(--blue); transform:translateY(-2px); outline:none; }
+.icon { display:block; font-size:25px; margin-bottom:9px; }
+.menu-button strong { display:block; margin-bottom:5px; }
+.menu-button small { color:var(--muted); line-height:1.5; }
+.screen { margin-top:20px; padding:20px; border:1px solid #355477; border-radius:16px; background:#0b1730; }
+.screen[hidden] { display:none; }
+.screen h2 { color:var(--blue); }
+.screen p { color:var(--muted); line-height:1.6; }
+.screen label { display:block; margin-top:12px; }
+.screen input:not([type=color]), .screen textarea, .screen select {
+  display:block; width:100%; margin:10px 0; padding:12px;
+  color:white; background:#071226; border:1px solid #355477; border-radius:9px;
+}
+.screen input[type=color] { display:block; width:100%; height:48px; margin:10px 0; background:#071226; border:1px solid #355477; border-radius:9px; }
+.screen textarea { min-height:90px; resize:vertical; }
+.action { padding:11px 15px; margin:5px 5px 5px 0; color:white; background:#0755a8; border:1px solid var(--blue); border-radius:9px; }
+.secondary { background:transparent; }
+.result { white-space:pre-wrap; overflow-wrap:anywhere; color:#c4edff; line-height:1.6; font-size:14px; margin-top:12px; }
+.memory-item { padding:10px 0; border-bottom:1px solid #263d5c; }
+.memory-item button { margin-top:8px; }
+footer { margin-top:30px; text-align:center; color:#7f94b5; font-size:12px; }
+.intro { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; background:#030817; }
+.intro[hidden] { display:none; }
+.intro-light { width:18px; height:18px; margin-bottom:28px; border-radius:50%; background:white; box-shadow:0 0 20px #36cfff,0 0 60px #168cff,0 0 110px #087cff; animation:form 2s ease-in-out forwards; }
+.intro h1 { opacity:0; animation:appear 1s ease 1.4s forwards; }
+.intro p { max-width:420px; color:var(--muted); line-height:1.7; opacity:0; animation:appear 1s ease 2s forwards; }
+.skip { position:absolute; top:20px; right:18px; padding:10px 15px; color:white; background:transparent; border:1px solid #54718f; border-radius:10px; }
+@keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
+@keyframes orbit { to { transform:rotate(360deg); } }
+@keyframes form { 0% { transform:scale(.3); opacity:.3; } 50% { transform:scale(5); opacity:1; } 100% { transform:scale(1); opacity:1; } }
+@keyframes appear { to { opacity:1; } }
+@media(max-width:380px) { .app { padding-left:13px; padding-right:13px; } .menu-button { padding:12px; } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; } }
+</style>
 </head>
 
 <body>
-  <section class="intro" id="intro" hidden>
-    <button class="skip" id="skipIntro" type="button">Skip introduction</button>
-    <div class="intro-light" aria-hidden="true"></div>
-    <h1>Meet <span style="color:#36cfff">BRIANIAC AI</span></h1>
-    <p>
-      Hello! I'm BRIANIAC AI, your personal AI companion.
-      I'm here to learn, grow, and explore with you.
-    </p>
+<section class="intro" id="intro" hidden>
+  <button class="skip" id="skipIntro" type="button">Skip introduction</button>
+  <div class="intro-light" aria-hidden="true"></div>
+  <h1>Meet <span>BRIANIAC AI</span></h1>
+  <p>Hello! I'm BRIANIAC AI, your personal AI companion. I'm here to learn, grow, and explore with you.</p>
+</section>
+
+<main class="app">
+  <header>
+    <div class="brand" id="brand">BRIANIAC AI</div>
+    <div class="status">Ready to explore</div>
+  </header>
+
+  <section class="hero">
+    <div class="character-area">
+      <div class="orbit" aria-hidden="true"></div>
+      <button class="character" id="character" type="button" aria-label="Tap to interact with BRIANIAC AI">
+        <span class="eyes" aria-hidden="true"><span class="eye"></span><span class="eye"></span></span>
+        <span class="mouth" aria-hidden="true"></span>
+      </button>
+    </div>
+    <h1>Hello, I'm <span id="heroName">BRIANIAC AI</span></h1>
+    <p class="description">Your personal AI companion. Think, explore, create, and grow with a little help along the way.</p>
+    <div id="greeting" aria-live="polite">Your next idea starts here.</div>
+    <button class="primary" id="sayHello" type="button">Say Hello!</button>
   </section>
 
-  <main class="app">
-    <header>
-      <div class="brand">BRIANIAC AI</div>
-      <div class="status">Ready to explore</div>
-    </header>
+  <h2 class="section-title">Your space</h2>
+  <nav class="menu" aria-label="Main menu">
+    <button class="menu-button" data-screen="chat" type="button"><span class="icon">💬</span><strong>Chat</strong><small>Start a conversation.</small></button>
+    <button class="menu-button" data-screen="memory" type="button"><span class="icon">🧠</span><strong>Memory</strong><small>Manage saved information.</small></button>
+    <button class="menu-button" data-screen="personalise" type="button"><span class="icon">🎨</span><strong>Personalise</strong><small>Customise your AI companion.</small></button>
+    <button class="menu-button" data-screen="settings" type="button"><span class="icon">⚙️</span><strong>Settings</strong><small>Choose your preferences.</small></button>
+  </nav>
 
-    <section class="hero">
-      <div class="character-area">
-        <div class="orbit" aria-hidden="true"></div>
-        <button class="character" id="character" type="button"
-                aria-label="Tap to interact with BRIANIAC AI">
-          <span class="eyes" aria-hidden="true">
-            <span class="eye"></span>
-            <span class="eye"></span>
-          </span>
-          <span class="mouth" aria-hidden="true"></span>
-        </button>
-      </div>
+  <section class="screen" id="chat" hidden>
+    <h2>Chat</h2>
+    <p>This is the starting chat interface. A real AI response engine still needs to be connected.</p>
+    <label for="chatInput">Your message</label>
+    <textarea id="chatInput" placeholder="Type your message..."></textarea>
+    <button class="action" id="sendMessage" type="button">Send</button>
+    <button class="action secondary" data-home type="button">Back home</button>
+    <div class="result" id="chatResult" aria-live="polite"></div>
+  </section>
 
-      <h1>Hello, I'm <span>BRIANIAC AI</span></h1>
-      <p class="description">
-        Your personal AI companion. Think, explore, create,
-        and grow with a little help along the way.
-      </p>
+  <section class="screen" id="memory" hidden>
+    <h2>Memory</h2>
+    <p>Save notes in this browser. They are not synced to an online account.</p>
+    <label for="memoryInput">What should I remember?</label>
+    <textarea id="memoryInput" placeholder="Enter a preference or useful detail..."></textarea>
+    <button class="action" id="saveMemory" type="button">Save memory</button>
+    <button class="action secondary" id="clearMemories" type="button">Delete all</button>
+    <button class="action secondary" data-home type="button">Back home</button>
+    <h3>Saved memories</h3>
+    <div class="result" id="memoryList" aria-live="polite"></div>
+  </section>
 
-      <div id="greeting" aria-live="polite">Your next idea starts here.</div>
+  <section class="screen" id="personalise" hidden>
+    <h2>Personalise My Companion</h2>
+    <p>Choose a name and glow colour for your BRIANIAC AI character.</p>
+    <label for="companionName">Companion name</label>
+    <input id="companionName" maxlength="40" placeholder="BRIANIAC AI">
+    <label for="companionColor">Character glow colour</label>
+    <input id="companionColor" type="color" value="#36cfff">
+    <button class="action" id="saveAppearance" type="button">Save appearance</button>
+    <button class="action secondary" id="resetAppearance" type="button">Reset appearance</button>
+    <button class="action secondary" data-home type="button">Back home</button>
+    <div class="result" id="appearanceResult" aria-live="polite"></div>
+  </section>
 
-      <button class="primary" id="sayHello" type="button">Say Hello!</button>
-    </section>
+  <section class="screen" id="settings" hidden>
+    <h2>Settings</h2>
+    <label for="responseStyle">Response preference</label>
+    <select id="responseStyle">
+      <option value="both">Text and voice (voice coming later)</option>
+      <option value="text">Text only</option>
+      <option value="voice">Voice when available</option>
+    </select>
+    <button class="action" id="saveSettings" type="button">Save settings</button>
+    <button class="action secondary" data-home type="button">Back home</button>
+    <div class="result" id="settingsResult" aria-live="polite"></div>
+  </section>
 
-    <h2 class="section-title">Your space</h2>
+  <footer>BRIANIAC AI · Your ideas, your companion.</footer>
+</main>
 
-    <nav class="menu" aria-label="Main menu">
-      <button class="menu-button" data-screen="chat" type="button">
-        <span class="icon" aria-hidden="true">💬</span>
-        <strong>Chat</strong>
-        <small>Start a conversation.</small>
-      </button>
+<script>
+const $ = id => document.getElementById(id);
+const screenNames = ["chat", "memory", "personalise", "settings"];
 
-      <button class="menu-button" data-screen="memory" type="button">
-        <span class="icon" aria-hidden="true">🧠</span>
-        <strong>Memory</strong>
-        <small>Manage information you save.</small>
-      </button>
+function readStorage(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    return value === null ? fallback : JSON.parse(value);
+  } catch (error) { return fallback; }
+}
+function writeStorage(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch (error) { return false; }
+}
+function showScreen(name) {
+  screenNames.forEach(screen => $(screen).hidden = screen !== name);
+  if (name === "memory") renderMemories();
+  if (name === "personalise") loadAppearance();
+  if (name === "settings") loadSettings();
+  if (name) $(name).scrollIntoView({behavior:"smooth", block:"start"});
+  else window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll("[data-screen]").forEach(button => {
+  button.addEventListener("click", () => showScreen(button.dataset.screen));
+});
+document.querySelectorAll("[data-home]").forEach(button => {
+  button.addEventListener("click", () => showScreen(null));
+});
 
-      <button class="menu-button" data-screen="settings" type="button">
-        <span class="icon" aria-hidden="true">⚙️</span>
-        <strong>Settings</strong>
-        <small>Choose your preferences.</small>
-      </button>
-    </nav>
+function greet() {
+  $("greeting").textContent = "Hello! I'm here to help you explore your next idea.";
+  $("character").classList.add("excited");
+  setTimeout(() => $("character").classList.remove("excited"), 800);
+}
+$("sayHello").addEventListener("click", greet);
+$("character").addEventListener("click", greet);
 
-    <section class="screen" id="chat" hidden>
-      <h2>Chat</h2>
-      <p>This is the starting chat interface. A real AI engine has not been connected yet.</p>
-      <label for="chatInput">Your message</label>
-      <textarea id="chatInput" placeholder="Type your message..."></textarea>
-      <button class="action" id="sendMessage" type="button">Send</button>
-      <button class="action secondary" data-home type="button">Back home</button>
-      <div class="result" id="chatResult" aria-live="polite"></div>
-    </section>
+$("sendMessage").addEventListener("click", () => {
+  $("chatResult").textContent = $("chatInput").value.trim()
+    ? "Your message has been entered. A real AI response engine still needs to be connected."
+    : "Please type a message first.";
+});
 
-    <section class="screen" id="memory" hidden>
-      <h2>Memory</h2>
-      <p>Save notes in this browser. These notes are not synced to an online account.</p>
-      <label for="memoryInput">What should I remember?</label>
-      <textarea id="memoryInput" placeholder="Enter a preference or useful detail..."></textarea>
-      <button class="action" id="saveMemory" type="button">Save memory</button>
-      <button class="action secondary" id="clearMemories" type="button">Delete all</button>
-      <button class="action secondary" data-home type="button">Back home</button>
-      <h3>Saved memories</h3>
-      <div class="result" id="memoryList" aria-live="polite"></div>
-    </section>
-
-    <section class="screen" id="settings" hidden>
-      <h2>Settings</h2>
-      <label for="responseStyle">Response preference</label>
-      <select id="responseStyle">
-        <option value="both">Text and voice (voice coming later)</option>
-        <option value="text">Text only</option>
-        <option value="voice">Voice when available</option>
-      </select>
-      <button class="action" id="saveSettings" type="button">Save settings</button>
-      <button class="action secondary" data-home type="button">Back home</button>
-      <div class="result" id="settingsResult" aria-live="polite"></div>
-    </section>
-
-    <footer>BRIANIAC AI · Your ideas, your companion.</footer>
-  </main>
-
-  <script>
-    const $ = id => document.getElementById(id);
-    const screenNames = ["chat", "memory", "settings"];
-
-    function readStorage(key, fallback) {
-      try {
-        const value = localStorage.getItem(key);
-        return value === null ? fallback : JSON.parse(value);
-      } catch (error) {
-        return fallback;
-      }
-    }
-
-    function writeStorage(key, value) {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-        return true;
-      } catch (error) {
-        return false;
-      }
-    }
-
-    function showScreen(name) {
-      screenNames.forEach(screen => {
-        $(screen).hidden = screen !== name;
-      });
-
-      if (name === "memory") renderMemories();
-
-      if (name) {
-        $(name).scrollIntoView({ behavior: "smooth", block: "start" });
-      } else {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    }
-
-    document.querySelectorAll("[data-screen]").forEach(button => {
-      button.addEventListener("click", () => showScreen(button.dataset.screen));
+// Memory functions
+function getMemories() {
+  const value = readStorage("brianiacMemories", []);
+  return Array.isArray(value) ? value : [];
+}
+function renderMemories() {
+  const list = $("memoryList");
+  list.replaceChildren();
+  const memories = getMemories();
+  if (!memories.length) {
+    list.textContent = "You have no saved memories yet.";
+    return;
+  }
+  memories.forEach((memory, index) => {
+    const row = document.createElement("div");
+    row.className = "memory-item";
+    const text = document.createElement("p");
+    text.textContent = memory;
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "action secondary";
+    del.textContent = "Delete";
+    del.addEventListener("click", () => {
+      const updated = getMemories();
+      updated.splice(index, 1);
+      if (writeStorage("brianiacMemories", updated)) renderMemories();
+      else list.textContent = "Could not update memories in this browser.";
     });
+    row.append(text, del);
+    list.appendChild(row);
+  });
+}
+$("saveMemory").addEventListener("click", () => {
+  const value = $("memoryInput").value.trim();
+  if (!value) { $("memoryList").textContent = "Please enter a memory first."; return; }
+  const memories = getMemories();
+  memories.push(value);
+  if (writeStorage("brianiacMemories", memories)) {
+    $("memoryInput").value = "";
+    renderMemories();
+  } else $("memoryList").textContent = "Could not save memory in this browser.";
+});
+$("clearMemories").addEventListener("click", () => {
+  if (!confirm("Delete all saved memories from this browser?")) return;
+  if (writeStorage("brianiacMemories", [])) renderMemories();
+});
 
-    document.querySelectorAll("[data-home]").forEach(button => {
-      button.addEventListener("click", () => showScreen(null));
-    });
+// Personalise functions
+function applyAppearance(appearance) {
+  const name = appearance.name || "BRIANIAC AI";
+  const color = appearance.color || "#36cfff";
+  $("brand").textContent = name;
+  $("heroName").textContent = name;
+  $("character").style.borderColor = color;
+  $("character").style.boxShadow = `0 0 28px ${color}, 0 0 70px ${color}88`;
+  document.documentElement.style.setProperty("--blue", color);
+}
+function loadAppearance() {
+  const appearance = readStorage("brianiacAppearance", {name:"BRIANIAC AI", color:"#36cfff"});
+  $("companionName").value = appearance.name || "BRIANIAC AI";
+  $("companionColor").value = appearance.color || "#36cfff";
+}
+$("saveAppearance").addEventListener("click", () => {
+  const appearance = {
+    name: $("companionName").value.trim() || "BRIANIAC AI",
+    color: $("companionColor").value
+  };
+  if (!writeStorage("brianiacAppearance", appearance)) {
+    $("appearanceResult").textContent = "Could not save settings in this browser.";
+    return;
+  }
+  applyAppearance(appearance);
+  $("appearanceResult").textContent = "Your companion appearance has been saved.";
+});
+$("resetAppearance").addEventListener("click", () => {
+  const appearance = {name:"BRIANIAC AI", color:"#36cfff"};
+  if (!writeStorage("brianiacAppearance", appearance)) return;
+  applyAppearance(appearance);
+  loadAppearance();
+  $("appearanceResult").textContent = "Default appearance restored.";
+});
 
-    function greet() {
-      $("greeting").textContent =
-        "Hello! I'm here to help you explore your next idea.";
-      $("character").classList.add("excited");
+// Settings functions
+function loadSettings() {
+  const settings = readStorage("brianiacSettings", {responseStyle:"both"});
+  $("responseStyle").value = settings.responseStyle || "both";
+}
+$("saveSettings").addEventListener("click", () => {
+  const ok = writeStorage("brianiacSettings", {responseStyle:$("responseStyle").value});
+  $("settingsResult").textContent = ok
+    ? "Preference saved. Voice features will be added in a later stage."
+    : "Could not save settings in this browser.";
+});
 
-      window.setTimeout(() => {
-        $("character").classList.remove("excited");
-      }, 800);
-    }
+// Restore appearance on page load.
+applyAppearance(readStorage("brianiacAppearance", {name:"BRIANIAC AI", color:"#36cfff"}));
 
-    $("sayHello").addEventListener("click", greet);
-    $("character").addEventListener("click", greet);
-
-    $("sendMessage").addEventListener("click", () => {
-      const message = $("chatInput").value.trim();
-
-      $("chatResult").textContent = message
-        ? "Your message has been entered. A real AI response engine still needs to be connected."
-        : "Please type a message first.";
-    });
-
-    function getMemories() {
-      const values = readStorage("brianiacMemories", []);
-      return Array.isArray(values) ? values : [];
-    }
-
-    function renderMemories() {
-      const list = $("memoryList");
-      list.replaceChildren();
-
-      const memories = getMemories();
-
-      if (!memories.length) {
-        list.textContent = "You have no saved memories yet.";
-        return;
-      }
-
-      memories.forEach((memory, index) => {
-        const row = document.createElement("p");
-        row.textContent = (index + 1) + ". " + memory;
-        list.appendChild(row);
-
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "action secondary";
-        button.textContent = "Delete";
-
-        button.addEventListener("click", () => {
-          const updated = getMemories();
-          updated.splice(index, 1);
-
-          if (writeStorage("brianiacMemories", updated)) {
-            renderMemories();
-          } else {
-            list.textContent = "The browser could not update your memories.";
-          }
-        });
-
-        list.appendChild(button);
-      });
-    }
-
-    $("saveMemory").addEventListener("click", () => {
-      const value = $("memoryInput").value.trim();
-
-      if (!value) {
-        $("memoryList").textContent = "Please enter a memory first.";
-        return;
-      }
-
-      const memories = getMemories();
-      memories.push(value);
-
-      if (writeStorage("brianiacMemories", memories)) {
-        $("memoryInput").value = "";
-        renderMemories();
-      } else {
-        $("memoryList").textContent = "Could not save the memory in this browser.";
-      }
-    });
-
-    $("clearMemories").addEventListener("click", () => {
-      if (!confirm("Delete all saved memories from this browser?")) return;
-
-      if (writeStorage("brianiacMemories", [])) {
-        renderMemories();
-      }
-    });
-
-    $("saveSettings").addEventListener("click", () => {
-      const saved = writeStorage("brianiacSettings", {
-        responseStyle: $("responseStyle").value
-      });
-
-      $("settingsResult").textContent = saved
-        ? "Your preference has been saved. Voice features will be added later."
-        : "Could not save your preference in this browser.";
-    });
-
-    // Show the introduction only once on this browser.
-    const introSeen = readStorage("brianiacIntroSeen", false);
-
-    if (!introSeen) {
-      $("intro").hidden = false;
-    }
-
-    function finishIntro() {
-      $("intro").hidden = true;
-      writeStorage("brianiacIntroSeen", true);
-    }
-
-    $("skipIntro").addEventListener("click", finishIntro);
-
-    // Automatically finish the introduction after its animation.
-    if (!introSeen) {
-      window.setTimeout(() => {
-        if (!$("intro").hidden) finishIntro();
-      }, 4500);
-    }
-  </script>
+// First-time introduction.
+function finishIntro() {
+  $("intro").hidden = true;
+  writeStorage("brianiacIntroSeen", true);
+}
+const introSeen = readStorage("brianiacIntroSeen", false);
+if (!introSeen) {
+  $("intro").hidden = false;
+  setTimeout(() => { if (!$("intro").hidden) finishIntro(); }, 4500);
+}
+$("skipIntro").addEventListener("click", finishIntro);
+</script>
 </body>
 </html>
