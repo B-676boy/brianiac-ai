@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#071329">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071329" />
   <title>BRIANIAC AI</title>
 
   <style>
@@ -19,8 +19,12 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
+    }
+
+    body {
       min-height: 100vh;
       padding: 24px 16px;
       background:
@@ -106,8 +110,6 @@
       margin-top: 18px;
     }
 
-    /* Companion */
-
     .companion-stage {
       min-height: 300px;
       display: flex;
@@ -125,7 +127,7 @@
         radial-gradient(circle at 35% 25%, #ffffff 0%, var(--glow) 17%, #061a46 78%);
       box-shadow:
         0 0 22px var(--glow),
-        0 0 65px color-mix(in srgb, var(--glow), transparent 45%);
+        0 0 60px rgba(22, 139, 255, 0.25);
       animation: float 3s ease-in-out infinite;
       transition: all 0.25s ease;
     }
@@ -133,7 +135,6 @@
     .companion.hologram {
       border: 2px solid var(--glow);
       background: rgba(22, 139, 255, 0.25);
-      background: color-mix(in srgb, var(--glow), transparent 75%);
       border-radius: 30%;
     }
 
@@ -255,8 +256,6 @@
       50% { transform: translateY(-10px); }
     }
 
-    /* Customisation controls */
-
     .control {
       margin: 18px 0;
       text-align: left;
@@ -296,9 +295,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
+      *, *::before, *::after {
         animation: none !important;
         transition: none !important;
       }
@@ -307,8 +304,6 @@
 </head>
 
 <body>
-
-  <!-- Welcome screen -->
   <section id="welcomeScreen" class="screen active">
     <h1>BRIANIAC AI</h1>
     <p>Your AI companion. Your design. Your experience.</p>
@@ -335,18 +330,12 @@
       </p>
 
       <div class="button-row">
-        <button class="primary" id="createBtn">
-          Create My Companion
-        </button>
-
-        <button class="secondary" id="meetBtn">
-          Meet BRIANIAC AI First
-        </button>
+        <button class="primary" id="createBtn">Create My Companion</button>
+        <button class="secondary" id="meetBtn">Meet BRIANIAC AI First</button>
       </div>
     </div>
   </section>
 
-  <!-- Main companion screen -->
   <section id="mainScreen" class="screen">
     <h1>BRIANIAC AI</h1>
     <p>Your personal companion</p>
@@ -367,15 +356,11 @@
       </div>
 
       <h2 id="companionName">Your BRIANIAC Companion</h2>
-      <p id="greeting" aria-live="polite">
-        Hello! I'm happy to meet you.
-      </p>
+      <p id="greeting" aria-live="polite">Hello! I'm happy to meet you.</p>
 
       <div class="button-row">
         <button class="primary" id="helloBtn">Say Hello!</button>
-        <button class="secondary" id="customiseBtn">
-          Customise My Companion
-        </button>
+        <button class="secondary" id="customiseBtn">Customise My Companion</button>
       </div>
 
       <p id="customiseInvite">
@@ -384,7 +369,6 @@
     </div>
   </section>
 
-  <!-- Customisation screen -->
   <section id="customiseScreen" class="screen">
     <h1>Design Your Companion</h1>
     <p>Make BRIANIAC AI feel more like yours.</p>
@@ -529,9 +513,29 @@
       return Object.prototype.hasOwnProperty.call(greetings, value);
     }
 
+    function safeStorageGet(key) {
+      try {
+        return window.localStorage.getItem(key);
+      } catch (error) {
+        console.warn("localStorage read failed:", error);
+        return null;
+      }
+    }
+
+    function safeStorageSet(key, value) {
+      try {
+        window.localStorage.setItem(key, value);
+        return true;
+      } catch (error) {
+        console.warn("localStorage write failed:", error);
+        return false;
+      }
+    }
+
     function hasSavedDesign() {
       try {
-        return Boolean(localStorage.getItem(STORAGE_KEYS.design));
+        const value = safeStorageGet(STORAGE_KEYS.design);
+        return Boolean(value && value.trim() !== "");
       } catch (error) {
         console.warn("Saved design could not be checked.", error);
         return false;
@@ -539,20 +543,11 @@
     }
 
     function hasSeenWelcome() {
-      try {
-        return localStorage.getItem(STORAGE_KEYS.welcomeSeen) === "true";
-      } catch (error) {
-        console.warn("Welcome flag could not be checked.", error);
-        return false;
-      }
+      return safeStorageGet(STORAGE_KEYS.welcomeSeen) === "true";
     }
 
     function setWelcomeSeen(value = true) {
-      try {
-        localStorage.setItem(STORAGE_KEYS.welcomeSeen, String(value));
-      } catch (error) {
-        console.warn("Could not save welcome flag.", error);
-      }
+      safeStorageSet(STORAGE_KEYS.welcomeSeen, String(value));
     }
 
     function showScreen(screenId) {
@@ -564,6 +559,8 @@
     }
 
     function applyToCompanion(element) {
+      if (!element) return;
+
       element.style.setProperty("--glow", design.colour);
 
       element.classList.remove(
@@ -585,6 +582,20 @@
       }
     }
 
+    function updateGreetingText() {
+      const personalityOptions = greetings[design.personality] || greetings[defaults.personality];
+      if (!personalityOptions || personalityOptions.length === 0) {
+        $("greeting").textContent = greetings[defaults.personality][0];
+        return;
+      }
+
+      if (helloCount >= personalityOptions.length) {
+        helloCount = 0;
+      }
+
+      $("greeting").textContent = personalityOptions[helloCount];
+    }
+
     function updateAll() {
       document.documentElement.style.setProperty("--glow", design.colour);
 
@@ -593,23 +604,18 @@
       applyToCompanion($("previewCompanion"));
 
       $("companionName").textContent =
-        design.name.trim() || "Your BRIANIAC Companion";
+        (design.name && design.name.trim()) || "Your BRIANIAC Companion";
 
       if (!isValidPersonality(design.personality)) {
         design.personality = defaults.personality;
       }
 
-      const personalityOptions = greetings[design.personality] || greetings[defaults.personality];
-      if (personalityOptions && personalityOptions[helloCount] !== undefined) {
-        $("greeting").textContent = personalityOptions[helloCount];
-      } else {
-        helloCount = 0;
-        $("greeting").textContent = personalityOptions[0];
-      }
+      updateGreetingText();
     }
 
     function openCustomisation() {
       setWelcomeSeen(true);
+
       $("colourInput").value = design.colour;
       $("bodyInput").value = design.body;
       $("eyesInput").value = design.eyes;
@@ -641,16 +647,13 @@
 
     function loadSavedDesign() {
       try {
-        const saved = localStorage.getItem(STORAGE_KEYS.design);
+        const saved = safeStorageGet(STORAGE_KEYS.design);
 
         if (saved) {
           const parsed = JSON.parse(saved);
 
           if (parsed && typeof parsed === "object") {
-            design = {
-              ...defaults,
-              ...parsed
-            };
+            design = { ...defaults, ...parsed };
           }
         }
       } catch (error) {
@@ -731,10 +734,16 @@
 
       try {
         setWelcomeSeen(true);
-        localStorage.setItem(STORAGE_KEYS.design, JSON.stringify(design));
-        $("statusMessage").textContent =
-          "Your design has been saved on this browser!";
-        showScreen("mainScreen");
+        const saved = JSON.stringify(design);
+        const ok = safeStorageSet(STORAGE_KEYS.design, saved);
+
+        if (ok) {
+          $("statusMessage").textContent = "Your design has been saved on this browser!";
+          showScreen("mainScreen");
+        } else {
+          $("statusMessage").textContent =
+            "Saving is unavailable in this browser. Your current design is still available.";
+        }
       } catch (error) {
         $("statusMessage").textContent =
           "Saving is unavailable in this browser. Your current design is still available.";
@@ -745,7 +754,6 @@
       design = { ...defaults };
       helloCount = 0;
       openCustomisation();
-
       $("statusMessage").textContent =
         "Default design restored. Save it if you want to keep it.";
     });
@@ -760,6 +768,7 @@
 
     if (hasSavedDesign() || hasSeenWelcome()) {
       showScreen("mainScreen");
+
       if (hasSavedDesign()) {
         $("customiseInvite").textContent =
           "Welcome back! Your saved companion design has been loaded.";
@@ -769,6 +778,5 @@
       }
     }
   </script>
-
 </body>
-  </html>
+          </html>u
