@@ -381,7 +381,6 @@
       0%, 100% {
         transform: translateY(0);
       }
-
       50% {
         transform: translateY(-9px);
       }
@@ -396,7 +395,6 @@
       0%, 44%, 48%, 100% {
         transform: scaleY(1);
       }
-
       46% {
         transform: scaleY(.12);
       }
@@ -413,72 +411,35 @@
 </head>
   <body>
   <header class="topbar">
-    <div class="brand-logo" aria-label="BRIANIAC AI logo">
-      <div class="brand-icon">
-        <span>B</span>
-      </div>
-
-      <div class="brand-name">
-        <span>BRIANIAC</span> <span class="ai-text">AI</span>
-        <small>ASK • LEARN • INNOVATE • GROW</small>
-      </div>
-    </div>
-
-    <button class="menu-button" id="menuToggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="menu">
+    <div class="brand">BRIANIAC AI</div>
+    <button class="menu-button" id="menuToggle" type="button">
       ☰ Menu
     </button>
   </header>
 
-  <nav class="menu" id="menu" aria-label="Main menu">
+  <nav class="menu" id="mainMenu">
     <button type="button" data-screen="home">Home</button>
-    <button type="button" data-screen="chat">Chat</button>
+    <button type="button" data-screen="chat">Chat with AI</button>
     <button type="button" data-screen="memory">Memory</button>
-    <button type="button" data-screen="personalise">Personalise</button>
     <button type="button" data-screen="settings">Settings</button>
+    <button type="button" data-screen="about">About</button>
   </nav>
 
   <main>
-    <section class="screen intro" id="intro">
-      <div class="character-brand">BRIANIAC AI</div>
-
-      <div class="character-area">
-        <div class="orbit"></div>
-        <div class="character">
-          <div class="eyes">
-            <div class="eye"></div>
-            <div class="eye"></div>
-          </div>
-          <div class="mouth"></div>
-        </div>
-      </div>
-
-      <h1>Meet BRIANIAC AI</h1>
-      <p class="subtitle">
-        Your digital companion is ready to begin.
-      </p>
-
-      <div class="button-row">
-        <button class="primary-button" id="startButton" type="button">
-          Let's Begin
-        </button>
-
-        <button class="secondary-button" id="skipIntro" type="button">
-          Skip
-        </button>
-      </div>
-    </section>
-
-    <section class="screen" id="home">
+    <!-- HOME SCREEN -->
+    <section class="screen active" id="home">
       <div class="hero">
-        <h2 class="character-brand">BRIANIAC AI</h2>
+        <div class="brand-logo">
+          <div class="brand-icon"><span>B</span></div>
+          <div class="brand-name">
+            <span>BRIANIAC</span> <span class="ai-text">AI</span>
+            <small>ASK • LEARN • INNOVATE • GROW</small>
+          </div>
+        </div>
 
         <div class="character-area">
           <div class="orbit"></div>
-
-          <div class="character" id="character">
+          <div class="character" id="homeCharacter">
             <div class="eyes">
               <div class="eye"></div>
               <div class="eye"></div>
@@ -487,41 +448,40 @@
           </div>
         </div>
 
-        <h1>Hello, I'm <span id="heroName">BRIANIAC AI</span></h1>
+        <h1 id="welcomeTitle">Hello! I'm BRIANIAC AI.</h1>
 
-        <p class="subtitle" id="homeSubtitle">
-          Your digital companion is ready.
-          Let's build something awesome.
+        <p class="subtitle">
+          Your AI companion for learning, creativity, problem-solving,
+          and exploring new ideas.
         </p>
 
         <div class="button-row">
-          <button class="primary-button" id="sayHello" type="button">
-            Say Hello!
+          <button class="primary-button" type="button"
+            data-screen="chat">
+            Start Chatting
           </button>
 
-          <button class="secondary-button" type="button" data-screen="chat">
-            Open Chat
+          <button class="secondary-button" type="button"
+            data-screen="settings">
+            Personalise
           </button>
         </div>
-
-        <p class="status" id="homeStatus" aria-live="polite"></p>
       </div>
     </section>
 
+    <!-- CHAT SCREEN -->
     <section class="screen" id="chat">
+      <h1>Chat with BRIANIAC AI</h1>
+
+      <p class="muted">
+        Ask questions, explore ideas, and learn something new.
+      </p>
+
       <div class="panel">
-        <h2>Chat with <span id="chatName">BRIANIAC AI</span></h2>
-
-        <p class="muted">
-          This is the first version of the chat interface.
-          It currently uses simple local responses and is not
-          connected to an online AI model yet.
-        </p>
-
         <div class="chat-log" id="chatLog" aria-live="polite">
           <div class="chat-message">
             <strong>BRIANIAC AI:</strong>
-            Hello! What would you like to talk about?
+            Hello! What would you like to explore today?
           </div>
         </div>
 
@@ -533,169 +493,169 @@
               required></textarea>
           </div>
 
-          <button class="primary-button" type="submit">
-            Send Message
-          </button>
-        </form>
+          <div class="button-row">
+            <button class="primary-button" id="sendButton"
+              type="submit">
+              Send Message
+            </button>
 
-        <p class="status" id="chatStatus" aria-live="polite"></p>
+            <button class="secondary-button" id="clearChat"
+              type="button">
+              Clear Chat
+            </button>
+          </div>
+
+          <p class="status" id="chatStatus" aria-live="polite"></p>
+        </form>
       </div>
     </section>
 
+    <!-- MEMORY SCREEN -->
     <section class="screen" id="memory">
+      <h1>Memory</h1>
+
+      <p class="muted">
+        Save useful notes that you want to keep available in this browser.
+      </p>
+
       <div class="panel">
-        <h2>Memory</h2>
+        <div class="field">
+          <label for="memoryInput">Write a note</label>
+          <textarea id="memoryInput"
+            placeholder="Enter something you want to remember..."></textarea>
+        </div>
 
-        <p class="muted">
-          Save notes in this browser. They stay on this device
-          and are not automatically shared with an online AI model.
-          Avoid storing passwords or sensitive information here.
-        </p>
-
-        <form id="memoryForm">
-          <div class="field">
-            <label for="memoryInput">Something to remember</label>
-            <textarea id="memoryInput"
-              placeholder="Write a note..."
-              required></textarea>
-          </div>
-
-          <button class="primary-button" type="submit">
-            Save Memory
+        <div class="button-row">
+          <button class="primary-button" id="saveMemory"
+            type="button">
+            Save Note
           </button>
-        </form>
+
+          <button class="secondary-button" id="clearMemory"
+            type="button">
+            Clear Memory
+          </button>
+        </div>
 
         <div class="memory-list" id="memoryList"></div>
-
-        <button class="secondary-button" id="clearMemory" type="button">
-          Clear All Memories
-        </button>
-
-        <p class="status" id="memoryStatus" aria-live="polite"></p>
       </div>
     </section>
 
-    <section class="screen" id="personalise">
-      <div class="panel">
-        <h2>Personalise Your Companion</h2>
-
-        <p class="muted">
-          Change your companion's display name and glow colour.
-          The BRIANIAC AI label above the character will stay the same.
-        </p>
-
-        <form id="personaliseForm">
-          <div class="field">
-            <label for="assistantName">Companion display name</label>
-            <input id="assistantName"
-              type="text"
-              placeholder="Enter a name"
-              maxlength="40"
-              required>
-          </div>
-
-          <div class="field">
-            <label for="assistantColor">Character glow colour</label>
-            <input id="assistantColor" type="color" value="#36cfff">
-          </div>
-
-          <button class="primary-button" type="submit">
-            Save Personalisation
-          </button>
-
-          <button class="secondary-button" id="resetAppearance" type="button">
-            Reset
-          </button>
-        </form>
-
-        <p class="status" id="personaliseStatus" aria-live="polite"></p>
-      </div>
-    </section>
-
+    <!-- SETTINGS SCREEN -->
     <section class="screen" id="settings">
+      <h1>Personalise BRIANIAC AI</h1>
+
+      <p class="muted">
+        Adjust the assistant's appearance and response style.
+      </p>
+
       <div class="panel">
-        <h2>Settings</h2>
+        <div class="field">
+          <label for="assistantName">Assistant name</label>
+          <input id="assistantName"
+            type="text"
+            maxlength="40"
+            placeholder="BRIANIAC AI">
+        </div>
 
-        <p class="muted">
-          Choose how the demo assistant phrases its replies.
-        </p>
+        <div class="field">
+          <label for="accentColor">Character and accent colour</label>
+          <input id="accentColor" type="color" value="#36cfff">
+        </div>
 
-        <form id="settingsForm">
-          <div class="field">
-            <label for="responseStyle">Response style</label>
+        <div class="field">
+          <label for="responseStyle">Response style</label>
+          <select id="responseStyle">
+            <option value="friendly">Friendly</option>
+            <option value="simple">Simple and easy to understand</option>
+            <option value="detailed">Detailed and explanatory</option>
+            <option value="creative">Creative</option>
+          </select>
+        </div>
 
-            <select id="responseStyle">
-              <option value="friendly">Friendly</option>
-              <option value="professional">Professional</option>
-              <option value="concise">Concise</option>
-            </select>
-          </div>
-
-          <button class="primary-button" type="submit">
+        <div class="button-row">
+          <button class="primary-button" id="saveSettings"
+            type="button">
             Save Settings
           </button>
-        </form>
+
+          <button class="secondary-button" id="resetSettings"
+            type="button">
+            Reset Settings
+          </button>
+        </div>
 
         <p class="status" id="settingsStatus" aria-live="polite"></p>
+      </div>
+    </section>
 
-        <hr style="border-color:rgba(255,255,255,.12); margin:24px 0;">
-
-        <h3>About BRIANIAC AI</h3>
+    <!-- ABOUT SCREEN -->
+    <section class="screen" id="about">
+      <div class="panel">
+        <h1>About BRIANIAC AI</h1>
 
         <p class="muted">
-          BRIANIAC AI is your personal digital companion project.
-          This version provides the interface and basic demo replies.
-          A real AI model can be connected in a later version.
+          BRIANIAC AI is a developing AI companion designed to help
+          people ask questions, learn, solve problems, and explore
+          their creativity.
+        </p>
+
+        <p class="muted">
+          ASK • LEARN • INNOVATE • GROW
         </p>
       </div>
     </section>
   </main>
 
   <footer>
-    BRIANIAC AI · Your project, one step at a time.
-            </footer>
-      <script>
-    const DEFAULT_APPEARANCE = {
+    BRIANIAC AI — Ask. Learn. Innovate. Grow.
+  </footer>
+  <script>
+    const WORKER_URL =
+      "https://brianiac-ai-api.brianamankona0.workers.dev/";
+
+    const DEFAULT_SETTINGS = {
       name: "BRIANIAC AI",
-      color: "#36cfff"
+      color: "#36cfff",
+      style: "friendly"
     };
 
-    const APPEARANCE_KEY = "brianiacAppearance";
-    const INTRO_KEY = "brianiacIntroSeen";
-    const MEMORY_KEY = "brianiacMemories";
-    const SETTINGS_KEY = "brianiacSettings";
-
-    const screens = document.querySelectorAll(".screen");
-    const menu = document.getElementById("menu");
-    const menuToggle = document.getElementById("menuToggle");
-
-    function readStorage(key, fallback) {
+    function getSettings() {
       try {
-        const value = localStorage.getItem(key);
-        return value === null ? fallback : JSON.parse(value);
-      } catch (error) {
-        return fallback;
+        return {
+          ...DEFAULT_SETTINGS,
+          ...JSON.parse(
+            localStorage.getItem("brianiacSettings") || "{}"
+          )
+        };
+      } catch {
+        return { ...DEFAULT_SETTINGS };
       }
     }
 
-    function writeStorage(key, value) {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-        return true;
-      } catch (error) {
-        return false;
-      }
+    function saveSettingsToStorage(settings) {
+      localStorage.setItem(
+        "brianiacSettings",
+        JSON.stringify(settings)
+      );
     }
 
-    function showScreen(screenName) {
-      const target = document.getElementById(screenName);
-      if (!target) return;
+    function getAppearance() {
+      return getSettings();
+    }
 
-      screens.forEach(screen => screen.classList.remove("active"));
-      target.classList.add("active");
+    function showScreen(screenId) {
+      const screen = document.getElementById(screenId);
 
-      menu.classList.remove("open");
-      menuToggle.setAttribute("aria-expanded", "false");
+      if (!screen) return;
+
+      document.querySelectorAll(".screen").forEach(item => {
+        item.classList.remove("active");
+      });
+
+      screen.classList.add("active");
+
+      document.getElementById("mainMenu").classList.remove("open");
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -706,139 +666,236 @@
       });
     });
 
-    menuToggle.addEventListener("click", () => {
-      const isOpen = menu.classList.toggle("open");
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-    });
+    document.getElementById("menuToggle").addEventListener(
+      "click",
+      () => {
+        document.getElementById("mainMenu").classList.toggle("open");
+      }
+    );
 
-    function startApp() {
-      try {
-        localStorage.setItem(INTRO_KEY, "true");
-      } catch (error) {}
+    function applySettings() {
+      const settings = getSettings();
 
-      showScreen("home");
+      document.documentElement.style.setProperty(
+        "--blue",
+        settings.color
+      );
+
+      document.getElementById("assistantName").value = settings.name;
+      document.getElementById("accentColor").value = settings.color;
+      document.getElementById("responseStyle").value = settings.style;
+
+      document.getElementById("welcomeTitle").textContent =
+        "Hello! I'm " + settings.name + ".";
     }
 
-    document.getElementById("startButton")
-      .addEventListener("click", startApp);
+    document.getElementById("saveSettings").addEventListener(
+      "click",
+      () => {
+        const name =
+          document.getElementById("assistantName").value.trim() ||
+          DEFAULT_SETTINGS.name;
 
-    document.getElementById("skipIntro")
-      .addEventListener("click", startApp);
+        const color =
+          document.getElementById("accentColor").value;
 
-    function getAppearance() {
-      const saved = readStorage(APPEARANCE_KEY, DEFAULT_APPEARANCE);
+        const style =
+          document.getElementById("responseStyle").value;
 
-      return {
-        name: typeof saved.name === "string" && saved.name.trim()
-          ? saved.name.trim()
-          : DEFAULT_APPEARANCE.name,
+        saveSettingsToStorage({ name, color, style });
+        applySettings();
 
-        color: saved && /^#[0-9a-fA-F]{6}$/.test(saved.color)
-          ? saved.color
-          : DEFAULT_APPEARANCE.color
+        document.getElementById("settingsStatus").textContent =
+          "Your settings have been saved.";
+      }
+    );
+
+    document.getElementById("resetSettings").addEventListener(
+      "click",
+      () => {
+        saveSettingsToStorage(DEFAULT_SETTINGS);
+        applySettings();
+
+        document.getElementById("settingsStatus").textContent =
+          "Your settings have been reset.";
+      }
+    );
+
+    function addChatMessage(speaker, message) {
+      const chatLog = document.getElementById("chatLog");
+      const messageElement = document.createElement("div");
+
+      messageElement.className = "chat-message";
+
+      const label = document.createElement("strong");
+      label.textContent = speaker + ": ";
+
+      const content = document.createElement("span");
+      content.textContent = message;
+
+      messageElement.appendChild(label);
+      messageElement.appendChild(content);
+
+      chatLog.appendChild(messageElement);
+      messageElement.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
+
+    async function makeChatReply(message) {
+      const settings = getSettings();
+
+      const styleInstructions = {
+        friendly: "Be friendly, warm, and helpful.",
+        simple: "Explain things in simple, easy-to-understand language.",
+        detailed: "Give detailed explanations with useful examples.",
+        creative: "Be imaginative and creative while staying accurate."
       };
+
+      const response = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are " + settings.name +
+                ", the AI companion inside BRIANIAC AI. " +
+                styleInstructions[settings.style] +
+                " Be honest when you are uncertain. " +
+                "Never claim that you performed an action you did not perform."
+            },
+            {
+              role: "user",
+              content: message
+            }
+          ]
+        })
+      });
+
+      let data;
+
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("The AI service returned an invalid response.");
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "The AI service returned an error."
+        );
+      }
+
+      const answer = data?.choices?.[0]?.message?.content;
+
+      if (typeof answer !== "string" || !answer.trim()) {
+        throw new Error("The AI service returned an empty answer.");
+      }
+
+      return answer.trim();
     }
 
-    function applyAppearance(appearance) {
-      const safeName = appearance.name || DEFAULT_APPEARANCE.name;
-      const safeColor = /^#[0-9a-fA-F]{6}$/.test(appearance.color)
-        ? appearance.color
-        : DEFAULT_APPEARANCE.color;
-
-      document.documentElement.style.setProperty("--blue", safeColor);
-
-      document.getElementById("brand").textContent = "BRIANIAC AI";
-      document.getElementById("heroName").textContent = safeName;
-      document.getElementById("chatName").textContent = safeName;
-      document.getElementById("assistantName").value = safeName;
-      document.getElementById("assistantColor").value = safeColor;
-    }
-
-    document.getElementById("personaliseForm")
-      .addEventListener("submit", event => {
+    document.getElementById("chatForm").addEventListener(
+      "submit",
+      async event => {
         event.preventDefault();
 
-        const name = document.getElementById("assistantName").value.trim();
-        const color = document.getElementById("assistantColor").value;
+        const input = document.getElementById("chatInput");
+        const sendButton = document.getElementById("sendButton");
+        const status = document.getElementById("chatStatus");
 
-        if (!name) {
-          document.getElementById("personaliseStatus").textContent =
-            "Please enter a name first.";
-          return;
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        addChatMessage("You", message);
+
+        input.value = "";
+        sendButton.disabled = true;
+        status.textContent = "BRIANIAC AI is thinking...";
+
+        try {
+          const reply = await makeChatReply(message);
+
+          addChatMessage(getSettings().name, reply);
+          status.textContent = "Response received.";
+        } catch (error) {
+          console.error("BRIANIAC AI error:", error);
+
+          addChatMessage(
+            "BRIANIAC AI",
+            "I'm having trouble connecting to my AI brain. Please check the connection and try again."
+          );
+
+          status.textContent =
+            "Connection failed. Please check the Worker configuration.";
+        } finally {
+          sendButton.disabled = false;
+          input.focus();
         }
+      }
+    );
 
-        const appearance = { name, color };
-        const saved = writeStorage(APPEARANCE_KEY, appearance);
+    document.getElementById("clearChat").addEventListener(
+      "click",
+      () => {
+        const chatLog = document.getElementById("chatLog");
+        chatLog.replaceChildren();
 
-        applyAppearance(appearance);
+        addChatMessage(
+          getSettings().name,
+          "Hello! What would you like to explore today?"
+        );
 
-        document.getElementById("personaliseStatus").textContent =
-          saved
-            ? "Personalisation saved!"
-            : "Applied for this session, but browser storage is unavailable.";
-      });
+        document.getElementById("chatStatus").textContent =
+          "Chat cleared.";
+      }
+    );
 
-    document.getElementById("resetAppearance")
-      .addEventListener("click", () => {
-        writeStorage(APPEARANCE_KEY, DEFAULT_APPEARANCE);
-        applyAppearance(DEFAULT_APPEARANCE);
+    function getMemory() {
+      try {
+        const memory = JSON.parse(
+          localStorage.getItem("brianiacMemory") || "[]"
+        );
 
-        document.getElementById("personaliseStatus").textContent =
-          "Default appearance restored.";
-      });
-
-    document.getElementById("sayHello")
-      .addEventListener("click", () => {
-        const name = getAppearance().name;
-
-        document.getElementById("homeStatus").textContent =
-          "Hello from " + name +
-          "! I'm ready to help you build something awesome.";
-      });
-
-    function getMemories() {
-      const memories = readStorage(MEMORY_KEY, []);
-      return Array.isArray(memories) ? memories : [];
+        return Array.isArray(memory) ? memory : [];
+      } catch {
+        return [];
+      }
     }
 
-    function renderMemories() {
+    function renderMemory() {
       const list = document.getElementById("memoryList");
       list.replaceChildren();
 
-      const memories = getMemories();
-
-      if (memories.length === 0) {
-        const empty = document.createElement("p");
-        empty.className = "muted";
-        empty.textContent = "No memories saved yet.";
-        list.appendChild(empty);
-        return;
-      }
-
-      memories.forEach((memory, index) => {
+      getMemory().forEach((note, index) => {
         const item = document.createElement("div");
         item.className = "memory-item";
 
         const text = document.createElement("p");
-        text.textContent = memory;
+        text.textContent = note;
         item.appendChild(text);
 
         const removeButton = document.createElement("button");
-        removeButton.type = "button";
         removeButton.className = "secondary-button";
-        removeButton.textContent = "Delete";
+        removeButton.type = "button";
+        removeButton.textContent = "Delete note";
 
         removeButton.addEventListener("click", () => {
-          const updated = getMemories();
-          updated.splice(index, 1);
+          const memory = getMemory();
+          memory.splice(index, 1);
 
-          const saved = writeStorage(MEMORY_KEY, updated);
-          renderMemories();
+          localStorage.setItem(
+            "brianiacMemory",
+            JSON.stringify(memory)
+          );
 
-          document.getElementById("memoryStatus").textContent =
-            saved
-              ? "Memory deleted."
-              : "Could not update browser storage.";
+          renderMemory();
         });
 
         item.appendChild(removeButton);
@@ -846,145 +903,39 @@
       });
     }
 
-    document.getElementById("memoryForm")
-      .addEventListener("submit", event => {
-        event.preventDefault();
-
+    document.getElementById("saveMemory").addEventListener(
+      "click",
+      () => {
         const input = document.getElementById("memoryInput");
         const note = input.value.trim();
 
         if (!note) return;
 
-        const memories = getMemories();
-        memories.push(note);
+        const memory = getMemory();
+        memory.push(note);
 
-        const saved = writeStorage(MEMORY_KEY, memories);
-
-        input.value = "";
-        renderMemories();
-
-        document.getElementById("memoryStatus").textContent =
-          saved
-            ? "Memory saved on this device."
-            : "Could not save. Browser storage may be unavailable.";
-      });
-
-    document.getElementById("clearMemory")
-      .addEventListener("click", () => {
-        if (!confirm("Are you sure you want to delete all saved memories?")) {
-          return;
-        }
-
-        const saved = writeStorage(MEMORY_KEY, []);
-        renderMemories();
-
-        document.getElementById("memoryStatus").textContent =
-          saved
-            ? "All memories cleared."
-            : "Could not update browser storage.";
-      });
-
-    function getSettings() {
-      const saved = readStorage(SETTINGS_KEY, { style: "friendly" });
-
-      const allowed = ["friendly", "professional", "concise"];
-
-      return {
-        style: saved && allowed.includes(saved.style)
-          ? saved.style
-          : "friendly"
-      };
-    }
-
-    document.getElementById("settingsForm")
-      .addEventListener("submit", event => {
-        event.preventDefault();
-
-        const style = document.getElementById("responseStyle").value;
-        const saved = writeStorage(SETTINGS_KEY, { style });
-
-        document.getElementById("settingsStatus").textContent =
-          saved
-            ? "Settings saved."
-            : "Could not save settings in browser storage.";
-      });
-
-    function makeChatReply(message) {
-      const text = message.toLowerCase();
-      const style = getSettings().style;
-
-      let reply;
-
-      if (/\b(hello|hi|hey)\b/.test(text)) {
-        reply = "Hello! It's good to talk with you. What shall we work on?";
-      } else if (
-        text.includes("your name") ||
-        text.includes("who are you")
-      ) {
-        reply = "I'm " + getAppearance().name +
-          ", your BRIANIAC AI companion.";
-      } else if (text.includes("help")) {
-        reply = "Tell me what you're trying to do, and we can break it into smaller steps.";
-      } else if (text.includes("thank")) {
-        reply = "You're welcome! Let's keep building.";
-      } else {
-        reply = "I received your message. This chat is currently a basic demo, so I don't have a real AI model connected yet.";
-      }
-
-      if (style === "concise") {
-        reply = reply.split(".")[0] + ".";
-      } else if (style === "professional") {
-        reply = "Thank you for your message. " + reply;
-      }
-
-      return reply;
-    }
-
-    document.getElementById("chatForm")
-      .addEventListener("submit", event => {
-        event.preventDefault();
-
-        const input = document.getElementById("chatInput");
-        const message = input.value.trim();
-
-        if (!message) return;
-
-        const log = document.getElementById("chatLog");
-
-        const userMessage = document.createElement("div");
-        userMessage.className = "chat-message";
-
-        const userLabel = document.createElement("strong");
-        userLabel.textContent = "You: ";
-
-        userMessage.appendChild(userLabel);
-        userMessage.appendChild(document.createTextNode(message));
-        log.appendChild(userMessage);
-
-        const replyMessage = document.createElement("div");
-        replyMessage.className = "chat-message";
-
-        const assistantLabel = document.createElement("strong");
-        assistantLabel.textContent = getAppearance().name + ": ";
-
-        replyMessage.appendChild(assistantLabel);
-        replyMessage.appendChild(document.createTextNode(makeChatReply(message)));
-        log.appendChild(replyMessage);
+        localStorage.setItem(
+          "brianiacMemory",
+          JSON.stringify(memory)
+        );
 
         input.value = "";
-      });
+        renderMemory();
+      }
+    );
 
-    const initialAppearance = getAppearance();
-    applyAppearance(initialAppearance);
+    document.getElementById("clearMemory").addEventListener(
+      "click",
+      () => {
+        if (!confirm("Delete all saved notes?")) return;
 
-    const introSeen = readStorage(INTRO_KEY, false);
-    if (introSeen) {
-      showScreen("home");
-    } else {
-      showScreen("intro");
-    }
+        localStorage.removeItem("brianiacMemory");
+        renderMemory();
+      }
+    );
 
-    renderMemories();
-      </script>
+    applySettings();
+    renderMemory();
+  </script>
 </body>
 </html>
