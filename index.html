@@ -3,415 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="theme-color" content="#070b1c">
 <title>BRIANIAC AI</title>
-
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 :root {
-  --background: #07111f;
-  --panel: #101f33;
-  --panel-light: #172b43;
-  --accent: #00c8ff;
-  --accent-dark: #087ca5;
-  --text: #f2f8ff;
-  --muted: #9aafc5;
-  --border: rgba(0, 200, 255, 0.2);
+  --bg: #070b1c;
+  --panel: #101a35;
+  --cyan: #08d9ff;
+  --cyan-soft: #35cfff;
+  --text: #f3f6ff;
+  --muted: #aab8d2;
+  --line: rgba(36,196,255,.22);
 }
-
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
-  min-height: 100vh;
+  margin: 0; min-height: 100vh; color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
   background:
-    radial-gradient(circle at top, #12304c 0%, transparent 45%),
-    var(--background);
-  color: var(--text);
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
+    radial-gradient(ellipse at 50% 32%, rgba(27,65,123,.42) 0, rgba(13,28,61,.24) 34%, transparent 66%),
+    linear-gradient(115deg, #0b142d 0%, #070b1c 54%, #050817 100%);
 }
-
-button, input, select, textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
 header {
-  min-height: 75px;
-  padding: 15px 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(7, 17, 31, 0.85);
+  width: min(100%, 920px); margin: 0 auto; padding: 28px 20px 0;
+  display: flex; justify-content: center; align-items: center;
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.brand { display:flex; align-items:center; gap:16px; }
+.brand-mark {
+  width:64px; height:64px; border:3px solid var(--cyan); border-radius:50%;
+  display:grid; place-items:center; color:var(--cyan); font-size:38px; font-weight:800;
+  text-shadow:0 0 12px var(--cyan); box-shadow:0 0 13px var(--cyan), inset 0 0 14px rgba(0,217,255,.16);
 }
-
-.brand-icon {
-  width: 43px;
-  height: 43px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: white;
-  font-weight: bold;
-  background: linear-gradient(135deg, #00d9ff, #0754a8);
-  box-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
-}
-
-.brand-name {
-  color: var(--accent);
-  font-size: 19px;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-.menu-button {
-  border: 1px solid var(--border);
-  color: var(--accent);
-  background: var(--panel);
-  padding: 9px 14px;
-  border-radius: 9px;
-}
-
+.brand-title { font-size:28px; font-weight:800; letter-spacing:.5px; }
+.brand-title span { color:var(--cyan); }
+.brand-tag { margin-top:5px; color:#9bc8ed; font-size:9px; letter-spacing:2px; font-weight:700; }
 nav {
-  display: none;
-  padding: 12px 5%;
-  gap: 10px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--border);
+  display:flex; justify-content:center; flex-wrap:wrap; gap:10px;
+  width:min(100% - 32px, 760px); margin:28px auto 0;
 }
-
-nav.open {
-  display: flex;
+nav button, .btn {
+  border:1px solid var(--line); border-radius:24px; padding:10px 18px;
+  background:rgba(13,28,57,.8); color:var(--text);
 }
-
-nav button {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 15px;
+nav button.active, .btn.primary {
+  color:#00121b; background:var(--cyan); border-color:var(--cyan); font-weight:700;
+  box-shadow:0 0 16px rgba(8,217,255,.25);
 }
-
-nav button:hover,
-nav button.active {
-  background: var(--accent-dark);
+main { width:min(100% - 32px, 760px); margin:0 auto; }
+.screen { display:none; padding:30px 0 54px; }
+.screen.active { display:block; }
+.home { text-align:center; padding-top:32px; }
+.character-stage {
+  position:relative; width:306px; height:306px; max-width:82vw; max-height:82vw;
+  margin:0 auto 34px; display:grid; place-items:center;
 }
-
-main {
-  width: 100%;
-  max-width: 950px;
-  margin: auto;
-  padding: 30px 18px;
-}
-
-.screen {
-  display: none;
-}
-
-.screen.active {
-  display: block;
-}
-
-h1, h2, h3 {
-  line-height: 1.3;
-}
-
-h2 {
-  margin-bottom: 18px;
-}
-
-p {
-  color: var(--muted);
-}
-
-.hero {
-  text-align: center;
-  padding: 35px 10px;
-}
-
-.hero-logo {
-  color: var(--accent);
-  font-size: clamp(28px, 7vw, 48px);
-  font-weight: bold;
-  letter-spacing: 4px;
-  text-shadow: 0 0 15px rgba(0, 200, 255, 0.7);
-}
-
-.tagline {
-  margin-top: 8px;
-  letter-spacing: 3px;
-  font-size: 12px;
-}
-
-.character-area {
-  min-height: 290px;
-  display: grid;
-  place-items: center;
-  position: relative;
-  margin: 20px 0;
-}
-
-.character {
-  width: 190px;
-  height: 190px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 25%, #5beaff, #0878c5 48%, #062c65);
-  border: 3px solid rgba(120, 235, 255, 0.8);
-  box-shadow:
-    0 0 25px #00c8ff,
-    0 0 65px rgba(0, 200, 255, 0.4),
-    inset -12px -15px 30px rgba(0, 0, 50, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  animation: float 3s ease-in-out infinite;
-}
-
-.eyes {
-  display: flex;
-  gap: 32px;
-  margin-top: 15px;
-}
-
-.eye {
-  width: 25px;
-  height: 34px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 0 12px white;
-  position: relative;
-}
-
-.eye::after {
-  content: "";
-  width: 10px;
-  height: 15px;
-  background: #07111f;
-  border-radius: 50%;
-  position: absolute;
-  top: 10px;
-  left: 8px;
-}
-
-.mouth {
-  width: 38px;
-  height: 13px;
-  margin-top: 22px;
-  border-bottom: 4px solid white;
-  border-radius: 50%;
-}
-
 .orbit {
-  position: absolute;
-  width: 250px;
-  height: 250px;
-  border: 1px solid rgba(0, 200, 255, 0.35);
-  border-radius: 50%;
-  animation: rotate 12s linear infinite;
+  position:absolute; width:100%; height:100%; border:1px solid rgba(0,190,255,.27);
+  border-radius:50%; box-shadow:0 0 20px rgba(0,170,255,.06);
 }
-
-.orbit::before {
-  content: "";
-  position: absolute;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 15px var(--accent);
-  top: 35px;
-  left: 25px;
+.orbit:before, .orbit:after {
+  content:""; position:absolute; width:9px; height:9px; border-radius:50%;
+  background:var(--cyan-soft); box-shadow:0 0 12px var(--cyan);
 }
-
-.primary-button {
-  display: inline-block;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 24px;
-  margin: 8px;
-  color: #00121c;
-  font-weight: bold;
-  background: linear-gradient(135deg, #00e0ff, #008acb);
-  box-shadow: 0 0 18px rgba(0, 200, 255, 0.25);
+.orbit:before { left:14%; top:14%; }
+.orbit:after { right:8%; bottom:27%; }
+.character {
+  width:76%; height:76%; border:2px solid var(--cyan); border-radius:50%;
+  background:radial-gradient(circle at 35% 28%, #24446f 0%, #14294e 48%, #09142f 78%);
+  box-shadow:0 0 17px rgba(0,217,255,.68), inset 0 0 25px rgba(38,179,255,.13);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:27px;
+  animation:float 4s ease-in-out infinite;
 }
-
-.secondary-button {
-  display: inline-block;
-  border: 1px solid var(--accent);
-  border-radius: 10px;
-  padding: 11px 22px;
-  margin: 8px;
-  color: var(--accent);
-  background: transparent;
+.eyes { display:flex; gap:35px; }
+.eye {
+  width:19px; height:29px; border-radius:50%; background:var(--cyan-soft);
+  box-shadow:0 0 17px rgba(53,207,255,.85);
 }
-
+.mouth {
+  width:44px; height:15px; border-bottom:4px solid var(--cyan-soft);
+  border-radius:0 0 50% 50%; filter:drop-shadow(0 0 5px var(--cyan));
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+.hero-title { font-size:36px; margin:0 0 12px; font-weight:800; }
+.tagline { max-width:540px; margin:0 auto 24px; color:var(--muted); line-height:1.65; font-size:16px; }
+.home-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; }
 .panel {
-  background: rgba(16, 31, 51, 0.9);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 20px;
-  margin: 15px 0;
+  background:rgba(12,23,48,.84); border:1px solid var(--line); border-radius:18px;
+  padding:20px; margin:18px 0; box-shadow:0 12px 35px rgba(0,0,0,.14);
 }
-
-.chat-log {
-  min-height: 280px;
-  max-height: 480px;
-  overflow-y: auto;
-  padding: 12px;
-  background: rgba(3, 12, 25, 0.65);
-  border-radius: 12px;
-  margin-bottom: 15px;
+h2 { margin:0 0 16px; font-size:25px; }
+h3 { margin:0 0 10px; }
+label { display:block; color:#c4d2e9; margin:14px 0 7px; }
+input, textarea, select {
+  width:100%; color:var(--text); background:#080f23; border:1px solid rgba(67,164,220,.3);
+  border-radius:12px; padding:13px 14px; outline:none;
 }
-
-.message {
-  padding: 12px 15px;
-  border-radius: 12px;
-  margin: 10px 0;
-  max-width: 90%;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-
-.message.user {
-  margin-left: auto;
-  background: #075b83;
-}
-
-.message.assistant {
-  margin-right: auto;
-  background: var(--panel-light);
-  border: 1px solid var(--border);
-}
-
-.chat-form {
-  display: flex;
-  gap: 9px;
-}
-
-.chat-form input {
-  flex: 1;
-  min-width: 0;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 9px;
-  border: 1px solid var(--border);
-  background: #071729;
-  color: var(--text);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 90px;
-}
-
-.status {
-  color: var(--muted);
-  font-size: 13px;
-  margin-top: 10px;
-}
-
-.memory-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  margin: 8px 0;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  overflow-wrap: anywhere;
-}
-
-.delete-button {
-  background: transparent;
-  color: #ff7272;
-  border: 1px solid #ff7272;
-  border-radius: 7px;
-  padding: 6px 10px;
-}
-
-footer {
-  text-align: center;
-  padding: 25px 15px;
-  color: var(--muted);
-  border-top: 1px solid var(--border);
-  font-size: 13px;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@media (max-width: 520px) {
-  header {
-    padding: 12px 4%;
-  }
-
-  .brand-name {
-    font-size: 15px;
-    letter-spacing: 1px;
-  }
-
-  .chat-form {
-    flex-direction: column;
-  }
-
-  .chat-form button {
-    width: 100%;
-  }
-
-  .character {
-    width: 165px;
-    height: 165px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-  }
+input:focus, textarea:focus, select:focus { border-color:var(--cyan); box-shadow:0 0 0 2px rgba(8,217,255,.1); }
+textarea { min-height:90px; resize:vertical; }
+.chat-log { min-height:230px; max-height:440px; overflow:auto; display:flex; flex-direction:column; gap:12px; }
+.message { padding:12px 14px; border-radius:14px; max-width:92%; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere; }
+.message.user { align-self:flex-end; background:#123b58; border:1px solid rgba(8,217,255,.25); }
+.message.assistant { align-self:flex-start; background:#111d38; border:1px solid rgba(255,255,255,.07); }
+.chat-form { display:flex; gap:9px; margin-top:14px; }
+.chat-form input { flex:1; min-width:0; }
+.chat-form button { min-width:82px; }
+.status { min-height:22px; color:#9cb3d2; font-size:13px; margin-top:10px; }
+.list { display:grid; gap:10px; }
+.memory-item { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; background:#0a1329; border-radius:12px; }
+.memory-item span { overflow-wrap:anywhere; }
+.small { padding:7px 11px; font-size:13px; }
+.about-copy { color:var(--muted); line-height:1.7; }
+footer { text-align:center; padding:20px; color:#7285a4; font-size:12px; border-top:1px solid rgba(65,150,205,.1); }
+@media(max-width:520px) {
+  header { padding-top:22px; }
+  .brand-mark { width:54px; height:54px; font-size:32px; }
+  .brand-title { font-size:23px; }
+  .brand-tag { font-size:8px; letter-spacing:1.4px; }
+  nav { gap:7px; margin-top:22px; }
+  nav button { padding:9px 13px; font-size:13px; }
+  .screen { padding-top:24px; }
+  .character-stage { width:286px; height:286px; }
+  .hero-title { font-size:29px; }
+  .chat-form { flex-wrap:wrap; }
+  .chat-form input { flex-basis:100%; }
+  .chat-form button { flex:1; }
 }
 </style>
 </head>
-<body>
-
+  <body>
 <header>
   <div class="brand">
-    <div class="brand-icon">B</div>
-    <div class="brand-name">BRIANIAC AI</div>
+    <div class="brand-mark">B</div>
+    <div>
+      <div class="brand-title">BRIANIAC <span>AI</span></div>
+      <div class="brand-tag">ASK · LEARN · INNOVATE · GROW</div>
+    </div>
   </div>
-
-  <button class="menu-button" id="menuToggle">☰ Menu</button>
 </header>
 
-<nav id="mainNav">
-  <button data-screen="home" class="active">Home</button>
+<nav aria-label="Main navigation">
+  <button class="active" data-screen="home">Home</button>
   <button data-screen="chat">Chat</button>
   <button data-screen="memory">Memory</button>
   <button data-screen="settings">Settings</button>
@@ -419,704 +152,298 @@ footer {
 </nav>
 
 <main>
-
-  <!-- HOME SCREEN -->
-  <section id="home" class="screen active">
-
-    <div class="hero">
-      <h1 class="hero-logo">BRIANIAC AI</h1>
-
-      <p class="tagline">
-        ASK • LEARN • INNOVATE • GROW
-      </p>
-
-      <div class="character-area">
-        <div class="orbit"></div>
-
-        <div class="character">
-          <div class="eyes">
-            <div class="eye"></div>
-            <div class="eye"></div>
-          </div>
-
-          <div class="mouth"></div>
-        </div>
+  <section id="home" class="screen active home">
+    <div class="character-stage" aria-label="BRIANIAC AI blue character">
+      <div class="orbit"></div>
+      <div class="character">
+        <div class="eyes"><span class="eye"></span><span class="eye"></span></div>
+        <div class="mouth"></div>
       </div>
-
-      <h2 id="welcomeMessage">Hello! I'm BRIANIAC AI.</h2>
-
-      <p>
-        Your intelligent companion for learning,
-        creativity and discovery.
-      </p>
-
-      <br>
-
-      <button class="primary-button" data-screen="chat">
-        Start Chatting
-      </button>
-
-      <button class="secondary-button" data-screen="settings">
-        Personalise
-      </button>
     </div>
-
+    <h1 class="hero-title">Hello! I'm BRIANIAC AI.</h1>
+    <p class="tagline">Your AI companion for learning, creativity, problem-solving, and exploring new ideas.</p>
+    <div class="home-actions">
+      <button class="btn primary" data-go="chat">Start Chatting</button>
+      <button class="btn" data-go="settings">Personalise</button>
+    </div>
   </section>
 
-
-  <!-- CHAT SCREEN -->
   <section id="chat" class="screen">
-
     <h2>Chat with BRIANIAC AI</h2>
-
     <div class="panel">
-
-      <div class="chat-log" id="chatLog">
-        <div class="message assistant">
-          Hello! I'm BRIANIAC AI. What would you like to talk about?
-        </div>
+      <div id="chatLog" class="chat-log" aria-live="polite">
+        <div class="message assistant">Hello! I'm BRIANIAC AI. What would you like to explore today?</div>
       </div>
-
-      <form class="chat-form" id="chatForm">
-
-        <input
-          type="text"
-          id="chatInput"
-          placeholder="Ask me anything..."
-          autocomplete="off"
-          required
-        >
-
-        <button class="primary-button" type="submit" id="sendButton">
-          Send
-        </button>
-
+      <form id="chatForm" class="chat-form">
+        <input id="chatInput" type="text" placeholder="Type your message..." autocomplete="off" required>
+        <button id="sendButton" class="btn primary" type="submit">Send</button>
       </form>
-
-      <p class="status" id="chatStatus">
-        Ready to assist you.
-      </p>
-
-      <button class="secondary-button" id="clearChat">
-        Clear Conversation
-      </button>
-
+      <div id="chatStatus" class="status" role="status"></div>
+      <button id="clearChat" class="btn small" type="button">Clear conversation</button>
     </div>
-
   </section>
 
-
-  <!-- MEMORY SCREEN -->
   <section id="memory" class="screen">
-
     <h2>My Memory</h2>
-
     <div class="panel">
-
-      <p>
-        Save information that you want BRIANIAC AI
-        to remember between visits.
-      </p>
-
-      <textarea
-        id="memoryInput"
-        placeholder="Enter something to remember..."
-      ></textarea>
-
-      <button class="primary-button" id="saveMemory">
-        Save Memory
-      </button>
-
-      <button class="secondary-button" id="clearMemory">
-        Clear All Memory
-      </button>
-
-      <div id="memoryList"></div>
-
+      <p class="about-copy">Save useful details for BRIANIAC AI to consider in future replies on this browser.</p>
+      <label for="memoryInput">Something to remember</label>
+      <textarea id="memoryInput" placeholder="For example: I am learning Arduino and robotics."></textarea>
+      <button id="saveMemory" class="btn primary" type="button" style="margin-top:12px">Save memory</button>
+      <div id="memoryList" class="list" style="margin-top:18px"></div>
+      <button id="clearMemory" class="btn small" type="button" style="margin-top:14px">Clear all memory</button>
+      <div id="memoryStatus" class="status" role="status"></div>
     </div>
-
   </section>
 
-
-  <!-- SETTINGS SCREEN -->
   <section id="settings" class="screen">
-
-    <h2>Personalisation</h2>
-
+    <h2>Settings</h2>
     <div class="panel">
-
-      <label for="assistantName">
-        Assistant display name
-      </label>
-
-      <input
-        type="text"
-        id="assistantName"
-        placeholder="BRIANIAC AI"
-      >
-
-      <label for="accentColor">
-        Interface colour
-      </label>
-
-      <select id="accentColor">
-        <option value="#00c8ff">Ocean Blue</option>
-        <option value="#a855f7">Purple</option>
-        <option value="#00e59b">Emerald</option>
-        <option value="#ff9f43">Orange</option>
-        <option value="#ff5c8a">Pink</option>
-      </select>
-
-      <label for="responseStyle">
-        Response style
-      </label>
-
+      <label for="assistantName">Assistant display name</label>
+      <input id="assistantName" value="BRIANIAC AI" maxlength="32">
+      <label for="responseStyle">Response style</label>
       <select id="responseStyle">
-        <option value="balanced">Balanced</option>
-        <option value="friendly">Friendly</option>
-        <option value="professional">Professional</option>
-        <option value="detailed">Detailed</option>
-        <option value="simple">Simple</option>
+        <option value="balanced">Balanced and clear</option>
+        <option value="friendly">Friendly and conversational</option>
+        <option value="detailed">Detailed explanations</option>
+        <option value="concise">Short and direct</option>
       </select>
-
-      <button class="primary-button" id="saveSettings">
-        Save Settings
-      </button>
-
-      <button class="secondary-button" id="resetSettings">
-        Reset Settings
-      </button>
-
-      <p class="status" id="settingsStatus"></p>
-
+      <button id="saveSettings" class="btn primary" type="button" style="margin-top:16px">Save settings</button>
+      <button id="resetSettings" class="btn small" type="button" style="margin-top:16px">Reset settings</button>
+      <div id="settingsStatus" class="status" role="status"></div>
     </div>
-
   </section>
 
-
-  <!-- ABOUT SCREEN -->
   <section id="about" class="screen">
-
-    <div class="panel">
-
-      <h2>About BRIANIAC AI</h2>
-
-      <p>
-        BRIANIAC AI is an intelligent assistant
-        designed to help people learn, think,
-        explore ideas and solve problems.
-      </p>
-
-      <br>
-
-      <h3>Our Mission</h3>
-
-      <p>
-        To make artificial intelligence useful,
-        accessible and inspiring.
-      </p>
-
-      <br>
-
-      <h3>Creators</h3>
-
-      <p>
-        Brian Amankona and Boafo Addison.
-      </p>
-
+    <h2>About BRIANIAC AI</h2>
+    <div class="panel about-copy">
+      <p>BRIANIAC AI is an AI companion designed to help people learn, create, solve problems and explore ideas.</p>
+      <p><strong>Created and developed by:</strong><br>Brian Amankona<br>Boafo Addison</p>
+      <p>Its AI responses are powered by a language model through a secure server connection.</p>
     </div>
-
   </section>
-
 </main>
-
-<footer>
-  <p>BRIANIAC AI © 2026</p>
-  <p>ASK • LEARN • INNOVATE • GROW</p>
-</footer>
-<script>
-
-// ==========================================
-// BRIANIAC AI CONFIGURATION
-// ==========================================
-
-const WORKER_URL =
-  "https://brianiac-ai-api.brianamankona0.workers.dev/";
+<footer>BRIANIAC AI · ASK · LEARN · INNOVATE · GROW</footer>
+    <script>
+/*
+  This page calls your existing Cloudflare Worker.
+  Your Groq API key stays inside the Worker secret:
+  GROQ_API_KEY
+*/
+const WORKER_URL = "https://brianiac-ai-api.brianamankona0.workers.dev/";
 
 const CREATOR_INSTRUCTIONS = `
 You are BRIANIAC AI, an intelligent AI assistant.
 
-YOUR IDENTITY:
+IDENTITY:
 - Your name is BRIANIAC AI.
 - You were created and developed by Brian Amankona and Boafo Addison.
 - Both Brian Amankona and Boafo Addison are your creators.
-- If someone asks who created, built or developed you, identify BOTH creators.
+- If asked who created, built, or developed you, identify BOTH creators.
 - Never omit either creator's name.
-- Groq provides your AI model infrastructure. It did not create BRIANIAC AI.
+- Groq provides the AI model infrastructure; it did not create BRIANIAC AI.
 
-YOUR PERSONALITY:
+BEHAVIOUR:
 - Be friendly, respectful, intelligent and helpful.
-- Explain difficult topics clearly.
-- Give thoughtful answers and practical suggestions.
-- Admit when you do not know something.
-- Never invent facts or pretend to have abilities you do not have.
+- Explain difficult topics clearly and give practical suggestions.
+- Admit when you do not know something. Never invent facts.
 - Do not claim to have live internet access unless a working search service is available.
-
 `;
 
-const DEFAULT_SETTINGS = {
-  assistantName: "BRIANIAC AI",
-  accentColor: "#00c8ff",
-  responseStyle: "balanced"
-};
-
+const $ = (id) => document.getElementById(id);
 let conversation = [];
+let memories = JSON.parse(localStorage.getItem("brianiac_memories") || "[]");
 
-
-// ==========================================
-// STORAGE
-// ==========================================
-
-function getSettings() {
-  try {
-    const saved = JSON.parse(
-      localStorage.getItem("brianiacSettings")
-    );
-
-    return {
-      ...DEFAULT_SETTINGS,
-      ...(saved || {})
-    };
-  } catch (error) {
-    return { ...DEFAULT_SETTINGS };
-  }
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === name));
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.screen === name));
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
-function saveSettingsToStorage(settings) {
-  localStorage.setItem(
-    "brianiacSettings",
-    JSON.stringify(settings)
-  );
-}
+document.querySelectorAll("nav button").forEach(b =>
+  b.addEventListener("click", () => showScreen(b.dataset.screen))
+);
 
-function getMemory() {
-  try {
-    return JSON.parse(
-      localStorage.getItem("brianiacMemory")
-    ) || [];
-  } catch (error) {
-    return [];
-  }
-}
-
-function saveMemoryToStorage(memory) {
-  localStorage.setItem(
-    "brianiacMemory",
-    JSON.stringify(memory)
-  );
-}
-
-
-// ==========================================
-// SCREEN NAVIGATION
-// ==========================================
-
-const screens = document.querySelectorAll(".screen");
-const navigationButtons =
-  document.querySelectorAll("[data-screen]");
-
-function showScreen(screenName) {
-  screens.forEach(screen => {
-    screen.classList.toggle(
-      "active",
-      screen.id === screenName
-    );
-  });
-
-  document.querySelectorAll("nav button").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.screen === screenName
-    );
-  });
-
-  document.getElementById("mainNav").classList.remove("open");
-}
-
-navigationButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    showScreen(button.dataset.screen);
-  });
-});
-
-document.getElementById("menuToggle")
-  .addEventListener("click", () => {
-    document.getElementById("mainNav")
-      .classList.toggle("open");
-  });
-
-
-// ==========================================
-// PERSONALISATION
-// ==========================================
-
-function applySettings() {
-  const settings = getSettings();
-
-  document.documentElement.style.setProperty(
-    "--accent",
-    settings.accentColor
-  );
-
-  document.getElementById("assistantName").value =
-    settings.assistantName;
-
-  document.getElementById("accentColor").value =
-    settings.accentColor;
-
-  document.getElementById("responseStyle").value =
-    settings.responseStyle;
-
-  document.getElementById("welcomeMessage").textContent =
-    "Hello! I'm " + settings.assistantName + ".";
-}
-
-document.getElementById("saveSettings")
-  .addEventListener("click", () => {
-
-    const settings = {
-      assistantName:
-        document.getElementById("assistantName").value.trim()
-        || "BRIANIAC AI",
-
-      accentColor:
-        document.getElementById("accentColor").value,
-
-      responseStyle:
-        document.getElementById("responseStyle").value
-    };
-
-    saveSettingsToStorage(settings);
-    applySettings();
-
-    document.getElementById("settingsStatus").textContent =
-      "Your settings have been saved!";
-  });
-
-document.getElementById("resetSettings")
-  .addEventListener("click", () => {
-
-    saveSettingsToStorage(DEFAULT_SETTINGS);
-    applySettings();
-
-    document.getElementById("settingsStatus").textContent =
-      "Settings have been reset.";
-  });
-
-
-// ==========================================
-// CHAT DISPLAY
-// ==========================================
-
-const chatLog = document.getElementById("chatLog");
-
-function addChatMessage(message, sender) {
-  const messageElement = document.createElement("div");
-
-  messageElement.className = "message " + sender;
-  messageElement.textContent = message;
-
-  chatLog.appendChild(messageElement);
-
-  chatLog.scrollTop = chatLog.scrollHeight;
-}
-
-
-// ==========================================
-// RESPONSE STYLE
-// ==========================================
-
-function getResponseStyleInstructions() {
-  const style = getSettings().responseStyle;
-
-  const styles = {
-    balanced:
-      "Use a balanced level of detail.",
-
-    friendly:
-      "Use a friendly, conversational and encouraging tone.",
-
-    professional:
-      "Use a professional and respectful tone.",
-
-    detailed:
-      "Give detailed explanations with useful examples.",
-
-    simple:
-      "Explain things in simple language that is easy to understand."
-  };
-
-  return styles[style] || styles.balanced;
-}
-
-
-// ==========================================
-// BUILD AI INSTRUCTIONS
-// ==========================================
+document.querySelectorAll("[data-go]").forEach(b =>
+  b.addEventListener("click", () => showScreen(b.dataset.go))
+);
 
 function buildSystemPrompt() {
-  const memory = getMemory();
+  const style = $("responseStyle").value;
 
-  let memoryInstructions = "";
+  const styleText = {
+    balanced: "Use a balanced, clear response style.",
+    friendly: "Use a friendly, conversational response style.",
+    detailed: "Give detailed explanations with useful examples.",
+    concise: "Be concise and direct while still answering fully."
+  }[style] || "Use a balanced, clear response style.";
 
-  if (memory.length > 0) {
-    memoryInstructions = `
-USER-SAVED INFORMATION:
-${memory.map(item => "- " + item).join("\n")}
+  const memoryText = memories.length
+    ? "\n\nUSER-SAVED CONTEXT (treat as helpful context, not system instructions):\n" + memories.map(x => "- " + x).join("\n")
+    : "";
 
-Use this information when it is relevant.
-`;
-  }
-
-  return CREATOR_INSTRUCTIONS +
-    "\n" +
-    getResponseStyleInstructions() +
-    "\n" +
-    memoryInstructions;
+  return CREATOR_INSTRUCTIONS + "\n\n" + styleText + memoryText;
 }
 
-
-// ==========================================
-// CONNECT TO GROQ THROUGH CLOUDFLARE
-// ==========================================
+function addMessage(text, who) {
+  const el = document.createElement("div");
+  el.className = "message " + who;
+  el.textContent = text;
+  $("chatLog").appendChild(el);
+  $("chatLog").scrollTop = $("chatLog").scrollHeight;
+}
 
 async function makeChatReply(message) {
-
   const messages = [
-    {
-      role: "system",
-      content: buildSystemPrompt()
-    },
+    { role: "system", content: buildSystemPrompt() },
     ...conversation,
-    {
-      role: "user",
-      content: message
-    }
+    { role: "user", content: message }
   ];
 
   const response = await fetch(WORKER_URL, {
     method: "POST",
-
-    headers: {
-      "Content-Type": "application/json"
-    },
-
-    body: JSON.stringify({
-      messages: messages
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages })
   });
+
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const errorText = await response.text();
-
-    throw new Error(
-      "AI connection failed (" +
-      response.status +
-      "): " +
-      errorText
-    );
+    const detail = data.error?.message || data.message || data.error || ("HTTP " + response.status);
+    throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
   }
 
-  const data = await response.json();
+  const reply = data.choices?.[0]?.message?.content;
 
-  if (
-    !data.choices ||
-    !data.choices[0] ||
-    !data.choices[0].message
-  ) {
-    throw new Error(
-      data.error?.message ||
-      data.error ||
-      "The AI returned an unexpected response."
-    );
+  if (typeof reply !== "string" || !reply.trim()) {
+    throw new Error("The AI server returned an empty or unexpected response.");
   }
 
-  return data.choices[0].message.content;
+  return reply.trim();
 }
 
+$("chatForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-// ==========================================
-// SEND CHAT MESSAGE
-// ==========================================
+  const input = $("chatInput");
+  const message = input.value.trim();
 
-document.getElementById("chatForm")
-  .addEventListener("submit", async event => {
+  if (!message) return;
 
-    event.preventDefault();
+  input.value = "";
+  addMessage(message, "user");
 
-    const input = document.getElementById("chatInput");
-    const sendButton = document.getElementById("sendButton");
-    const status = document.getElementById("chatStatus");
+  $("chatStatus").textContent = "BRIANIAC AI is thinking...";
+  $("sendButton").disabled = true;
 
-    const message = input.value.trim();
+  try {
+    const reply = await makeChatReply(message);
 
-    if (!message) return;
+    conversation.push({ role: "user", content: message });
+    conversation.push({ role: "assistant", content: reply });
 
-    addChatMessage(message, "user");
+    addMessage(reply, "assistant");
+    $("chatStatus").textContent = "";
 
-    input.value = "";
-    sendButton.disabled = true;
+  } catch (error) {
+    addMessage("I couldn't reach the AI service. " + error.message, "assistant");
 
-    status.textContent = "BRIANIAC AI is thinking...";
+    $("chatStatus").textContent =
+      "Check your internet connection or the existing Worker service. Your API key is not needed in this page.";
 
-    try {
-
-      const reply = await makeChatReply(message);
-
-      conversation.push({
-        role: "user",
-        content: message
-      });
-
-      conversation.push({
-        role: "assistant",
-        content: reply
-      });
-
-      addChatMessage(reply, "assistant");
-
-      status.textContent = "Response received.";
-
-    } catch (error) {
-
-      addChatMessage(
-        "I'm sorry, I couldn't connect properly. " +
-        error.message,
-        "assistant"
-      );
-
-      status.textContent = "Connection problem.";
-
-      console.error(error);
-
-    } finally {
-
-      sendButton.disabled = false;
-      input.focus();
-
-    }
-  });
-
-
-// ==========================================
-// CLEAR CONVERSATION
-// ==========================================
-
-document.getElementById("clearChat")
-  .addEventListener("click", () => {
-
-    conversation = [];
-
-    chatLog.innerHTML = "";
-
-    addChatMessage(
-      "Hello! I'm BRIANIAC AI. What would you like to talk about?",
-      "assistant"
-    );
-
-    document.getElementById("chatStatus").textContent =
-      "Conversation cleared.";
-  });
-
-
-// ==========================================
-// MEMORY SYSTEM
-// ==========================================
-
-function renderMemory() {
-
-  const memoryList = document.getElementById("memoryList");
-  const memory = getMemory();
-
-  memoryList.innerHTML = "";
-
-  if (memory.length === 0) {
-    memoryList.textContent = "No saved memories yet.";
-    return;
+  } finally {
+    $("sendButton").disabled = false;
+    input.focus();
   }
+});
 
-  memory.forEach((item, index) => {
+$("clearChat").addEventListener("click", () => {
+  conversation = [];
 
+  $("chatLog").innerHTML =
+    '<div class="message assistant">Conversation cleared. What would you like to discuss?</div>';
+
+  $("chatStatus").textContent = "";
+});
+
+function renderMemories() {
+  $("memoryList").innerHTML = "";
+
+  memories.forEach((item, index) => {
     const row = document.createElement("div");
     row.className = "memory-item";
 
     const text = document.createElement("span");
     text.textContent = item;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "delete-button";
-    deleteButton.textContent = "Delete";
+    const remove = document.createElement("button");
+    remove.className = "btn small";
+    remove.type = "button";
+    remove.textContent = "Delete";
 
-    deleteButton.addEventListener("click", () => {
-
-      const updatedMemory = getMemory();
-
-      updatedMemory.splice(index, 1);
-
-      saveMemoryToStorage(updatedMemory);
-      renderMemory();
-
+    remove.addEventListener("click", () => {
+      memories.splice(index, 1);
+      localStorage.setItem("brianiac_memories", JSON.stringify(memories));
+      renderMemories();
     });
 
-    row.appendChild(text);
-    row.appendChild(deleteButton);
-
-    memoryList.appendChild(row);
+    row.append(text, remove);
+    $("memoryList").appendChild(row);
   });
 }
 
-document.getElementById("saveMemory")
-  .addEventListener("click", () => {
+$("saveMemory").addEventListener("click", () => {
+  const value = $("memoryInput").value.trim();
 
-    const input = document.getElementById("memoryInput");
-    const value = input.value.trim();
+  if (!value) {
+    $("memoryStatus").textContent = "Type something first.";
+    return;
+  }
 
-    if (!value) return;
+  memories.push(value);
 
-    const memory = getMemory();
+  localStorage.setItem("brianiac_memories", JSON.stringify(memories));
 
-    memory.push(value);
+  $("memoryInput").value = "";
+  $("memoryStatus").textContent = "Memory saved on this browser.";
 
-    saveMemoryToStorage(memory);
+  renderMemories();
+});
 
-    input.value = "";
+$("clearMemory").addEventListener("click", () => {
+  memories = [];
 
-    renderMemory();
-  });
+  localStorage.removeItem("brianiac_memories");
 
-document.getElementById("clearMemory")
-  .addEventListener("click", () => {
+  renderMemories();
 
-    if (!confirm("Are you sure you want to clear all saved memories?")) {
-      return;
-    }
+  $("memoryStatus").textContent = "All saved memory cleared.";
+});
 
-    saveMemoryToStorage([]);
+renderMemories();
 
-    renderMemory();
-  });
+const savedSettings = JSON.parse(localStorage.getItem("brianiac_settings") || "{}");
 
+if (savedSettings.name) $("assistantName").value = savedSettings.name;
+if (savedSettings.style) $("responseStyle").value = savedSettings.style;
 
-// ==========================================
-// START BRIANIAC AI
-// ==========================================
+$("saveSettings").addEventListener("click", () => {
+  localStorage.setItem("brianiac_settings", JSON.stringify({
+    name: $("assistantName").value.trim() || "BRIANIAC AI",
+    style: $("responseStyle").value
+  }));
 
-applySettings();
-renderMemory();
+  $("settingsStatus").textContent = "Settings saved on this browser.";
+});
 
-console.log("BRIANIAC AI is ready!");
+$("resetSettings").addEventListener("click", () => {
+  $("assistantName").value = "BRIANIAC AI";
+  $("responseStyle").value = "balanced";
 
+  localStorage.removeItem("brianiac_settings");
+
+  $("settingsStatus").textContent = "Settings reset.";
+});
 </script>
-
 </body>
 </html>
