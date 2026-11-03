@@ -455,14 +455,30 @@ const savedSettings = JSON.parse(localStorage.getItem("brianiac_settings") || "{
 if (savedSettings.name) $("assistantName").value = savedSettings.name;
 if (savedSettings.style) $("responseStyle").value = savedSettings.style;
 
+function updateAssistantDisplayName() {
+  const savedSettings = JSON.parse(
+    localStorage.getItem("brianiac_settings") || "{}"
+  );
+
+  const name = savedSettings.name || "BRIANIAC AI";
+
+  $("homeAssistantName").textContent = name;
+  $("chatAssistantName").textContent = name;
+}
+
 $("saveSettings").addEventListener("click", () => {
   localStorage.setItem("brianiac_settings", JSON.stringify({
     name: $("assistantName").value.trim() || "BRIANIAC AI",
     style: $("responseStyle").value
   }));
 
+  updateAssistantDisplayName();
+
   $("settingsStatus").textContent = "Settings saved on this browser.";
 });
+
+// Restore the custom name when the website opens
+updateAssistantDisplayName();
 
 $("resetSettings").addEventListener("click", () => {
   $("assistantName").value = "BRIANIAC AI";
