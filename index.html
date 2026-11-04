@@ -243,8 +243,16 @@ footer { text-align:center; padding:20px; color:#7285a4; font-size:12px; border-
   </section>
   <section id="personalisation" class="screen">
   <h2>Personalisation</h2>
+
   <div class="panel">
-    <p>Make BRIANIAC AI feel more like your own assistant.</p>
+    <label for="assistantName">Assistant display name</label>
+    <input id="assistantName" value="BRIANIAC AI" maxlength="32">
+
+    <button id="savePersonalisation" class="btn primary" type="button" style="margin-top:16px">
+      Save personalisation
+    </button>
+
+    <div id="personalisationStatus" class="status" role="status"></div>
   </div>
   </section>
 
