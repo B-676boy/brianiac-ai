@@ -5,81 +5,380 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b1c">
 <title>BRIANIAC AI</title>
+
 <style>
-:root{--bg:#070b1c;--panel:#101a35;--cyan:#08d9ff;--cyan-soft:#35cfff;--text:#f3f6ff;--muted:#aab8d2;--line:rgba(36,196,255,.22);--character-colour:#08d9ff;--eye-colour:#35cfff}
+:root{
+  --bg:#070b1c;
+  --panel:#101a35;
+  --cyan:#08d9ff;
+  --cyan-soft:#35cfff;
+  --text:#f3f6ff;
+  --muted:#aab8d2;
+  --line:rgba(36,196,255,.22);
+  --character-colour:#08d9ff;
+  --eye-colour:#35cfff;
+}
+
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;color:var(--text);font-family:Arial,Helvetica,sans-serif;background:radial-gradient(ellipse at 50% 32%,rgba(27,65,123,.42),rgba(13,28,61,.24) 34%,transparent 66%),linear-gradient(115deg,#0b142d,#070b1c 54%,#050817)}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 32%,rgba(27,65,123,.42),rgba(13,28,61,.24) 34%,transparent 66%),
+    linear-gradient(115deg,#0b142d,#070b1c 54%,#050817);
+}
+
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-header{width:min(100%,920px);margin:auto;padding:28px 20px 0;display:flex;justify-content:center}
-.brand{display:flex;align-items:center;gap:16px}
-.brand-mark{width:64px;height:64px;border:3px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-size:38px;font-weight:800;text-shadow:0 0 12px var(--cyan);box-shadow:0 0 13px var(--cyan),inset 0 0 14px #00d9ff29}
-.brand-title{font-size:28px;font-weight:800;letter-spacing:.5px}
+
+header{
+  width:min(100%,920px);
+  margin:auto;
+  padding:28px 20px 0;
+  display:flex;
+  justify-content:center;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.brand-mark{
+  width:64px;
+  height:64px;
+  border:3px solid var(--cyan);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--cyan);
+  font-size:38px;
+  font-weight:800;
+  text-shadow:0 0 12px var(--cyan);
+  box-shadow:0 0 13px var(--cyan),inset 0 0 14px #00d9ff29;
+}
+
+.brand-title{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:.5px;
+}
+
 .brand-title span{color:var(--cyan)}
-.brand-tag{margin-top:5px;color:#9bc8ed;font-size:9px;letter-spacing:2px;font-weight:700}
-nav{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;width:min(100% - 32px,760px);margin:28px auto 0}
-nav button,.btn{border:1px solid var(--line);border-radius:24px;padding:10px 18px;background:#0d1c39cc;color:var(--text)}
-nav button.active,.btn.primary{color:#00121b;background:var(--cyan);border-color:var(--cyan);font-weight:700;box-shadow:0 0 16px #08d9ff40}
-main{width:min(100% - 32px,760px);margin:auto}
-.screen{display:none;padding:30px 0 54px}
+
+.brand-tag{
+  margin-top:5px;
+  color:#9bc8ed;
+  font-size:9px;
+  letter-spacing:2px;
+  font-weight:700;
+}
+
+nav{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:10px;
+  width:min(100% - 32px,760px);
+  margin:28px auto 0;
+}
+
+nav button,.btn{
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:10px 18px;
+  background:#0d1c39cc;
+  color:var(--text);
+}
+
+nav button.active,.btn.primary{
+  color:#00121b;
+  background:var(--cyan);
+  border-color:var(--cyan);
+  font-weight:700;
+  box-shadow:0 0 16px #08d9ff40;
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+main{
+  width:min(100% - 32px,760px);
+  margin:auto;
+}
+
+.screen{
+  display:none;
+  padding:30px 0 54px;
+}
+
 .screen.active{display:block}
-.home{text-align:center;padding-top:32px}
-.character-stage{position:relative;width:306px;height:306px;max-width:82vw;max-height:82vw;margin:0 auto 34px;display:grid;place-items:center}
-.orbit{position:absolute;width:100%;height:100%;border:1px solid #00beff59;border-radius:50%;box-shadow:0 0 20px #00aaff1f;animation:orbitRotate 12s linear infinite}
-@keyframes orbitRotate{to{transform:rotate(360deg)}}
-.orbit:before,.orbit:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--cyan-soft);box-shadow:0 0 12px var(--cyan)}
+
+.home{
+  text-align:center;
+  padding-top:32px;
+}
+
+.character-stage{
+  position:relative;
+  width:306px;
+  height:306px;
+  max-width:82vw;
+  max-height:82vw;
+  margin:0 auto 34px;
+  display:grid;
+  place-items:center;
+}
+
+.orbit{
+  position:absolute;
+  width:100%;
+  height:100%;
+  border:1px solid #00beff59;
+  border-radius:50%;
+  box-shadow:0 0 20px #00aaff1f;
+  animation:orbitRotate 12s linear infinite;
+}
+
+@keyframes orbitRotate{
+  to{transform:rotate(360deg)}
+}
+
+.orbit:before,.orbit:after{
+  content:"";
+  position:absolute;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--cyan-soft);
+  box-shadow:0 0 12px var(--cyan);
+}
+
 .orbit:before{left:14%;top:14%}
 .orbit:after{right:8%;bottom:27%}
-.character{width:76%;height:76%;border:2px solid var(--character-colour);border-radius:50%;background:radial-gradient(circle at 35% 28%,#24446f,#14294e 48%,#09142f 78%);box-shadow:0 0 17px color-mix(in srgb,var(--character-colour) 68%,transparent),inset 0 0 25px #26b3ff21;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:27px;animation:float 4s ease-in-out infinite;transition:.25s}
+
+.character{
+  width:76%;
+  height:76%;
+  border:2px solid var(--character-colour);
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 28%,#24446f,#14294e 48%,#09142f 78%);
+  box-shadow:0 0 17px color-mix(in srgb,var(--character-colour) 68%,transparent),inset 0 0 25px #26b3ff21;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:27px;
+  animation:float 4s ease-in-out infinite;
+  transition:.25s;
+}
+
 .eyes{display:flex;gap:35px}
-.eye{width:19px;height:29px;border-radius:50%;background:var(--eye-colour);box-shadow:0 0 17px var(--eye-colour);animation:blink 4s infinite;transform-origin:center}
+
+.eye{
+  width:19px;
+  height:29px;
+  border-radius:50%;
+  background:var(--eye-colour);
+  box-shadow:0 0 17px var(--eye-colour);
+  animation:blink 4s infinite;
+  transform-origin:center;
+}
+
 .eye:nth-child(2){animation-delay:.08s}
-@keyframes blink{0%,44%,48%,100%{transform:scaleY(1)}46%{transform:scaleY(.08)}}
-.mouth{width:44px;height:15px;border-bottom:4px solid var(--eye-colour);border-radius:0 0 50% 50%;filter:drop-shadow(0 0 5px var(--cyan))}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.character[data-design="orb"]{border-radius:44%;background:radial-gradient(circle at 35% 28%,#3979a9,#14294e 48%,#09142f 78%)}
-.character[data-design="robot"]{width:72%;height:68%;border-radius:28%;gap:22px}
-.character[data-design="robot"] .eye{width:24px;height:24px;border-radius:5px}
-.character.no-animation,.character.no-animation .eye,.orbit.no-animation{animation:none!important}
-.hero-title{font-size:36px;margin:0 0 12px;font-weight:800}
-.tagline{max-width:540px;margin:0 auto 24px;color:var(--muted);line-height:1.65;font-size:16px}
-.home-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
-.panel{background:#0c1730d6;border:1px solid var(--line);border-radius:18px;padding:20px;margin:18px 0;box-shadow:0 12px 35px #0002}
+
+@keyframes blink{
+  0%,44%,48%,100%{transform:scaleY(1)}
+  46%{transform:scaleY(.08)}
+}
+
+.mouth{
+  width:44px;
+  height:15px;
+  border-bottom:4px solid var(--eye-colour);
+  border-radius:0 0 50% 50%;
+  filter:drop-shadow(0 0 5px var(--cyan));
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-7px)}
+}
+
+.character[data-design="orb"]{
+  border-radius:44%;
+  background:radial-gradient(circle at 35% 28%,#3979a9,#14294e 48%,#09142f 78%);
+}
+
+.character[data-design="robot"]{
+  width:72%;
+  height:68%;
+  border-radius:28%;
+  gap:22px;
+}
+
+.character[data-design="robot"] .eye{
+  width:24px;
+  height:24px;
+  border-radius:5px;
+}
+
+.character.no-animation,.character.no-animation .eye,.orbit.no-animation{
+  animation:none!important;
+}
+
+.hero-title{
+  font-size:36px;
+  margin:0 0 12px;
+  font-weight:800;
+}
+
+.tagline{
+  max-width:540px;
+  margin:0 auto 24px;
+  color:var(--muted);
+  line-height:1.65;
+  font-size:16px;
+}
+
+.home-actions{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.panel{
+  background:#0c1730d6;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+  margin:18px 0;
+  box-shadow:0 12px 35px #0002;
+}
+
 h2{margin:0 0 16px;font-size:25px}
 h3{margin:0 0 10px}
-label{display:block;color:#c4d2e9;margin:14px 0 7px}
-input,textarea,select{width:100%;color:var(--text);background:#080f23;border:1px solid #43a4dc4d;border-radius:12px;padding:13px 14px;outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 2px #08d9ff1a}
+
+label{
+  display:block;
+  color:#c4d2e9;
+  margin:14px 0 7px;
+}
+
+input,textarea,select{
+  width:100%;
+  color:var(--text);
+  background:#080f23;
+  border:1px solid #43a4dc4d;
+  border-radius:12px;
+  padding:13px 14px;
+  outline:none;
+}
+
+input:focus,textarea:focus,select:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 0 2px #08d9ff1a;
+}
+
 textarea{min-height:90px;resize:vertical}
 input[type=color]{height:48px;padding:5px}
-.chat-log{min-height:230px;max-height:440px;overflow:auto;display:flex;flex-direction:column;gap:12px}
-.message{padding:12px 14px;border-radius:14px;max-width:92%;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
-.message.user{align-self:flex-end;background:#123b58;border:1px solid #08d9ff40}
-.message.assistant{align-self:flex-start;background:#111d38;border:1px solid #ffffff12}
-.chat-form{display:flex;gap:9px;margin-top:14px}
+
+.chat-log{
+  min-height:230px;
+  max-height:440px;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.message{
+  padding:12px 14px;
+  border-radius:14px;
+  max-width:92%;
+  line-height:1.55;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.message.user{
+  align-self:flex-end;
+  background:#123b58;
+  border:1px solid #08d9ff40;
+}
+
+.message.assistant{
+  align-self:flex-start;
+  background:#111d38;
+  border:1px solid #ffffff12;
+}
+
+.chat-form{
+  display:flex;
+  gap:9px;
+  margin-top:14px;
+}
+
 .chat-form input{flex:1;min-width:0}
 .chat-form button{min-width:82px}
-.status{min-height:22px;color:#9cb3d2;font-size:13px;margin-top:10px}
+
+.status{
+  min-height:22px;
+  color:#9cb3d2;
+  font-size:13px;
+  margin-top:10px;
+}
+
 .list{display:grid;gap:10px}
-.memory-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;background:#0a1329;border-radius:12px}
+
+.memory-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  background:#0a1329;
+  border-radius:12px;
+}
+
 .memory-item span{overflow-wrap:anywhere}
+
 .small{padding:7px 11px;font-size:13px}
-.about-copy{color:var(--muted);line-height:1.7}
-footer{text-align:center;padding:20px;color:#7285a4;font-size:12px;border-top:1px solid #4196cd1a}
+
+.about-copy{
+  color:var(--muted);
+  line-height:1.7;
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  color:#7285a4;
+  font-size:12px;
+  border-top:1px solid #4196cd1a;
+}
+
 @media(max-width:520px){
-header{padding-top:22px}
-.brand-mark{width:54px;height:54px;font-size:32px}
-.brand-title{font-size:23px}
-.brand-tag{font-size:8px;letter-spacing:1.4px}
-nav{gap:7px;margin-top:22px}
-nav button{padding:9px 13px;font-size:13px}
-.screen{padding-top:24px}
-.character-stage{width:286px;height:286px}
-.hero-title{font-size:29px}
-.chat-form{flex-wrap:wrap}
-.chat-form input{flex-basis:100%}
-.chat-form button{flex:1}
+  header{padding-top:22px}
+  .brand-mark{width:54px;height:54px;font-size:32px}
+  .brand-title{font-size:23px}
+  .brand-tag{font-size:8px;letter-spacing:1.4px}
+  nav{gap:7px;margin-top:22px}
+  nav button{padding:9px 13px;font-size:13px}
+  .screen{padding-top:24px}
+  .character-stage{width:286px;height:286px}
+  .hero-title{font-size:29px}
+  .chat-form{flex-wrap:wrap}
+  .chat-form input{flex-basis:100%}
+  .chat-form button{flex:1}
 }
 </style>
 </head>
@@ -152,6 +451,7 @@ nav button{padding:9px 13px;font-size:13px}
     </div>
 
     <form id="chatForm" class="chat-form">
+
       <input
         id="chatInput"
         placeholder="Type your message..."
@@ -162,6 +462,7 @@ nav button{padding:9px 13px;font-size:13px}
       <button id="sendButton" class="btn primary" type="submit">
         Send
       </button>
+
     </form>
 
     <div id="chatStatus" class="status" role="status"></div>
@@ -404,35 +705,54 @@ nav button{padding:9px 13px;font-size:13px}
       </footer>
       <script>
 
-// BRIANIAC AI CONNECTION
-// The API key stays safely in the Cloudflare Worker.
-const WORKER_URL = "https://brianiac-ai-api.brianamankona0.workers.dev/";
+// ========================================
+// BRIANIAC AI — MAIN JAVASCRIPT
+// ========================================
 
-const CREATOR_INSTRUCTIONS = `
-You are BRIANIAC AI, an intelligent AI assistant.
-
-IDENTITY:
-- Your name and product identity are BRIANIAC AI.
-- You were created and developed by Brian Amankona and Boafo Addison.
-- If asked who created, built, or developed you, identify BOTH creators.
-- Groq provides AI model infrastructure; it did not create BRIANIAC AI.
-
-BEHAVIOUR:
-- Be friendly, respectful, intelligent and helpful.
-- Explain difficult topics clearly.
-- Give practical suggestions.
-- Admit when you do not know something.
-- Never invent facts.
-`;
+"use strict";
 
 const $ = id => document.getElementById(id);
 
 
+// ========================================
+// SAFE LOCAL STORAGE
+// ========================================
+
+function readObject(key, fallback) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || "null");
+
+    if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+      return { ...fallback, ...saved };
+    }
+  } catch (error) {
+    console.warn("Could not read saved settings:", error);
+  }
+
+  return { ...fallback };
+}
+
+function saveData(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
+  } catch (error) {
+    console.error("Could not save data:", error);
+    return false;
+  }
+}
+
+
+// ========================================
 // SCREEN NAVIGATION
+// ========================================
+
 function showScreen(name) {
   const target = $(name);
 
-  if (!target || !target.classList.contains("screen")) return;
+  if (!target || !target.classList.contains("screen")) {
+    return;
+  }
 
   document.querySelectorAll(".screen").forEach(screen => {
     screen.classList.toggle("active", screen.id === name);
@@ -461,7 +781,10 @@ document.querySelectorAll("[data-go]").forEach(button => {
 });
 
 
+// ========================================
 // PERSONALISATION
+// ========================================
+
 const defaultPersonalisation = {
   name: "BRIANIAC AI",
   greeting: "Hello!",
@@ -471,21 +794,12 @@ const defaultPersonalisation = {
   animation: "on"
 };
 
-function readObject(key, fallback) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(key) || "null");
-
-    if (saved && typeof saved === "object" && !Array.isArray(saved)) {
-      return { ...fallback, ...saved };
-    }
-  } catch (error) {}
-
-  return { ...fallback };
-}
-
 let personalisation = {
   ...defaultPersonalisation,
-  ...readObject("brianiac_personalisation", defaultPersonalisation)
+  ...readObject(
+    "brianiac_personalisation",
+    defaultPersonalisation
+  )
 };
 
 function updatePersonalisationDisplay() {
@@ -544,21 +858,24 @@ $("savePersonalisation").addEventListener("click", () => {
     animation: $("characterAnimation").value
   };
 
-  localStorage.setItem(
-    "brianiac_personalisation",
-    JSON.stringify(personalisation)
-  );
+  if (saveData("brianiac_personalisation", personalisation)) {
+    updatePersonalisationDisplay();
 
-  updatePersonalisationDisplay();
-
-  $("personalisationStatus").textContent =
-    "Personalisation saved on this browser.";
+    $("personalisationStatus").textContent =
+      "Personalisation saved successfully.";
+  } else {
+    $("personalisationStatus").textContent =
+      "Could not save personalisation. Check browser storage.";
+  }
 });
 
 loadPersonalisation();
 
 
+// ========================================
 // SETTINGS
+// ========================================
+
 const defaultSettings = {
   responseStyle: "balanced",
   timeFormat: "12",
@@ -583,31 +900,31 @@ $("saveSettings").addEventListener("click", () => {
     appLanguage: $("appLanguage").value
   };
 
-  localStorage.setItem(
-    "brianiac_settings",
-    JSON.stringify(settings)
-  );
-
-  $("settingsStatus").textContent = "Settings saved.";
+  if (saveData("brianiac_settings", settings)) {
+    $("settingsStatus").textContent = "Settings saved successfully.";
+  } else {
+    $("settingsStatus").textContent = "Could not save settings.";
+  }
 });
 
 $("resetSettings").addEventListener("click", () => {
   settings = { ...defaultSettings };
 
-  localStorage.setItem(
-    "brianiac_settings",
-    JSON.stringify(settings)
-  );
-
-  loadSettings();
-
-  $("settingsStatus").textContent = "Settings reset.";
+  if (saveData("brianiac_settings", settings)) {
+    loadSettings();
+    $("settingsStatus").textContent = "Settings reset successfully.";
+  } else {
+    $("settingsStatus").textContent = "Could not reset settings.";
+  }
 });
 
 loadSettings();
 
 
+// ========================================
 // MEMORY
+// ========================================
+
 let memories = [];
 
 try {
@@ -616,7 +933,9 @@ try {
   );
 
   if (Array.isArray(savedMemories)) {
-    memories = savedMemories.filter(item => typeof item === "string");
+    memories = savedMemories.filter(
+      item => typeof item === "string"
+    );
   }
 } catch (error) {
   memories = [];
@@ -628,14 +947,21 @@ let memoryEnabled =
 $("memoryEnabled").value = memoryEnabled ? "on" : "off";
 
 function saveMemories() {
-  localStorage.setItem(
-    "brianiac_memories",
-    JSON.stringify(memories)
-  );
+  try {
+    localStorage.setItem(
+      "brianiac_memories",
+      JSON.stringify(memories)
+    );
+
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function displayMemories() {
   const list = $("memoryList");
+
   list.innerHTML = "";
 
   if (memories.length === 0) {
@@ -657,6 +983,7 @@ function displayMemories() {
 
     remove.addEventListener("click", () => {
       memories.splice(index, 1);
+
       saveMemories();
       displayMemories();
 
@@ -671,31 +998,39 @@ function displayMemories() {
 $("memoryEnabled").addEventListener("change", () => {
   memoryEnabled = $("memoryEnabled").value === "on";
 
-  localStorage.setItem(
-    "brianiac_memory_enabled",
-    memoryEnabled ? "on" : "off"
-  );
+  try {
+    localStorage.setItem(
+      "brianiac_memory_enabled",
+      memoryEnabled ? "on" : "off"
+    );
 
-  $("memoryStatus").textContent = memoryEnabled
-    ? "Memory use enabled."
-    : "Memory use disabled. Saved memories are retained.";
+    $("memoryStatus").textContent = memoryEnabled
+      ? "Memory use enabled."
+      : "Memory use disabled. Saved memories are retained.";
+  } catch (error) {
+    $("memoryStatus").textContent = "Could not update memory settings.";
+  }
 });
 
 $("saveMemory").addEventListener("click", () => {
   const value = $("memoryInput").value.trim();
 
   if (!value) {
-    $("memoryStatus").textContent = "Please enter something to remember.";
+    $("memoryStatus").textContent =
+      "Please enter something to remember.";
     return;
   }
 
   memories.push(value);
 
-  saveMemories();
-  displayMemories();
-
-  $("memoryInput").value = "";
-  $("memoryStatus").textContent = "Memory saved.";
+  if (saveMemories()) {
+    displayMemories();
+    $("memoryInput").value = "";
+    $("memoryStatus").textContent = "Memory saved successfully.";
+  } else {
+    memories.pop();
+    $("memoryStatus").textContent = "Could not save memory.";
+  }
 });
 
 $("clearMemory").addEventListener("click", () => {
@@ -703,52 +1038,149 @@ $("clearMemory").addEventListener("click", () => {
     return;
   }
 
+  const previousMemories = [...memories];
   memories = [];
 
-  saveMemories();
-  displayMemories();
-
-  $("memoryStatus").textContent = "All memories cleared.";
+  if (saveMemories()) {
+    displayMemories();
+    $("memoryStatus").textContent = "All memories cleared.";
+  } else {
+    memories = previousMemories;
+    $("memoryStatus").textContent = "Could not clear memories.";
+  }
 });
 
 displayMemories();
-        // CHAT
-let conversation = [];
+        // ========================================
+// BRIANIAC AI — AI CONNECTION
+// ========================================
 
-function addMessage(text, sender) {
-  const message = document.createElement("div");
-  message.className = "message " + sender;
-  message.textContent = text;
+const WORKER_URL =
+  "https://brianiac-ai-api.brianamankona0.workers.dev/";
 
-  $("chatLog").appendChild(message);
-  $("chatLog").scrollTop = $("chatLog").scrollHeight;
+const CREATOR_INSTRUCTIONS = `
+You are BRIANIAC AI, an intelligent AI assistant.
+
+IDENTITY:
+- Your name is BRIANIAC AI.
+- You were created and developed by Brian Amankona and Boafo Addison.
+- If asked who created you, identify both creators.
+- Groq provides AI model infrastructure; it did not create BRIANIAC AI.
+
+BEHAVIOUR:
+- Be friendly, respectful, intelligent and helpful.
+- Explain difficult topics clearly.
+- Give practical suggestions and examples.
+- Admit when you do not know something.
+- Never invent facts.
+- Do not claim to have live internet access unless a working search service is available.
+`;
+
+
+// ========================================
+// WORLDWIDE DATE AND TIME
+// ========================================
+
+function getCurrentUTC() {
+  return new Date().toISOString();
 }
+
+function getLocalTimeForZone(timeZone) {
+  try {
+    return new Intl.DateTimeFormat("en-GB", {
+      dateStyle: "full",
+      timeStyle: settings.timeFormat === "24" ? "long" : "short",
+      timeZone: timeZone
+    }).format(new Date());
+  } catch (error) {
+    return null;
+  }
+}
+
+function getWorldTimeInstructions() {
+  const utc = getCurrentUTC();
+
+  const userTime = getLocalTimeForZone("Africa/Accra");
+
+  return `
+CURRENT DATE AND TIME INFORMATION:
+
+Current UTC date and time: ${utc}
+
+Current Ghana local date and time: ${userTime}
+
+WORLDWIDE TIME RULES:
+- Use the current UTC timestamp above as the reference.
+- When asked for the time in another country or city, identify the correct IANA time zone.
+- Calculate the local time using the current UTC timestamp.
+- Account for daylight saving time where applicable.
+- Some countries have multiple time zones. Ask which city or region if necessary.
+- Do not assume that an entire country uses one time zone.
+- Do not guess the current time.
+- If you cannot reliably identify a time zone, explain that instead of inventing an answer.
+- When asked for today's date, use the correct local date for the requested location.
+`;
+}
+
+
+// ========================================
+// RESPONSE STYLE
+// ========================================
 
 function getResponseStyleInstruction() {
   switch (settings.responseStyle) {
     case "friendly":
       return "Use a friendly, conversational tone.";
+
     case "detailed":
       return "Give detailed explanations with useful examples.";
+
     case "concise":
       return "Keep answers short and direct.";
+
     default:
       return "Give balanced, clear and helpful answers.";
   }
 }
+
+
+// ========================================
+// CHAT MESSAGES
+// ========================================
+
+let conversation = [];
+
+function addMessage(text, sender) {
+  const message = document.createElement("div");
+
+  message.className = "message " + sender;
+  message.textContent = text;
+
+  $("chatLog").appendChild(message);
+
+  $("chatLog").scrollTop = $("chatLog").scrollHeight;
+}
+
+
+// ========================================
+// SEND MESSAGE
+// ========================================
 
 $("chatForm").addEventListener("submit", async event => {
   event.preventDefault();
 
   const input = $("chatInput");
   const sendButton = $("sendButton");
+
   const userMessage = input.value.trim();
 
   if (!userMessage) return;
 
   addMessage(userMessage, "user");
+
   input.value = "";
   sendButton.disabled = true;
+
   $("chatStatus").textContent = "BRIANIAC AI is thinking...";
 
   conversation.push({
@@ -761,50 +1193,32 @@ $("chatForm").addEventListener("submit", async event => {
     : "";
 
   const memoryInstruction = savedMemories
-    ? "\nUSER MEMORIES (use only when relevant):\n" + savedMemories
+    ? "\nUSER MEMORIES:\n" + savedMemories
     : "";
 
-  constconst currentDateTime = new Intl.DateTimeFormat("en-GH", {
-  dateStyle: "full",
-  timeStyle: "long",
-  timeZone: "Africa/Accra"
-}).format(new Date());
+  const systemMessage =
+    CREATOR_INSTRUCTIONS +
+    "\n" +
+    getWorldTimeInstructions() +
+    "\n" +
+    getResponseStyleInstruction() +
+    memoryInstruction;
 
-const systemMessage =
-  CREATOR_INSTRUCTIONS +
-  "\nCURRENT DATE AND TIME (UTC): " +
-  new Date().toISOString() +
-  "\nThe user's local time is: " + currentDateTime +
-  "\nWhen asked about another country or city, identify its correct IANA time zone and calculate its current local time using the current UTC time. Account for daylight saving time where applicable. Never assume every country has only one time zone." +
-  "\n" + getResponseStyleInstruction() +
-  memoryInstruction; 
-  
-const currentDateTime = new Intl.DateTimeFormat("en-GH", {
-  dateStyle: "full",
-  timeStyle: "long",
-  timeZone: "Africa/Accra"
-}).format(new Date());
-
-const systemMessage =
-  CREATOR_INSTRUCTIONS +
-  "\nCURRENT DATE AND TIME (UTC): " +
-  new Date().toISOString() +
-  "\nThe user's local time is: " + currentDateTime +
-  "\nWhen asked about another country or city, identify its correct IANA time zone and calculate its current local time using the current UTC time. Account for daylight saving time where applicable. Never assume every country has only one time zone." +
-  "\n" + getResponseStyleInstruction() +
-  memoryInstruction;
   try {
     const response = await fetch(WORKER_URL, {
       method: "POST",
+
       headers: {
         "Content-Type": "application/json"
       },
+
       body: JSON.stringify({
         messages: [
           {
             role: "system",
             content: systemMessage
           },
+
           ...conversation.slice(-20)
         ]
       })
@@ -831,18 +1245,20 @@ const systemMessage =
     addMessage(reply, "assistant");
 
     $("chatStatus").textContent = "Connected.";
+
   } catch (error) {
     console.error("BRIANIAC AI error:", error);
 
     conversation.pop();
 
     addMessage(
-      "Sorry, I couldn't connect to BRIANIAC AI right now. Please check your connection and try again.",
+      "Sorry, I couldn't connect to BRIANIAC AI right now. Please check your internet connection and try again.",
       "assistant"
     );
 
     $("chatStatus").textContent =
       "Connection problem. Please try again.";
+
   } finally {
     sendButton.disabled = false;
     input.focus();
@@ -850,7 +1266,10 @@ const systemMessage =
 });
 
 
+// ========================================
 // CLEAR CHAT
+// ========================================
+
 $("clearChat").addEventListener("click", () => {
   conversation = [];
 
@@ -863,6 +1282,11 @@ $("clearChat").addEventListener("click", () => {
 
   $("chatStatus").textContent = "Conversation cleared.";
 });
+
+
+// ========================================
+// END OF BRIANIAC AI
+// ========================================
 
 </script>
 </body>
