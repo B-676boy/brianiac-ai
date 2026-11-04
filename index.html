@@ -768,7 +768,20 @@ $("chatForm").addEventListener("submit", async event => {
     CREATOR_INSTRUCTIONS +
     "\n" + getResponseStyleInstruction() +
     memoryInstruction;
+const currentDateTime = new Intl.DateTimeFormat("en-GH", {
+  dateStyle: "full",
+  timeStyle: "long",
+  timeZone: "Africa/Accra"
+}).format(new Date());
 
+const systemMessage =
+  CREATOR_INSTRUCTIONS +
+  "\nCURRENT DATE AND TIME (UTC): " +
+  new Date().toISOString() +
+  "\nThe user's local time is: " + currentDateTime +
+  "\nWhen asked about another country or city, identify its correct IANA time zone and calculate its current local time using the current UTC time. Account for daylight saving time where applicable. Never assume every country has only one time zone." +
+  "\n" + getResponseStyleInstruction() +
+  memoryInstruction;
   try {
     const response = await fetch(WORKER_URL, {
       method: "POST",
