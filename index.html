@@ -330,6 +330,53 @@ input[type=color]{height:48px;padding:5px}
 .chat-form input{flex:1;min-width:0}
 .chat-form button{min-width:82px}
 
+.attachment-tools{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-top:14px;
+}
+.attachment-tools input[type="file"]{display:none}
+.attachment-preview{
+    display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.attachment-preview:empty{
+  display:none;
+}
+
+.attachment-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#101d38;
+  color:var(--text);
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+
+.attachment-item button{
+  border:0;
+  background:transparent;
+  color:#ff8b9b;
+  font-size:17px;
+  padding:0 4px;
+}
+
+.attachment-note{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:8px;
+  line-height:1.5;
+}
+
 .status{
   min-height:22px;
   color:#9cb3d2;
@@ -379,9 +426,11 @@ footer{
   .chat-form{flex-wrap:wrap}
   .chat-form input{flex-basis:100%}
   .chat-form button{flex:1}
+  .attachment-tools button{flex:1}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -465,6 +514,39 @@ footer{
 
     </form>
 
+    <div class="attachment-tools">
+
+      <button id="attachImageButton" class="btn" type="button">
+        📷 Attach Image
+      </button>
+
+      <button id="attachPdfButton" class="btn" type="button">
+        📄 Attach PDF
+      </button>
+
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        multiple
+      >
+
+      <input
+        id="pdfInput"
+        type="file"
+        accept="application/pdf,.pdf"
+        multiple
+      >
+
+    </div>
+
+    <div id="attachmentPreview" class="attachment-preview"></div>
+
+    <div class="attachment-note">
+      Attach images for visual analysis or PDFs for document questions.
+      You can attach up to three images or two PDFs per message.
+    </div>
+
     <div id="chatStatus" class="status" role="status"></div>
 
     <button id="clearChat" class="btn small" type="button">
@@ -535,19 +617,13 @@ footer{
   </div>
 
 </section>
-
-
 <!-- SETTINGS PAGE -->
 <section id="settings" class="screen">
-
   <h2>Settings</h2>
-
   <div class="panel">
-
     <h3>AI response preferences</h3>
 
     <label for="responseStyle">Response style</label>
-
     <select id="responseStyle">
       <option value="balanced">Balanced and clear</option>
       <option value="friendly">Friendly and conversational</option>
@@ -556,72 +632,44 @@ footer{
     </select>
 
     <label for="timeFormat">Time format preference</label>
-
     <select id="timeFormat">
       <option value="12">12-hour format</option>
       <option value="24">24-hour format</option>
     </select>
 
     <label for="appLanguage">App language preference</label>
-
     <select id="appLanguage">
       <option value="en">English</option>
     </select>
 
-    <button
-      id="saveSettings"
-      class="btn primary"
-      type="button"
-      style="margin-top:16px"
-    >
+    <button id="saveSettings" class="btn primary" type="button" style="margin-top:16px">
       Save settings
     </button>
 
-    <button
-      id="resetSettings"
-      class="btn small"
-      type="button"
-      style="margin-top:16px"
-    >
+    <button id="resetSettings" class="btn small" type="button" style="margin-top:16px">
       Reset settings
     </button>
 
     <div id="settingsStatus" class="status" role="status"></div>
-
   </div>
-
 </section>
-
 
 <!-- PERSONALISATION PAGE -->
 <section id="personalisation" class="screen">
-
   <h2>Personalisation</h2>
 
   <div class="panel">
-
     <h3>Assistant identity</h3>
 
     <label for="assistantName">Assistant display name</label>
-
-    <input
-      id="assistantName"
-      maxlength="32"
-      value="BRIANIAC AI"
-    >
+    <input id="assistantName" maxlength="32" value="BRIANIAC AI">
 
     <label for="greetingText">Home greeting</label>
-
-    <input
-      id="greetingText"
-      maxlength="80"
-      value="Hello!"
-    >
+    <input id="greetingText" maxlength="80" value="Hello!">
 
     <h3 style="margin-top:24px">Character appearance</h3>
 
     <label for="characterDesign">Character design</label>
-
     <select id="characterDesign">
       <option value="classic">Classic BRIANIAC character</option>
       <option value="orb">Holographic orb</option>
@@ -629,55 +677,30 @@ footer{
     </select>
 
     <label for="characterColour">Character colour</label>
-
-    <input
-      id="characterColour"
-      type="color"
-      value="#08d9ff"
-    >
+    <input id="characterColour" type="color" value="#08d9ff">
 
     <label for="eyeColour">Eye colour</label>
-
-    <input
-      id="eyeColour"
-      type="color"
-      value="#35cfff"
-    >
+    <input id="eyeColour" type="color" value="#35cfff">
 
     <label for="characterAnimation">Character animation</label>
-
     <select id="characterAnimation">
       <option value="on">Animations on</option>
       <option value="off">Animations off</option>
     </select>
 
-    <button
-      id="savePersonalisation"
-      class="btn primary"
-      type="button"
-      style="margin-top:18px"
-    >
+    <button id="savePersonalisation" class="btn primary" type="button" style="margin-top:18px">
       Save personalisation
     </button>
 
-    <div
-      id="personalisationStatus"
-      class="status"
-      role="status"
-    ></div>
-
+    <div id="personalisationStatus" class="status" role="status"></div>
   </div>
-
 </section>
-
 
 <!-- ABOUT PAGE -->
 <section id="about" class="screen">
-
   <h2>About BRIANIAC AI</h2>
 
   <div class="panel about-copy">
-
     <p>
       BRIANIAC AI is an AI companion designed to help people learn,
       create, solve problems and explore ideas.
@@ -690,89 +713,64 @@ footer{
     </p>
 
     <p>
-      Its AI responses are powered by a language model
-      through a secure server connection.
+      Its AI responses are powered by a language model through a secure server connection.
     </p>
-
   </div>
-
 </section>
 
 </main>
 
 <footer>
   BRIANIAC AI · ASK · LEARN · INNOVATE · GROW
-      </footer>
-      <script>
+</footer>
 
-// ========================================
-// BRIANIAC AI — MAIN JAVASCRIPT
-// ========================================
+<!-- PDF TEXT EXTRACTION LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
+<script>
 "use strict";
+
+/* =========================================
+   BASIC APP FUNCTIONS
+========================================= */
 
 const $ = id => document.getElementById(id);
 
-
-// ========================================
-// SAFE LOCAL STORAGE
-// ========================================
-
 function readObject(key, fallback) {
   try {
-    const saved = JSON.parse(localStorage.getItem(key) || "null");
-
-    if (saved && typeof saved === "object" && !Array.isArray(saved)) {
-      return { ...fallback, ...saved };
-    }
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : fallback;
   } catch (error) {
-    console.warn("Could not read saved settings:", error);
+    return fallback;
   }
-
-  return { ...fallback };
 }
 
 function saveData(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (error) {
-    console.error("Could not save data:", error);
-    return false;
-  }
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
+/* =========================================
+   PAGE NAVIGATION
+========================================= */
 
-// ========================================
-// SCREEN NAVIGATION
-// ========================================
-
-function showScreen(name) {
-  const target = $(name);
-
-  if (!target || !target.classList.contains("screen")) {
-    return;
-  }
-
+function showScreen(screenName) {
   document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.toggle("active", screen.id === name);
+    screen.classList.remove("active");
   });
 
-  document.querySelectorAll("nav button").forEach(button => {
+  const selectedScreen = $(screenName);
+
+  if (selectedScreen) {
+    selectedScreen.classList.add("active");
+  }
+
+  document.querySelectorAll("[data-go]").forEach(button => {
     button.classList.toggle(
       "active",
-      button.dataset.screen === name
+      button.dataset.go === screenName
     );
   });
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
-document.querySelectorAll("nav button").forEach(button => {
-  button.addEventListener("click", () => {
-    showScreen(button.dataset.screen);
-  });
-});
 
 document.querySelectorAll("[data-go]").forEach(button => {
   button.addEventListener("click", () => {
@@ -780,101 +778,54 @@ document.querySelectorAll("[data-go]").forEach(button => {
   });
 });
 
-
-// ========================================
-// PERSONALISATION
-// ========================================
+/* =========================================
+   PERSONALISATION
+========================================= */
 
 const defaultPersonalisation = {
-  name: "BRIANIAC AI",
-  greeting: "Hello!",
-  design: "classic",
+  assistantName: "BRIANIAC AI",
+  greetingText: "Hello!",
+  characterDesign: "classic",
   characterColour: "#08d9ff",
   eyeColour: "#35cfff",
-  animation: "on"
+  characterAnimation: "on"
 };
 
-let personalisation = {
-  ...defaultPersonalisation,
-  ...readObject(
-    "brianiac_personalisation",
-    defaultPersonalisation
-  )
-};
-
-function updatePersonalisationDisplay() {
-  $("homeAssistantName").textContent = personalisation.name;
-  $("chatAssistantName").textContent = personalisation.name;
-  $("homeGreeting").textContent = personalisation.greeting;
-
-  const character = $("mainCharacter");
-  const orbit = $("characterOrbit");
-
-  character.dataset.design = personalisation.design;
-
-  character.style.setProperty(
-    "--character-colour",
-    personalisation.characterColour
-  );
-
-  character.style.setProperty(
-    "--eye-colour",
-    personalisation.eyeColour
-  );
-
-  character.style.borderColor = personalisation.characterColour;
-
-  character.querySelector(".mouth").style.borderBottomColor =
-    personalisation.eyeColour;
-
-  const animationOff = personalisation.animation === "off";
-
-  character.classList.toggle("no-animation", animationOff);
-  orbit.classList.toggle("no-animation", animationOff);
-
-  character.querySelectorAll(".eye").forEach(eye => {
-    eye.style.animation = animationOff ? "none" : "";
-  });
-}
+let personalisation = readObject(
+  "brianiacPersonalisation",
+  defaultPersonalisation
+);
 
 function loadPersonalisation() {
-  $("assistantName").value = personalisation.name;
-  $("greetingText").value = personalisation.greeting;
-  $("characterDesign").value = personalisation.design;
+  $("assistantName").value = personalisation.assistantName;
+  $("greetingText").value = personalisation.greetingText;
+  $("characterDesign").value = personalisation.characterDesign;
   $("characterColour").value = personalisation.characterColour;
   $("eyeColour").value = personalisation.eyeColour;
-  $("characterAnimation").value = personalisation.animation;
-
-  updatePersonalisationDisplay();
+  $("characterAnimation").value = personalisation.characterAnimation;
 }
-
-$("savePersonalisation").addEventListener("click", () => {
-  personalisation = {
-    name: $("assistantName").value.trim() || "BRIANIAC AI",
-    greeting: $("greetingText").value.trim() || "Hello!",
-    design: $("characterDesign").value,
-    characterColour: $("characterColour").value,
-    eyeColour: $("eyeColour").value,
-    animation: $("characterAnimation").value
-  };
-
-  if (saveData("brianiac_personalisation", personalisation)) {
-    updatePersonalisationDisplay();
-
-    $("personalisationStatus").textContent =
-      "Personalisation saved successfully.";
-  } else {
-    $("personalisationStatus").textContent =
-      "Could not save personalisation. Check browser storage.";
-  }
-});
 
 loadPersonalisation();
 
+$("savePersonalisation").addEventListener("click", () => {
+  personalisation = {
+    assistantName: $("assistantName").value.trim() || "BRIANIAC AI",
+    greetingText: $("greetingText").value.trim() || "Hello!",
+    characterDesign: $("characterDesign").value,
+    characterColour: $("characterColour").value,
+    eyeColour: $("eyeColour").value,
+    characterAnimation: $("characterAnimation").value
+  };
 
-// ========================================
-// SETTINGS
-// ========================================
+  saveData("brianiacPersonalisation", personalisation);
+
+  $("personalisationStatus").textContent =
+    "Your personalisation has been saved.";
+});
+
+/* =========================================
+   SETTINGS
+========================================= */
 
 const defaultSettings = {
   responseStyle: "balanced",
@@ -882,16 +833,15 @@ const defaultSettings = {
   appLanguage: "en"
 };
 
-let settings = {
-  ...defaultSettings,
-  ...readObject("brianiac_settings", defaultSettings)
-};
+let settings = readObject("brianiacSettings", defaultSettings);
 
 function loadSettings() {
   $("responseStyle").value = settings.responseStyle;
   $("timeFormat").value = settings.timeFormat;
   $("appLanguage").value = settings.appLanguage;
 }
+
+loadSettings();
 
 $("saveSettings").addEventListener("click", () => {
   settings = {
@@ -900,186 +850,175 @@ $("saveSettings").addEventListener("click", () => {
     appLanguage: $("appLanguage").value
   };
 
-  if (saveData("brianiac_settings", settings)) {
-    $("settingsStatus").textContent = "Settings saved successfully.";
-  } else {
-    $("settingsStatus").textContent = "Could not save settings.";
-  }
+  saveData("brianiacSettings", settings);
+
+  $("settingsStatus").textContent = "Settings saved successfully.";
 });
 
 $("resetSettings").addEventListener("click", () => {
   settings = { ...defaultSettings };
 
-  if (saveData("brianiac_settings", settings)) {
-    loadSettings();
-    $("settingsStatus").textContent = "Settings reset successfully.";
-  } else {
-    $("settingsStatus").textContent = "Could not reset settings.";
-  }
+  saveData("brianiacSettings", settings);
+  loadSettings();
+
+  $("settingsStatus").textContent = "Settings have been reset.";
 });
 
-loadSettings();
+/* =========================================
+   MEMORY SYSTEM
+========================================= */
 
-
-// ========================================
-// MEMORY
-// ========================================
-
-let memories = [];
-
-try {
-  const savedMemories = JSON.parse(
-    localStorage.getItem("brianiac_memories") || "[]"
-  );
-
-  if (Array.isArray(savedMemories)) {
-    memories = savedMemories.filter(
-      item => typeof item === "string"
-    );
-  }
-} catch (error) {
-  memories = [];
-}
-
-let memoryEnabled =
-  localStorage.getItem("brianiac_memory_enabled") !== "off";
-
-$("memoryEnabled").value = memoryEnabled ? "on" : "off";
-
-function saveMemories() {
-  try {
-    localStorage.setItem(
-      "brianiac_memories",
-      JSON.stringify(memories)
-    );
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
+let memories = readObject("brianiacMemories", []);
+let memoryEnabled = readObject("brianiacMemoryEnabled", true);
 
 function displayMemories() {
-  const list = $("memoryList");
+  const memoryList = $("memoryList");
 
-  list.innerHTML = "";
+  if (!memoryList) return;
 
-  if (memories.length === 0) {
-    list.textContent = "No memories saved yet.";
-    return;
-  }
+  memoryList.innerHTML = "";
 
   memories.forEach((memory, index) => {
-    const row = document.createElement("div");
-    row.className = "memory-item";
+    const item = document.createElement("div");
+    item.className = "memory-item";
 
     const text = document.createElement("span");
     text.textContent = memory;
 
-    const remove = document.createElement("button");
-    remove.className = "btn small";
-    remove.type = "button";
-    remove.textContent = "Delete";
+    const removeButton = document.createElement("button");
+    removeButton.className = "btn small";
+    removeButton.type = "button";
+    removeButton.textContent = "Delete";
 
-    remove.addEventListener("click", () => {
+    removeButton.addEventListener("click", () => {
       memories.splice(index, 1);
-
-      saveMemories();
+      saveData("brianiacMemories", memories);
       displayMemories();
-
-      $("memoryStatus").textContent = "Memory deleted.";
     });
 
-    row.append(text, remove);
-    list.appendChild(row);
+    item.appendChild(text);
+    item.appendChild(removeButton);
+    memoryList.appendChild(item);
   });
 }
 
-$("memoryEnabled").addEventListener("change", () => {
-  memoryEnabled = $("memoryEnabled").value === "on";
+function updateMemoryStatus() {
+  const status = $("memoryStatus");
 
-  try {
-    localStorage.setItem(
-      "brianiac_memory_enabled",
-      memoryEnabled ? "on" : "off"
-    );
-
-    $("memoryStatus").textContent = memoryEnabled
-      ? "Memory use enabled."
-      : "Memory use disabled. Saved memories are retained.";
-  } catch (error) {
-    $("memoryStatus").textContent = "Could not update memory settings.";
+  if (status) {
+    status.textContent = memoryEnabled
+      ? "Memory is enabled."
+      : "Memory is disabled.";
   }
-});
-
-$("saveMemory").addEventListener("click", () => {
-  const value = $("memoryInput").value.trim();
-
-  if (!value) {
-    $("memoryStatus").textContent =
-      "Please enter something to remember.";
-    return;
-  }
-
-  memories.push(value);
-
-  if (saveMemories()) {
-    displayMemories();
-    $("memoryInput").value = "";
-    $("memoryStatus").textContent = "Memory saved successfully.";
-  } else {
-    memories.pop();
-    $("memoryStatus").textContent = "Could not save memory.";
-  }
-});
-
-$("clearMemory").addEventListener("click", () => {
-  if (!confirm("Are you sure you want to delete all saved memories?")) {
-    return;
-  }
-
-  const previousMemories = [...memories];
-  memories = [];
-
-  if (saveMemories()) {
-    displayMemories();
-    $("memoryStatus").textContent = "All memories cleared.";
-  } else {
-    memories = previousMemories;
-    $("memoryStatus").textContent = "Could not clear memories.";
-  }
-});
+}
 
 displayMemories();
-        // ========================================
-// BRIANIAC AI — AI CONNECTION
-// ========================================
+updateMemoryStatus();
+
+/* =========================================
+   END OF PART 3
+========================================= */
+  /* =========================================
+   MEMORY CONTROLS
+========================================= */
+
+if ($("memoryToggle")) {
+  $("memoryToggle").checked = memoryEnabled;
+
+  $("memoryToggle").addEventListener("change", event => {
+    memoryEnabled = event.target.checked;
+
+    saveData("brianiacMemoryEnabled", memoryEnabled);
+    updateMemoryStatus();
+  });
+}
+
+if ($("addMemory")) {
+  $("addMemory").addEventListener("click", () => {
+    const input = $("memoryInput");
+    const newMemory = input.value.trim();
+
+    if (!newMemory) return;
+
+    memories.push(newMemory);
+
+    saveData("brianiacMemories", memories);
+
+    input.value = "";
+    displayMemories();
+  });
+}
+
+if ($("clearMemories")) {
+  $("clearMemories").addEventListener("click", () => {
+    memories = [];
+
+    saveData("brianiacMemories", memories);
+    displayMemories();
+  });
+}
+
+/* =========================================
+   AI SERVER CONNECTION
+========================================= */
 
 const WORKER_URL =
   "https://brianiac-ai-api.brianamankona0.workers.dev/";
 
+/* =========================================
+   BRIANIAC AI PERSONALITY
+========================================= */
+
 const CREATOR_INSTRUCTIONS = `
-You are BRIANIAC AI, an intelligent AI assistant.
+You are BRIANIAC AI.
+
+You are a friendly, respectful, intelligent and helpful AI assistant.
+
+Your purpose is to help people learn, understand concepts,
+solve problems, explore ideas and create new things.
 
 IDENTITY:
 - Your name is BRIANIAC AI.
 - You were created and developed by Brian Amankona and Boafo Addison.
-- If asked who created you, identify both creators.
-- Groq provides AI model infrastructure; it did not create BRIANIAC AI.
+- You are an AI assistant, not a human.
+- Be honest about what you can and cannot do.
 
-BEHAVIOUR:
-- Be friendly, respectful, intelligent and helpful.
-- Explain difficult topics clearly.
-- Give practical suggestions and examples.
-- Admit when you do not know something.
-- Never invent facts.
-- Do not claim to have live internet access unless a working search service is available.
+PERSONALITY:
+- Be friendly, calm and respectful.
+- Be patient when explaining difficult topics.
+- Do not insult, mock or judge the user.
+- Do not use excessive emojis.
+- Avoid unnecessarily long introductions.
+- Give complete answers and complete sentences.
+
+ANSWERING:
+- Understand the user's actual question before answering.
+- Give accurate and useful information.
+- Explain difficult ideas step by step.
+- If you are uncertain, say so instead of inventing information.
+- If the user asks for instructions, explain them clearly.
+- If the user asks for code, provide complete and properly formatted code.
+- Do not pretend to have performed actions you have not performed.
+
+ATTACHMENTS:
+- When an image is attached, carefully examine it before answering.
+- Describe only what you can actually identify.
+- If you cannot understand an image, explain the limitation.
+- When a PDF is attached, use its extracted text to answer questions.
+- Do not pretend to have read content that was not provided.
+
+CONVERSATION:
+- Pay attention to the conversation history.
+- Use relevant earlier messages to understand follow-up questions.
+- Do not make the user repeat information unnecessarily.
+- Ask a clear question when important information is missing.
+
+Your goal is to make every interaction helpful, understandable and respectful.
 `;
 
-
-// ========================================
-// WORLDWIDE DATE AND TIME
-// ========================================
+/* =========================================
+   WORLDWIDE DATE AND TIME
+========================================= */
 
 function getCurrentUTC() {
   return new Date().toISOString();
@@ -1099,7 +1038,6 @@ function getLocalTimeForZone(timeZone) {
 
 function getWorldTimeInstructions() {
   const utc = getCurrentUTC();
-
   const userTime = getLocalTimeForZone("Africa/Accra");
 
   return `
@@ -1110,61 +1048,326 @@ Current UTC date and time: ${utc}
 Current Ghana local date and time: ${userTime}
 
 WORLDWIDE TIME RULES:
-- Use the current UTC timestamp above as the reference.
-- When asked for the time in another country or city, identify the correct IANA time zone.
-- Calculate the local time using the current UTC timestamp.
+- Use the current UTC timestamp as your reference.
+- When asked for the time in another country or city, identify its correct IANA timezone.
 - Account for daylight saving time where applicable.
-- Some countries have multiple time zones. Ask which city or region if necessary.
-- Do not assume that an entire country uses one time zone.
-- Do not guess the current time.
-- If you cannot reliably identify a time zone, explain that instead of inventing an answer.
-- When asked for today's date, use the correct local date for the requested location.
+- Some countries have multiple time zones. Ask for a city or region if needed.
+- Do not guess the time.
+- If a timezone cannot be identified reliably, say so.
+- When asked for today's date, use the local date for the requested location.
 `;
 }
 
-
-// ========================================
-// RESPONSE STYLE
-// ========================================
+/* =========================================
+   END OF PART 4
+========================================= */
+  /* =========================================
+   RESPONSE STYLE PREFERENCES
+========================================= */
 
 function getResponseStyleInstruction() {
   switch (settings.responseStyle) {
     case "friendly":
-      return "Use a friendly, conversational tone.";
+      return "Use a friendly and conversational tone.";
 
     case "detailed":
       return "Give detailed explanations with useful examples.";
 
     case "concise":
-      return "Keep answers short and direct.";
+      return "Keep answers short, clear and direct.";
 
     default:
       return "Give balanced, clear and helpful answers.";
   }
 }
 
-
-// ========================================
-// CHAT MESSAGES
-// ========================================
+/* =========================================
+   CONVERSATION HISTORY
+========================================= */
 
 let conversation = [];
 
-function addMessage(text, sender) {
-  const message = document.createElement("div");
+/* =========================================
+   DISPLAY CHAT MESSAGES
+========================================= */
 
-  message.className = "message " + sender;
-  message.textContent = text;
+function addMessage(message, sender) {
+  const messageElement = document.createElement("div");
 
-  $("chatLog").appendChild(message);
+  messageElement.className =
+    sender === "user" ? "message user-message" : "message assistant-message";
+
+  messageElement.textContent = message;
+
+  $("chatLog").appendChild(messageElement);
 
   $("chatLog").scrollTop = $("chatLog").scrollHeight;
 }
 
+/* =========================================
+   ATTACHMENT STORAGE
+========================================= */
 
-// ========================================
-// SEND MESSAGE
-// ========================================
+let selectedImages = [];
+let selectedPDFs = [];
+
+const MAX_IMAGES = 3;
+const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
+const MAX_PDF_SIZE = 10 * 1024 * 1024;
+const MAX_PDF_TEXT = 30000;
+
+/* =========================================
+   IMAGE FILE READER
+========================================= */
+
+function readImageFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Could not read image."));
+
+    reader.readAsDataURL(file);
+  });
+}
+
+/* =========================================
+   ATTACHMENT PREVIEW
+========================================= */
+
+function displayAttachments() {
+  const preview = $("attachmentPreview");
+
+  preview.innerHTML = "";
+
+  const allAttachments = [
+    ...selectedImages.map((item, index) => ({
+      name: item.name,
+      type: "image",
+      index: index
+    })),
+
+    ...selectedPDFs.map((item, index) => ({
+      name: item.name,
+      type: "pdf",
+      index: index
+    }))
+  ];
+
+  allAttachments.forEach(attachment => {
+    const chip = document.createElement("div");
+
+    chip.className = "attachment-chip";
+    chip.style.display = "flex";
+    chip.style.alignItems = "center";
+    chip.style.gap = "8px";
+    chip.style.padding = "8px 10px";
+    chip.style.margin = "4px";
+    chip.style.borderRadius = "10px";
+    chip.style.background = "rgba(8,217,255,0.10)";
+    chip.style.border = "1px solid rgba(8,217,255,0.35)";
+
+    const name = document.createElement("span");
+
+    name.textContent =
+      (attachment.type === "image" ? "🖼️ " : "📄 ") +
+      attachment.name;
+
+    const removeButton = document.createElement("button");
+
+    removeButton.type = "button";
+    removeButton.textContent = "×";
+    removeButton.setAttribute("aria-label", "Remove attachment");
+
+    removeButton.style.border = "none";
+    removeButton.style.background = "transparent";
+    removeButton.style.color = "inherit";
+    removeButton.style.fontSize = "20px";
+    removeButton.style.cursor = "pointer";
+
+    removeButton.addEventListener("click", () => {
+      if (attachment.type === "image") {
+        selectedImages.splice(attachment.index, 1);
+      } else {
+        selectedPDFs.splice(attachment.index, 1);
+      }
+
+      displayAttachments();
+    });
+
+    chip.appendChild(name);
+    chip.appendChild(removeButton);
+
+    preview.appendChild(chip);
+  });
+}
+
+/* =========================================
+   IMAGE UPLOAD
+========================================= */
+
+$("attachImageButton").addEventListener("click", () => {
+  $("imageInput").click();
+});
+
+$("imageInput").addEventListener("change", async event => {
+  const files = Array.from(event.target.files || []);
+
+  for (const file of files) {
+    if (selectedImages.length >= MAX_IMAGES) {
+      alert("You can attach a maximum of 3 images.");
+      break;
+    }
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      alert("Please select a JPG, PNG or WEBP image.");
+      continue;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      alert("Each image must be 4 MB or smaller.");
+      continue;
+    }
+
+    try {
+      const imageData = await readImageFile(file);
+
+      selectedImages.push({
+        name: file.name,
+        mime: file.type,
+        data: imageData
+      });
+
+      displayAttachments();
+
+    } catch (error) {
+      alert("Could not load " + file.name + ".");
+    }
+  }
+
+  event.target.value = "";
+});
+
+/* =========================================
+   PDF TEXT EXTRACTION
+========================================= */
+
+async function extractPDFText(file) {
+  if (!window.pdfjsLib) {
+    throw new Error("The PDF reader could not be loaded.");
+  }
+
+  const arrayBuffer = await file.arrayBuffer();
+
+  const pdf = await pdfjsLib.getDocument({
+    data: new Uint8Array(arrayBuffer)
+  }).promise;
+
+  let extractedText = "";
+
+  const maximumPages = Math.min(pdf.numPages, 30);
+
+  for (let pageNumber = 1; pageNumber <= maximumPages; pageNumber++) {
+    const page = await pdf.getPage(pageNumber);
+
+    const textContent = await page.getTextContent();
+
+    const pageText = textContent.items
+      .map(item => item.str)
+      .join(" ");
+
+    extractedText +=
+      "\n\nPage " + pageNumber + ":\n" + pageText;
+
+    if (extractedText.length >= MAX_PDF_TEXT) {
+      extractedText = extractedText.substring(0, MAX_PDF_TEXT);
+      break;
+    }
+  }
+
+  if (!extractedText.trim()) {
+    throw new Error(
+      "No selectable text was found. This PDF may contain scanned pages."
+    );
+  }
+
+  return extractedText;
+}
+
+/* =========================================
+   PDF UPLOAD
+========================================= */
+
+$("attachPdfButton").addEventListener("click", () => {
+  $("pdfInput").click();
+});
+
+$("pdfInput").addEventListener("change", async event => {
+  const files = Array.from(event.target.files || []);
+
+  for (const file of files) {
+    if (selectedPDFs.length >= 2) {
+      alert("You can attach a maximum of 2 PDF files.");
+      break;
+    }
+
+    if (file.type !== "application/pdf") {
+      alert("Please select a PDF document.");
+      continue;
+    }
+
+    if (file.size > MAX_PDF_SIZE) {
+      alert("Each PDF must be 10 MB or smaller.");
+      continue;
+    }
+
+    $("chatStatus").textContent =
+      "Reading PDF: " + file.name + "...";
+
+    try {
+      const pdfText = await extractPDFText(file);
+
+      selectedPDFs.push({
+        name: file.name,
+        text: pdfText
+      });
+
+      displayAttachments();
+
+      $("chatStatus").textContent =
+        "PDF ready to send.";
+
+    } catch (error) {
+      alert(error.message);
+      $("chatStatus").textContent =
+        "Could not read the PDF.";
+    }
+  }
+
+  event.target.value = "";
+});
+
+/* =========================================
+   PDF LIBRARY WORKER
+========================================= */
+
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
+/* =========================================
+   END OF PART 5
+========================================= */
+  /* =========================================
+   SEND MESSAGE TO BRIANIAC AI
+========================================= */
 
 $("chatForm").addEventListener("submit", async event => {
   event.preventDefault();
@@ -1174,18 +1377,85 @@ $("chatForm").addEventListener("submit", async event => {
 
   const userMessage = input.value.trim();
 
-  if (!userMessage) return;
+  // Check whether there is anything to send.
+  if (
+    !userMessage &&
+    selectedImages.length === 0 &&
+    selectedPDFs.length === 0
+  ) {
+    return;
+  }
 
-  addMessage(userMessage, "user");
+  // Create a readable message for the chat screen.
+  let displayMessage = userMessage;
+
+  if (!displayMessage) {
+    displayMessage = "Please analyse my attachment.";
+  }
+
+  selectedImages.forEach(image => {
+    displayMessage += "\n[Attached image: " + image.name + "]";
+  });
+
+  selectedPDFs.forEach(pdf => {
+    displayMessage += "\n[Attached PDF: " + pdf.name + "]";
+  });
+
+  addMessage(displayMessage, "user");
 
   input.value = "";
   sendButton.disabled = true;
 
-  $("chatStatus").textContent = "BRIANIAC AI is thinking...";
+  $("chatStatus").textContent =
+    "BRIANIAC AI is analysing your message...";
 
+  // Prepare PDF text.
+  let pdfInstructions = "";
+
+  selectedPDFs.forEach(pdf => {
+    pdfInstructions +=
+      "\n\nATTACHED PDF DOCUMENT: " +
+      pdf.name +
+      "\n" +
+      pdf.text;
+  });
+
+  // Prepare the actual AI message.
+  let messageContent;
+
+  if (selectedImages.length > 0) {
+    // Images require multimodal message content.
+    messageContent = [
+      {
+        type: "text",
+        text:
+          (userMessage ||
+            "Please analyse the attached image or images.") +
+          pdfInstructions
+      }
+    ];
+
+    selectedImages.forEach(image => {
+      messageContent.push({
+        type: "image_url",
+        image_url: {
+          url: image.data
+        }
+      });
+    });
+
+  } else {
+    // Text-only and PDF-only messages.
+    messageContent =
+      (userMessage ||
+        "Please analyse the attached PDF document.") +
+      pdfInstructions;
+  }
+
+  // Remember the message in conversation history.
   conversation.push({
     role: "user",
-    content: userMessage
+    content: messageContent
   });
 
   const savedMemories = memoryEnabled
@@ -1218,14 +1488,15 @@ $("chatForm").addEventListener("submit", async event => {
             role: "system",
             content: systemMessage
           },
-
           ...conversation.slice(-20)
         ]
       })
     });
 
     if (!response.ok) {
-      throw new Error("Server error: " + response.status);
+      throw new Error(
+        "AI server error: " + response.status
+      );
     }
 
     const data = await response.json();
@@ -1234,21 +1505,33 @@ $("chatForm").addEventListener("submit", async event => {
       data.choices?.[0]?.message?.content;
 
     if (!reply) {
-      throw new Error("The AI server returned an empty response.");
+      throw new Error(
+        "The AI server returned an empty response."
+      );
     }
 
+    // Save the AI response.
     conversation.push({
       role: "assistant",
       content: reply
     });
 
+    // Display the response.
     addMessage(reply, "assistant");
 
-    $("chatStatus").textContent = "Connected.";
+    // Clear attachments after a successful response.
+    selectedImages = [];
+    selectedPDFs = [];
+
+    displayAttachments();
+
+    $("chatStatus").textContent =
+      "BRIANIAC AI is connected.";
 
   } catch (error) {
     console.error("BRIANIAC AI error:", error);
 
+    // Remove the failed message from conversation history.
     conversation.pop();
 
     addMessage(
@@ -1265,28 +1548,45 @@ $("chatForm").addEventListener("submit", async event => {
   }
 });
 
-
-// ========================================
-// CLEAR CHAT
-// ========================================
+/* =========================================
+   CLEAR CHAT
+========================================= */
 
 $("clearChat").addEventListener("click", () => {
   conversation = [];
 
+  selectedImages = [];
+  selectedPDFs = [];
+
   $("chatLog").innerHTML = "";
+
+  displayAttachments();
 
   addMessage(
     "Hello! I'm BRIANIAC AI. What would you like to explore today?",
     "assistant"
   );
 
-  $("chatStatus").textContent = "Conversation cleared.";
+  $("chatStatus").textContent =
+    "Your conversation has been cleared.";
 });
 
+/* =========================================
+   INITIAL CHAT MESSAGE
+========================================= */
 
-// ========================================
-// END OF BRIANIAC AI
-// ========================================
+if ($("chatLog").children.length === 0) {
+  addMessage(
+    "Hello! I'm BRIANIAC AI. What would you like to explore today?",
+    "assistant"
+  );
+}
+
+/* =========================================
+   BRIANIAC AI INITIALISATION COMPLETE
+========================================= */
+
+console.log("BRIANIAC AI has successfully loaded.");
 
 </script>
 </body>
