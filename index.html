@@ -1773,16 +1773,73 @@ async function extractPDFText(file) {
 
 async function askGroq(userMessage) {
 
+  let timeContext = "";
+
+  const isTimeQuestion =
+    /\b(time|date|timezone|time zone|clock|time difference)\b/i
+      .test(userMessage);
+
+  if (
+    isTimeQuestion &&
+    window.ct &&
+    window.BRIANIAC_FEATURES
+  ) {
+
+    const countries = Object.values(
+      window.ct.getAllCountries()
+    );
+
+    const matchedCountry = countries
+      .filter(country => {
+        const escapedName = country.name.replace(
+          /[.*+?^${}()|[\]\\]/g,
+          "\\$&"
+        );
+
+        return new RegExp(
+          "(^|[^a-z])" +
+          escapedName +
+          "([^a-z]|$)",
+          "i"
+        ).test(userMessage);
+      })
+      .sort((a, b) => b.name.length - a.name.length)[0];
+
+    if (matchedCountry) {
+
+      const result =
+        window.BRIANIAC_FEATURES.getTimeForCountry(
+          matchedCountry.name
+        );
+
+      timeContext =
+        "\n\nVERIFIED TIME AND DATE INFORMATION:\n" +
+        JSON.stringify(result) +
+        "\nUse this information to answer accurately. " +
+        "Do not guess or invent a time.";
+
+    } else {
+
+      timeContext =
+        "\n\nThe user is asking about time or date, " +
+        "but the location has not been identified. " +
+        "Ask for the country, city or region. Do not guess.";
+
+    }
+  }
+
   const messages = [
     {
       role: "system",
       content: SYSTEM_PROMPT + "\n\n" +
-  (window.BRIANIAC_FEATURES?.identity || "")
+        (window.BRIANIAC_FEATURES?.identity || "")
     },
+
     ...conversationHistory,
+
     {
       role: "user",
-      content: userMessage
+      content: userMessage + timeContext
     }
   ];
 
@@ -1794,7 +1851,7 @@ async function askGroq(userMessage) {
   );
 
   return extractResponse(data);
-}
+                       }
 
 
 /* =========================================
