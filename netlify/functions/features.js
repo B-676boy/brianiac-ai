@@ -160,7 +160,71 @@ Focus on helping the user.
     }
 
   },
+  // RECOGNISE COUNTRIES AND THEIR TIME ZONES
 
+  getTimeForCountry: function (countryName, timezoneName) {
+
+    try {
+
+      if (!window.ct) {
+        return {
+          error: "Time-zone database is unavailable."
+        };
+      }
+
+      const countries = Object.values(
+        window.ct.getAllCountries()
+      );
+
+      const country = countries.find(
+        item =>
+          item.name.toLowerCase() ===
+          countryName.trim().toLowerCase()
+      );
+
+      if (!country) {
+        return {
+          error: "I couldn't identify that country."
+        };
+      }
+
+      const timezones = country.timezones || [];
+
+      // Countries with multiple time zones
+
+      if (timezones.length > 1 && !timezoneName) {
+        return {
+          country: country.name,
+          multipleTimezones: true,
+          availableTimezones: timezones,
+          message:
+            "Please specify a city or region so I can give you the correct local time."
+        };
+      }
+
+      const selectedTimezone =
+        timezoneName || timezones[0];
+
+      if (!timezones.includes(selectedTimezone)) {
+        return {
+          error: "That time zone does not belong to this country."
+        };
+      }
+
+      return {
+        country: country.name,
+        ...this.getTime(selectedTimezone)
+      };
+
+    } catch (error) {
+
+      return {
+        error: "Unable to retrieve the country's time."
+      };
+
+    }
+
+  },
   // TAVILY INTERNET SEARCH
   searchWeb: async function (query) {
 
