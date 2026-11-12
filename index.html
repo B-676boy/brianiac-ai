@@ -1772,7 +1772,8 @@ async function askGroq(userMessage) {
   const messages = [
     {
       role: "system",
-      content: SYSTEM_PROMPT
+      content: SYSTEM_PROMPT + "\n\n" +
+  (window.BRIANIAC_FEATURES?.identity || "")
     },
     ...conversationHistory,
     {
