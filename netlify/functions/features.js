@@ -268,3 +268,4 @@ Focus on helping the user.
   }
 
 };
+console.log("BRIANIAC FEATURES LOADED", window.BRIANIAC_FEATURES);
