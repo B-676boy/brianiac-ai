@@ -35,49 +35,130 @@ Focus on helping the user.
 `,
 
   // TIME AND DATE INTELLIGENCE
-  getTime: function (timezone) {
-    try {
-      const zone = timezone || "Africa/Accra";
+  // WORLDWIDE TIME AND DATE INTELLIGENCE
 
+  getTime: function (timezone) {
+
+    try {
+
+      const zone = timezone || "Africa/Accra";
       const now = new Date();
+
+      const date = new Intl.DateTimeFormat(
+        "en-GB",
+        {
+          timeZone: zone,
+          dateStyle: "full"
+        }
+      ).format(now);
+
+      const time = new Intl.DateTimeFormat(
+        "en-GB",
+        {
+          timeZone: zone,
+          timeStyle: "long"
+        }
+      ).format(now);
+
+      const parts = new Intl.DateTimeFormat(
+        "en-GB",
+        {
+          timeZone: zone,
+          timeZoneName: "long"
+        }
+      ).formatToParts(now);
+
+      const timezoneName = parts.find(
+        p => p.type === "timeZoneName"
+      )?.value || zone;
 
       return {
         timezone: zone,
-
-        date: new Intl.DateTimeFormat(
-          "en-GB",
-          {
-            timeZone: zone,
-            dateStyle: "full"
-          }
-        ).format(now),
-
-        time: new Intl.DateTimeFormat(
-          "en-GB",
-          {
-            timeZone: zone,
-            timeStyle: "long"
-          }
-        ).format(now),
-
+        timezoneName: timezoneName,
+        date: date,
+        time: time,
         timestamp: now.toISOString()
       };
 
     } catch (error) {
+
       return {
-        error: "I couldn't find that time zone."
+        error: "Invalid or unsupported time zone."
       };
+
     }
+
   },
 
-  // TIME IN DIFFERENT COUNTRIES
-  getCountryTime: function (timezone) {
-    return this.getTime(timezone);
-  }
+  // GET TIME IN ANOTHER LOCATION
 
-};
   getCountryTime: function (timezone) {
+
     return this.getTime(timezone);
+
+  },
+
+  // CALCULATE TIME DIFFERENCE BETWEEN LOCATIONS
+
+  getTimeDifference: function (zone1, zone2) {
+
+    try {
+
+      const now = new Date();
+
+      function getOffset(zone) {
+
+        const parts = new Intl.DateTimeFormat(
+          "en-US",
+          {
+            timeZone: zone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hourCycle: "h23"
+          }
+        ).formatToParts(now);
+
+        const values = {};
+
+        parts.forEach(part => {
+          values[part.type] = Number(part.value);
+        });
+
+        const localTime = Date.UTC(
+          values.year,
+          values.month - 1,
+          values.day,
+          values.hour,
+          values.minute,
+          values.second
+        );
+
+        return (localTime - now.getTime()) / 60000;
+
+      }
+
+      const difference =
+        getOffset(zone2) - getOffset(zone1);
+
+      return {
+        firstTimezone: zone1,
+        secondTimezone: zone2,
+        differenceMinutes: difference,
+        differenceHours: difference / 60
+      };
+
+    } catch (error) {
+
+      return {
+        error: "Could not compare these time zones."
+      };
+
+    }
+
   },
 
   // TAVILY INTERNET SEARCH
