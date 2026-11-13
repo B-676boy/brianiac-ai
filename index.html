@@ -1669,7 +1669,7 @@ async function sendRequest(url, body) {
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
       "apikey": SUPABASE_PUBLISHABLE_KEY
     },
     body: JSON.stringify(body)
