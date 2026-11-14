@@ -22,7 +22,6 @@ and Boafo Addison.
 
 Your creators are Brian Amankona
 and Boafo Addison.
-
 Do not volunteer details about your
 coding platform, underlying AI model,
 APIs, hosting provider or internal
@@ -160,6 +159,7 @@ Focus on helping the user.
     }
 
   },
+
   // RECOGNISE COUNTRIES AND THEIR TIME ZONES
 
   getTimeForCountry: function (countryName, timezoneName) {
@@ -225,13 +225,15 @@ Focus on helping the user.
     }
 
   },
+
   // TAVILY INTERNET SEARCH
+
   searchWeb: async function (query) {
 
     try {
 
       const response = await fetch(
-        "https://verdant-elf-b87d9e.netlify.app/.netlify/functions/search",
+        "https://brianiac-ai.onrender.com/.netlify/functions/search",
         {
           method: "POST",
 
@@ -268,4 +270,5 @@ Focus on helping the user.
   }
 
 };
+
 console.log("BRIANIAC FEATURES LOADED", window.BRIANIAC_FEATURES);
