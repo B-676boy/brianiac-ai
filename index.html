@@ -2,45 +2,40 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#070b1c">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071426">
 
 <title>BRIANIAC AI</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/manuelmhtr/countries-and-timezones@v3.11.0/dist/index.min.js"></script>
+
 <style>
-
-:root {
-  --bg: #070b1c;
-  --panel: #101a35;
-  --cyan: #08d9ff;
-  --text: #f3f6ff;
-  --muted: #aab8d2;
-  --line: rgba(36,196,255,.22);
-  --character-colour: #08d9ff;
-  --eye-colour: #35cfff;
-}
-
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --background: #061222;
+  --panel: #0d2037;
+  --panel-light: #132b46;
+  --blue: #168bff;
+  --cyan: #00e5ff;
+  --text: #f3f8ff;
+  --muted: #91a8c2;
+  --border: rgba(0, 210, 255, 0.18);
 }
 
 body {
-  margin: 0;
   min-height: 100vh;
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
   background:
-    radial-gradient(
-      ellipse at 50% 32%,
-      rgba(27,65,123,.42),
-      transparent 66%
-    ),
-    linear-gradient(
-      115deg,
-      #0b142d,
-      #070b1c 54%,
-      #050817
-    );
+    radial-gradient(circle at 50% 10%, #12345a 0%, transparent 42%),
+    var(--background);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 button, input, textarea, select {
@@ -51,2146 +46,689 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-}
-
-/* HEADER */
-
 header {
-  width: min(100%, 920px);
-  margin: auto;
-  padding: 28px 20px 0;
-  display: flex;
-  justify-content: center;
-}
-
-.brand {
+  width: 100%;
+  padding: 18px 22px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5, 17, 32, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
 }
 
-.brand-mark {
-  width: 64px;
-  height: 64px;
-  border: 3px solid var(--cyan);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
+.logo {
   color: var(--cyan);
-  font-size: 38px;
-  font-weight: 800;
-  text-shadow: 0 0 12px var(--cyan);
-  box-shadow:
-    0 0 13px var(--cyan),
-    inset 0 0 14px #00d9ff29;
-}
-
-.brand-title {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: .5px;
-}
-
-.brand-title span {
-  color: var(--cyan);
-}
-
-.brand-tag {
-  margin-top: 5px;
-  color: #9bc8ed;
-  font-size: 9px;
+  font-size: 21px;
+  font-weight: bold;
   letter-spacing: 2px;
-  font-weight: 700;
 }
 
-/* NAVIGATION */
-
-nav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 9px;
-  width: min(100% - 32px, 760px);
-  margin: 28px auto 0;
+.menu-button {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: white;
+  padding: 9px 13px;
+  border-radius: 10px;
 }
-
-nav button,
-.btn {
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  padding: 10px 18px;
-  background: #0d1c39cc;
-  color: var(--text);
-}
-
-nav button.active,
-.btn.primary {
-  color: #00121b;
-  background: var(--cyan);
-  border-color: var(--cyan);
-  font-weight: 700;
-  box-shadow: 0 0 16px #08d9ff40;
-}
-
-/* MAIN LAYOUT */
 
 main {
-  width: min(100% - 32px, 760px);
+  width: 100%;
+  max-width: 950px;
   margin: auto;
+  padding: 25px 16px 100px;
 }
 
 .screen {
   display: none;
-  padding: 30px 0 54px;
 }
 
 .screen.active {
   display: block;
 }
 
-.panel {
-  background: #0c1730d6;
-  border: 1px solid var(--line);
+.card {
+  background: linear-gradient(145deg, #102741, #091a2e);
+  border: 1px solid var(--border);
   border-radius: 18px;
   padding: 20px;
-  margin: 18px 0;
-  box-shadow: 0 12px 35px #0002;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
 }
 
-h2 {
-  margin: 0 0 16px;
-  font-size: 25px;
+h1, h2, h3 {
+  margin-bottom: 12px;
 }
 
-h3 {
-  margin: 0 0 10px;
+p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.primary-button {
+  background: linear-gradient(100deg, var(--blue), #00bcd4);
+  border: none;
+  color: white;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: bold;
+}
+
+.secondary-button {
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  color: white;
+  border-radius: 12px;
+  padding: 11px 16px;
+}
+
+input, textarea, select {
+  width: 100%;
+  background: #061629;
+  color: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 90px;
 }
 
 label {
   display: block;
-  color: #c4d2e9;
+  color: var(--muted);
   margin: 14px 0 7px;
 }
 
-input,
-textarea,
-select {
-  width: 100%;
-  color: var(--text);
-  background: #080f23;
-  border: 1px solid #43a4dc4d;
-  border-radius: 12px;
-  padding: 13px 14px;
-  outline: none;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 2px #08d9ff1a;
-}
-
-textarea {
-  min-height: 90px;
-  resize: vertical;
-}
-
-input[type="color"] {
-  height: 48px;
-  padding: 5px;
-}
-
-/* HOME SCREEN */
-
-.home {
+.character-area {
   text-align: center;
-  padding-top: 32px;
-}
-
-.character-stage {
-  position: relative;
-  width: 306px;
-  height: 306px;
-  max-width: 82vw;
-  max-height: 82vw;
-  margin: 0 auto 34px;
-  display: grid;
-  place-items: center;
-}
-
-.orbit {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: 1px solid #00beff59;
-  border-radius: 50%;
-  box-shadow: 0 0 20px #00aaff1f;
-  animation: orbitRotate 12s linear infinite;
-}
-
-@keyframes orbitRotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.orbit::before,
-.orbit::after {
-  content: "";
-  position: absolute;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 12px var(--cyan);
-}
-
-.orbit::before {
-  left: 14%;
-  top: 14%;
-}
-
-.orbit::after {
-  right: 8%;
-  bottom: 27%;
+  padding: 30px 10px;
 }
 
 .character {
-  width: 76%;
-  height: 76%;
-  border: 2px solid var(--character-colour);
+  width: 175px;
+  height: 175px;
+  margin: 20px auto;
   border-radius: 50%;
-  background:
-    radial-gradient(
-      circle at 35% 28%,
-      #24446f,
-      #14294e 48%,
-      #09142f 78%
-    );
+  background: radial-gradient(circle at 35% 30%, #43eaff, #0875df 60%, #063b91);
   box-shadow:
-    0 0 17px var(--character-colour),
-    inset 0 0 25px #26b3ff21;
+    0 0 25px #00cfff,
+    0 0 65px rgba(0, 180, 255, 0.35);
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 27px;
-  animation: float 4s ease-in-out infinite;
-}
-
-.eyes {
-  display: flex;
-  gap: 35px;
+  align-items: center;
+  gap: 28px;
+  animation: float 3s ease-in-out infinite;
 }
 
 .eye {
-  width: 19px;
-  height: 29px;
+  width: 18px;
+  height: 27px;
+  background: #06172d;
   border-radius: 50%;
-  background: var(--eye-colour);
-  box-shadow: 0 0 17px var(--eye-colour);
-  animation: blink 4s infinite;
 }
 
-@keyframes blink {
-  0%, 44%, 48%, 100% {
-    transform: scaleY(1);
-  }
-  46% {
-    transform: scaleY(.08);
-  }
+.face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
 }
 
 .mouth {
-  width: 44px;
-  height: 15px;
-  border-bottom: 4px solid var(--eye-colour);
-  border-radius: 0 0 50% 50%;
+  width: 38px;
+  height: 13px;
+  border-bottom: 5px solid #06172d;
+  border-radius: 50%;
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
-.character[data-design="orb"] {
-  border-radius: 44%;
+.navigation {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-bottom: 22px;
 }
 
-.character[data-design="robot"] {
-  width: 72%;
-  height: 68%;
-  border-radius: 28%;
-  gap: 22px;
+.navigation button {
+  background: var(--panel);
+  color: white;
+  border: 1px solid var(--border);
+  padding: 12px 5px;
+  border-radius: 11px;
 }
 
-.character[data-design="robot"] .eye {
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
+.navigation button:hover,
+.navigation button.selected {
+  background: #07558a;
+  border-color: var(--cyan);
 }
 
-.character.no-animation,
-.character.no-animation .eye,
-.orbit.no-animation {
-  animation: none !important;
-}
-
-.hero-title {
-  font-size: 36px;
-  margin: 0 0 12px;
-}
-
-.tagline {
-  max-width: 540px;
-  margin: 0 auto 24px;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-.home-actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-/* CHAT */
-
-.chat-log {
-  min-height: 230px;
-  max-height: 440px;
+.chat-box {
+  min-height: 300px;
+  max-height: 55vh;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  padding: 12px;
+  background: rgba(3, 13, 25, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 14px;
 }
 
 .message {
   padding: 12px 14px;
-  border-radius: 14px;
-  max-width: 92%;
-  line-height: 1.55;
+  margin: 10px 0;
+  border-radius: 13px;
+  max-width: 90%;
+  line-height: 1.5;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.message.user {
-  align-self: flex-end;
-  background: #123b58;
-  border: 1px solid #08d9ff40;
+.user-message {
+  background: #07558a;
+  margin-left: auto;
 }
 
-.message.assistant {
-  align-self: flex-start;
-  background: #111d38;
-  border: 1px solid #ffffff12;
+.ai-message {
+  background: #142d49;
+  margin-right: auto;
 }
 
-.chat-form {
+.chat-controls {
   display: flex;
-  gap: 9px;
-  margin-top: 14px;
-}
-
-.chat-form input {
-  flex: 1;
-  min-width: 0;
-}
-
-.chat-form button {
-  min-width: 82px;
-}
-
-.attachment-tools {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 14px;
-}
-
-.attachment-tools input[type="file"] {
-  display: none;
-}
-
-.attachment-preview {
-  display: flex;
-  flex-wrap: wrap;
   gap: 8px;
-  margin-top: 10px;
-}
-
-.attachment-preview:empty {
-  display: none;
-}
-
-.attachment-item {
-  display: flex;
   align-items: center;
+}
+
+.chat-controls textarea {
+  min-height: 48px;
+  max-height: 120px;
+}
+
+.file-row {
+  display: flex;
   gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #101d38;
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.attachment-item button {
-  border: 0;
-  background: transparent;
-  color: #ff8b9b;
-  font-size: 19px;
-}
-
-.attachment-note,
-.about-copy {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.7;
+  flex-wrap: wrap;
+  margin: 12px 0;
 }
 
 .status {
-  min-height: 22px;
-  color: #9cb3d2;
+  color: var(--cyan);
   font-size: 13px;
   margin-top: 10px;
 }
 
-.list {
-  display: grid;
-  gap: 10px;
+@media (max-width: 500px) {
+  header { padding: 15px; }
+  .logo { font-size: 17px; }
+  .character { width: 145px; height: 145px; }
+  .navigation { grid-template-columns: repeat(2, 1fr); }
 }
-
-.memory-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #0a1329;
-  border-radius: 12px;
-}
-
-.memory-item span {
-  overflow-wrap: anywhere;
-}
-
-.small {
-  padding: 7px 11px;
-  font-size: 13px;
-}
-
-/* FOOTER */
-
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #7285a4;
-  font-size: 12px;
-  border-top: 1px solid #4196cd1a;
-}
-
-/* MOBILE */
-
-@media (max-width: 520px) {
-  header {
-    padding-top: 22px;
-  }
-
-  .brand-mark {
-    width: 54px;
-    height: 54px;
-    font-size: 32px;
-  }
-
-  .brand-title {
-    font-size: 23px;
-  }
-
-  .brand-tag {
-    font-size: 8px;
-    letter-spacing: 1.4px;
-  }
-
-  nav {
-    gap: 7px;
-    margin-top: 22px;
-  }
-
-  nav button {
-    padding: 9px 13px;
-    font-size: 13px;
-  }
-
-  .screen {
-    padding-top: 24px;
-  }
-
-  .character-stage {
-    width: 286px;
-    height: 286px;
-  }
-
-  .hero-title {
-    font-size: 29px;
-  }
-
-  .chat-form {
-    flex-wrap: wrap;
-  }
-
-  .chat-form input {
-    flex-basis: 100%;
-  }
-
-  .chat-form button {
-    flex: 1;
-  }
-
-  .attachment-tools button {
-    flex: 1;
-  }
-}
-
 </style>
-</head>
-
-<body>
+  </head>
+  <body>
 
 <header>
-  <div class="brand">
-    <div class="brand-mark">B</div>
-    <div>
-      <div class="brand-title">
-        BRIANIAC <span>AI</span>
-      </div>
-      <div class="brand-tag">
-        ASK · LEARN · INNOVATE · GROW
-      </div>
-    </div>
-  </div>
+  <div class="logo">BRIANIAC AI</div>
+  <button class="menu-button" id="menuButton">☰ Menu</button>
 </header>
-
-<nav aria-label="Main navigation">
-  <button class="active" data-screen="home">Home</button>
-  <button data-screen="chat">Chat</button>
-  <button data-screen="memory">Memory</button>
-  <button data-screen="settings">Settings</button>
-  <button data-screen="personalisation">Personalise</button>
-  <button data-screen="about">About</button>
-</nav>
 
 <main>
 
-<!-- HOME SCREEN -->
+  <nav class="navigation" id="mainNavigation">
+    <button class="selected" data-screen="home">🏠 Home</button>
+    <button data-screen="chat">💬 Chat</button>
+    <button data-screen="memory">🧠 Memory</button>
+    <button data-screen="settings">⚙️ Settings</button>
+    <button data-screen="personalise">🎨 Personalise</button>
+    <button data-screen="about">ℹ️ About</button>
+  </nav>
 
-<section id="home" class="screen active home">
+  <!-- HOME SCREEN -->
+  <section class="screen active" id="homeScreen">
 
-  <div class="character-stage">
-    <div class="orbit" id="characterOrbit"></div>
+    <div class="character-area">
+      <h1>Welcome to BRIANIAC AI</h1>
+      <p>Your intelligent assistant, ready to help.</p>
 
-    <div
-      class="character"
-      id="mainCharacter"
-      data-design="classic"
-    >
-      <div class="eyes">
-        <span class="eye"></span>
-        <span class="eye"></span>
+      <div class="character" id="character">
+        <div class="face">
+          <div style="display:flex; gap:28px;">
+            <div class="eye"></div>
+            <div class="eye"></div>
+          </div>
+          <div class="mouth"></div>
+        </div>
       </div>
-      <div class="mouth"></div>
-    </div>
-  </div>
 
-  <h1 class="hero-title">
-    <span id="homeGreeting">Hello!</span>
-    I'm <span id="homeAssistantName">BRIANIAC AI</span>.
-  </h1>
+      <p id="homeGreeting">How can I help you today?</p>
 
-  <p class="tagline">
-    Your AI companion for learning, creativity,
-    problem-solving and exploring new ideas.
-  </p>
+      <br>
 
-  <div class="home-actions">
-    <button class="btn primary" data-go="chat">
-      Start Chatting
-    </button>
-
-    <button class="btn" data-go="personalisation">
-      Personalise
-    </button>
-  </div>
-
-</section>
-
-<!-- CHAT SCREEN -->
-
-<section id="chat" class="screen">
-
-  <h2>
-    Chat with <span id="chatAssistantName">BRIANIAC AI</span>
-  </h2>
-
-  <div class="panel">
-
-    <div id="chatLog" class="chat-log" aria-live="polite">
-      <div class="message assistant">
-        Hello! I'm BRIANIAC AI.
-        What would you like to explore today?
-      </div>
-    </div>
-
-    <form id="chatForm" class="chat-form">
-
-      <input
-        id="chatInput"
-        type="text"
-        placeholder="Type your message..."
-        autocomplete="off"
-      >
-
-      <button
-        id="sendButton"
-        class="btn primary"
-        type="submit"
-      >
-        Send
+      <button class="primary-button" data-screen="chat">
+        Start Chatting
       </button>
-
-    </form>
-
-    <div class="attachment-tools">
-
-      <button
-        id="attachImageButton"
-        class="btn"
-        type="button"
-      >
-        📷 Attach Image
-      </button>
-
-      <button
-        id="attachPdfButton"
-        class="btn"
-        type="button"
-      >
-        📄 Attach PDF
-      </button>
-
-      <input
-        id="imageInput"
-        type="file"
-        accept="image/png,image/jpeg,image/webp"
-        multiple
-      >
-
-      <input
-        id="pdfInput"
-        type="file"
-        accept="application/pdf,.pdf"
-        multiple
-      >
-
     </div>
 
-    <div id="attachmentPreview" class="attachment-preview"></div>
-
-    <div class="attachment-note">
-      Attach images for visual analysis or PDFs for document questions.
-      You can attach up to three images or two PDFs per message.
-    </div>
-
-    <div class="attachment-tools">
-
-      <button
-        id="voiceInputButton"
-        class="btn"
-        type="button"
-      >
-        🎙️ Speak
-      </button>
-
-      <label style="display:flex;align-items:center;gap:8px;margin:0">
-        <input
-          id="voiceReplies"
-          type="checkbox"
-          style="width:auto"
-        >
-        Voice replies
-      </label>
-
-    </div>
-
-    <div id="chatStatus" class="status" role="status"></div>
-
-    <button
-      id="clearChat"
-      class="btn small"
-      type="button"
-    >
-      Clear conversation
-    </button>
-
-  </div>
-
-      </section>
-      <!-- MEMORY SCREEN -->
-
-<section id="memory" class="screen">
-
-  <h2>Memory</h2>
-
-  <div class="panel">
-
-    <h3>Conversation Memory</h3>
-
-    <p class="about-copy">
-      BRIANIAC AI can save useful details to help maintain
-      continuity between conversations on this device.
-    </p>
-
-    <label for="memoryInput">Add a memory</label>
-
-    <input
-      id="memoryInput"
-      type="text"
-      placeholder="Enter something to remember..."
-    >
-
-    <button
-      id="saveMemory"
-      class="btn primary"
-      type="button"
-      style="margin-top:12px"
-    >
-      Save Memory
-    </button>
-
-    <div id="memoryStatus" class="status"></div>
-
-  </div>
-
-  <div class="panel">
-
-    <h3>Saved Memories</h3>
-
-    <div id="memoryList" class="list">
-      <p class="about-copy">
-        Your saved memories will appear here.
+    <div class="card">
+      <h2>Meet BRIANIAC AI</h2>
+      <p>
+        BRIANIAC AI is your friendly digital assistant.
+        Ask questions, explore ideas, understand images,
+        and get help with everyday tasks.
       </p>
     </div>
 
-    <button
-      id="clearMemories"
-      class="btn small"
-      type="button"
-      style="margin-top:15px"
-    >
-      Clear All Memories
-    </button>
-
-  </div>
-
-</section>
-
-
-<!-- SETTINGS SCREEN -->
-
-<section id="settings" class="screen">
-
-  <h2>Settings</h2>
-
-  <div class="panel">
-
-    <h3>Appearance</h3>
-
-    <label for="themeSelect">Theme</label>
-
-    <select id="themeSelect">
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
-    </select>
-
-    <label for="fontSizeSelect">Text size</label>
-
-    <select id="fontSizeSelect">
-      <option value="small">Small</option>
-      <option value="medium" selected>Medium</option>
-      <option value="large">Large</option>
-    </select>
-
-  </div>
-
-  <div class="panel">
-
-    <h3>Voice</h3>
-
-    <label for="voiceEnabled">
-      Voice replies
-    </label>
-
-    <select id="voiceEnabled">
-      <option value="off">Off</option>
-      <option value="on">On</option>
-    </select>
-
-    <label for="speechRate">
-      Speech speed
-    </label>
-
-    <select id="speechRate">
-      <option value="0.8">Slow</option>
-      <option value="1" selected>Normal</option>
-      <option value="1.2">Fast</option>
-    </select>
-
-  </div>
-
-  <div class="panel">
-
-    <h3>Privacy</h3>
-
-    <p class="about-copy">
-      Your API credentials are stored on the Netlify
-      backend, not in this page's JavaScript.
-      Avoid uploading sensitive documents or images
-      unless you have checked the providers' data policies.
-    </p>
-
-  </div>
-
-</section>
-
-
-<!-- PERSONALISATION SCREEN -->
-
-<section id="personalisation" class="screen">
-
-  <h2>Personalisation</h2>
-
-  <div class="panel">
-
-    <h3>Assistant Identity</h3>
-
-    <label for="assistantName">
-      Assistant name
-    </label>
-
-    <input
-      id="assistantName"
-      type="text"
-      maxlength="30"
-      placeholder="BRIANIAC AI"
-    >
-
-    <p class="about-copy">
-      You can customise the assistant's display name.
-      The BRIANIAC AI brand above the character will remain.
-    </p>
-
-  </div>
-
-  <div class="panel">
-
-    <h3>Character Appearance</h3>
-
-    <label for="characterColour">
-      Character colour
-    </label>
-
-    <input
-      id="characterColour"
-      type="color"
-      value="#08d9ff"
-    >
-
-    <label for="eyeColour">
-      Eye colour
-    </label>
-
-    <input
-      id="eyeColour"
-      type="color"
-      value="#35cfff"
-    >
-
-    <label for="characterDesign">
-      Character design
-    </label>
-
-    <select id="characterDesign">
-      <option value="classic">Classic</option>
-      <option value="orb">Orb</option>
-      <option value="robot">Robot</option>
-    </select>
-
-    <label for="characterAnimation">
-      Character animation
-    </label>
-
-    <select id="characterAnimation">
-      <option value="on">On</option>
-      <option value="off">Off</option>
-    </select>
-
-    <button
-      id="savePersonalisation"
-      class="btn primary"
-      type="button"
-      style="margin-top:18px"
-    >
-      Save Personalisation
-    </button>
-
-    <div id="personalisationStatus" class="status"></div>
-
-  </div>
-
-</section>
-
-
-<!-- ABOUT SCREEN -->
-
-<section id="about" class="screen">
-
-  <h2>About BRIANIAC AI</h2>
-
-  <div class="panel">
-
-    <h3>BRIANIAC AI</h3>
-
-    <p class="about-copy">
-      BRIANIAC AI is an intelligent assistant designed
-      to help people ask questions, learn, explore ideas
-      and solve problems.
-    </p>
-
-    <p class="about-copy">
-      ASK · LEARN · INNOVATE · GROW
-    </p>
-
-    <h3 style="margin-top:24px">
-      Capabilities
-    </h3>
-
-    <div class="list">
-
-      <div class="memory-item">
-        <span>💬 Conversational AI</span>
-        <span>✓</span>
+    <div class="card">
+      <h3>Quick Access</h3>
+      <div class="file-row">
+        <button class="secondary-button" data-screen="chat">
+          Open Chat
+        </button>
+        <button class="secondary-button" data-screen="personalise">
+          Personalise
+        </button>
       </div>
-
-      <div class="memory-item">
-        <span>👁️ Image understanding</span>
-        <span>✓</span>
-      </div>
-
-      <div class="memory-item">
-        <span>📄 PDF reading</span>
-        <span>✓</span>
-      </div>
-
-      <div class="memory-item">
-        <span>🎙️ Voice interaction</span>
-        <span>✓</span>
-      </div>
-
-      <div class="memory-item">
-        <span>🧠 Personal memory</span>
-        <span>✓</span>
-      </div>
-
     </div>
 
-    <p class="about-copy" style="margin-top:24px">
-      Version 2.0
-    </p>
+  </section>
 
-  </div>
 
-</section>
+  <!-- CHAT SCREEN -->
+  <section class="screen" id="chatScreen">
 
-</main>
+    <div class="card">
+      <h2>Chat with BRIANIAC AI</h2>
+      <p>Ask me anything. I'm ready to help.</p>
 
-<footer>
-  BRIANIAC AI · ASK · LEARN · INNOVATE · GROW
-</footer>
+      <div class="chat-box" id="chatMessages">
+        <div class="message ai-message">
+          Hello! I'm BRIANIAC AI. What would you like to talk about?
+        </div>
+      </div>
+
+      <div class="file-row">
+        <button class="secondary-button" id="imageButton">
+          🖼️ Add Image
+        </button>
+
+        <button class="secondary-button" id="pdfButton">
+          📄 Add PDF
+        </button>
+
+        <button class="secondary-button" id="voiceButton">
+          🎤 Speak
+        </button>
+      </div>
+
+      <input
+        type="file"
+        id="imageInput"
+        accept="image/*"
+        hidden
+      >
+
+      <input
+        type="file"
+        id="pdfInput"
+        accept=".pdf,application/pdf"
+        multiple
+        hidden
+      >
+
+      <div id="attachmentPreview" class="status">
+        No attachments selected.
+      </div>
+
+      <div class="chat-controls">
+        <textarea
+          id="chatInput"
+          placeholder="Type your message..."
+          rows="1"
+        ></textarea>
+
+        <button class="primary-button" id="sendButton">
+          Send
+        </button>
+      </div>
+
+      <div class="file-row">
+        <button class="secondary-button" id="clearChatButton">
+          Clear Chat
+        </button>
+
+        <button class="secondary-button" id="stopVoiceButton">
+          Stop Speaking
+        </button>
+      </div>
+
+      <p class="status" id="chatStatus">
+        Ready.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- MEMORY SCREEN -->
+  <section class="screen" id="memoryScreen">
+
+    <div class="card">
+      <h2>Memory</h2>
+
+      <p>
+        Manage information saved during your conversations.
+      </p>
+
+      <label for="memoryInput">Your saved memory</label>
+
+      <textarea
+        id="memoryInput"
+        placeholder="Write something you want BRIANIAC AI to remember..."
+      ></textarea>
+
+      <div class="file-row">
+        <button class="primary-button" id="saveMemoryButton">
+          Save Memory
+        </button>
+
+        <button class="secondary-button" id="clearMemoryButton">
+          Clear Memory
+        </button>
+      </div>
+
+      <p class="status" id="memoryStatus">
+        Memory is ready.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- SETTINGS SCREEN -->
+  <section class="screen" id="settingsScreen">
+
+    <div class="card">
+      <h2>Settings</h2>
+
+      <label for="voiceEnabled">
+        Voice input
+      </label>
+
+      <select id="voiceEnabled">
+        <option value="true">Enabled</option>
+        <option value="false">Disabled</option>
+      </select>
+
+      <label for="voiceReplies">
+        Spoken replies
+      </label>
+
+      <select id="voiceReplies">
+        <option value="true">Enabled</option>
+        <option value="false">Disabled</option>
+      </select>
+
+      <label for="assistantLanguage">
+        Assistant language
+      </label>
+
+      <select id="assistantLanguage">
+        <option value="en-US">English</option>
+        <option value="fr-FR">French</option>
+        <option value="es-ES">Spanish</option>
+        <option value="de-DE">German</option>
+      </select>
+
+      <p class="status" id="settingsStatus">
+        Settings are ready.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- PERSONALISE SCREEN -->
+  <section class="screen" id="personaliseScreen">
+
+    <div class="card">
+      <h2>Personalise BRIANIAC AI</h2>
+
+      <p>
+        Change the appearance and preferences of your assistant.
+      </p>
+
+      <label for="assistantName">
+        Your assistant's display name
+      </label>
+
+      <input
+        type="text"
+        id="assistantName"
+        placeholder="Enter a name"
+      >
+
+      <label for="characterColor">
+        Character colour
+      </label>
+
+      <input
+        type="color"
+        id="characterColor"
+        value="#0875df"
+      >
+
+      <div class="file-row">
+        <button class="primary-button" id="savePersonalisationButton">
+          Save Changes
+        </button>
+
+        <button class="secondary-button" id="resetPersonalisationButton">
+          Reset
+        </button>
+      </div>
+
+      <p class="status" id="personalisationStatus">
+        Personalisation is ready.
+      </p>
+    </div>
+
+  </section>
+
+
+  <!-- ABOUT SCREEN -->
+  <section class="screen" id="aboutScreen">
+
+    <div class="card">
+      <h2>About BRIANIAC AI</h2>
+
+      <p>
+        BRIANIAC AI is an intelligent assistant designed
+        to help people learn, explore, create, and solve problems.
+      </p>
+
+      <br>
+
+      <h3>Our Vision</h3>
+
+      <p>
+        To make helpful artificial intelligence accessible
+        and useful in everyday life.
+      </p>
+
+      <br>
+
+      <h3>Creators</h3>
+
+      <p>
+        Brian Amankona and Boafo Addison.
+      </p>
+    </div>
+
+  </section>
+
+  </main>
+  <script src="features.js"></script>
+<script src="app.js"></script>
+
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 
-/* =========================================
-   BRIANIAC AI CONFIGURATION
-========================================= */
+  const navigationButtons =
+    document.querySelectorAll("[data-screen]");
 
-const WORKER_URL =
-  "https://eyuqdwpubiwyjpjrnaum.supabase.co/functions/v1/chat";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Fk3XacGe2HQA3HpgBg-7tg_42wbf3-I";
-
-const VISION_URL =
-  "https://verdant-elf-b87d9e.netlify.app/.netlify/functions/vision";
-
-const $ = (id) => document.getElementById(id);
-
-const STORAGE = {
-  memories: "brianiac_memories_v2",
-  settings: "brianiac_settings_v2",
-  personalisation: "brianiac_personalisation_v2"
-};
-
-let selectedImages = [];
-let selectedPDFs = [];
-let conversationHistory = [];
-let isSending = false;
-
-
-/* =========================================
-   SAFE LOCAL STORAGE
-========================================= */
-
-function readStorage(key, fallback) {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch (error) {
-    console.error("Storage read error:", error);
-    return fallback;
-  }
-}
-
-function writeStorage(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (error) {
-    console.error("Storage write error:", error);
-    return false;
-  }
-}
-
-
-/* =========================================
-   NAVIGATION
-========================================= */
-
-function showScreen(screenName) {
-  const target = $(screenName);
-
-  if (!target || !target.classList.contains("screen")) {
-    console.warn("Unknown screen:", screenName);
-    return;
-  }
-
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.remove("active");
-  });
-
-  target.classList.add("active");
-
-  document.querySelectorAll("nav button[data-screen]").forEach(button => {
-    button.classList.toggle(
-      "active",
-      button.dataset.screen === screenName
-    );
-  });
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-document.querySelectorAll("nav button[data-screen]").forEach(button => {
-  button.addEventListener("click", () => {
-    showScreen(button.dataset.screen);
-  });
-});
-
-document.querySelectorAll("[data-go]").forEach(button => {
-  button.addEventListener("click", () => {
-    showScreen(button.dataset.go);
-  });
-});
-
-
-/* =========================================
-   MEMORY SYSTEM
-========================================= */
-
-let memories = readStorage(STORAGE.memories, []);
-
-if (!Array.isArray(memories)) {
-  memories = [];
-}
-
-function displayMemories() {
-  const list = $("memoryList");
-
-  list.innerHTML = "";
-
-  if (memories.length === 0) {
-    const empty = document.createElement("p");
-    empty.className = "about-copy";
-    empty.textContent = "No saved memories yet.";
-    list.appendChild(empty);
-    return;
-  }
-
-  memories.forEach((memory, index) => {
-    const row = document.createElement("div");
-    row.className = "memory-item";
-
-    const text = document.createElement("span");
-    text.textContent = memory;
-
-    const remove = document.createElement("button");
-    remove.className = "btn small";
-    remove.type = "button";
-    remove.textContent = "Delete";
-
-    remove.addEventListener("click", () => {
-      memories.splice(index, 1);
-      writeStorage(STORAGE.memories, memories);
-      displayMemories();
+  function showScreen(screenName) {
+    document.querySelectorAll(".screen").forEach(screen => {
+      screen.classList.remove("active");
     });
 
-    row.appendChild(text);
-    row.appendChild(remove);
-
-    list.appendChild(row);
-  });
-}
-
-$("saveMemory").addEventListener("click", () => {
-  const input = $("memoryInput");
-  const value = input.value.trim();
-
-  if (!value) {
-    $("memoryStatus").textContent =
-      "Please enter something to remember.";
-    return;
-  }
-
-  if (memories.length >= 100) {
-    $("memoryStatus").textContent =
-      "Memory limit reached.";
-    return;
-  }
-
-  memories.push(value);
-
-  const saved = writeStorage(STORAGE.memories, memories);
-
-  if (!saved) {
-    memories.pop();
-    $("memoryStatus").textContent =
-      "Could not save memory on this device.";
-    return;
-  }
-
-  input.value = "";
-  $("memoryStatus").textContent = "Memory saved.";
-  displayMemories();
-});
-
-$("clearMemories").addEventListener("click", () => {
-  if (!confirm("Delete all saved memories?")) {
-    return;
-  }
-
-  memories = [];
-  writeStorage(STORAGE.memories, memories);
-  displayMemories();
-
-  $("memoryStatus").textContent =
-    "All memories cleared.";
-});
-
-displayMemories();
-
-
-/* =========================================
-   PERSONALISATION
-========================================= */
-
-let personalisation = readStorage(
-  STORAGE.personalisation,
-  {
-    name: "BRIANIAC AI",
-    characterColour: "#08d9ff",
-    eyeColour: "#35cfff",
-    design: "classic",
-    animation: "on"
-  }
-);
-
-function applyPersonalisation() {
-  const character = $("mainCharacter");
-  const orbit = $("characterOrbit");
-
-  const name = personalisation.name || "BRIANIAC AI";
-
-  character.style.setProperty(
-    "--character-colour",
-    personalisation.characterColour
-  );
-
-  character.style.setProperty(
-    "--eye-colour",
-    personalisation.eyeColour
-  );
-
-  character.dataset.design = personalisation.design;
-
-  character.classList.toggle(
-    "no-animation",
-    personalisation.animation === "off"
-  );
-
-  orbit.classList.toggle(
-    "no-animation",
-    personalisation.animation === "off"
-  );
-
-  $("homeAssistantName").textContent = name;
-  $("chatAssistantName").textContent = name;
-
-  $("assistantName").value = personalisation.name;
-  $("characterColour").value = personalisation.characterColour;
-  $("eyeColour").value = personalisation.eyeColour;
-  $("characterDesign").value = personalisation.design;
-  $("characterAnimation").value = personalisation.animation;
-}
-
-$("savePersonalisation").addEventListener("click", () => {
-  const name = $("assistantName").value.trim();
-
-  if (!name) {
-    $("personalisationStatus").textContent =
-      "Please enter an assistant name.";
-    return;
-  }
-
-  personalisation = {
-    name: name,
-    characterColour: $("characterColour").value,
-    eyeColour: $("eyeColour").value,
-    design: $("characterDesign").value,
-    animation: $("characterAnimation").value
-  };
-
-  if (!writeStorage(STORAGE.personalisation, personalisation)) {
-    $("personalisationStatus").textContent =
-      "Could not save personalisation.";
-    return;
-  }
-
-  applyPersonalisation();
-
-  $("personalisationStatus").textContent =
-    "Personalisation saved successfully.";
-});
-
-applyPersonalisation();
-
-
-/* =========================================
-   SETTINGS
-========================================= */
-
-let settings = readStorage(
-  STORAGE.settings,
-  {
-    theme: "dark",
-    fontSize: "medium",
-    voiceReplies: "off",
-    speechRate: "1"
-  }
-);
-
-function applySettings() {
-  document.body.style.background =
-    settings.theme === "light"
-      ? "#edf4ff"
-      : "";
-
-  document.body.style.color =
-    settings.theme === "light"
-      ? "#15243b"
-      : "";
-
-  document.body.style.fontSize =
-    settings.fontSize === "large"
-      ? "18px"
-      : settings.fontSize === "small"
-        ? "14px"
-        : "16px";
-
-  $("themeSelect").value = settings.theme;
-  $("fontSizeSelect").value = settings.fontSize;
-  $("voiceEnabled").value = settings.voiceReplies;
-  $("speechRate").value = settings.speechRate;
-
-  $("voiceReplies").checked =
-    settings.voiceReplies === "on";
-}
-
-function saveSettings() {
-  settings = {
-    theme: $("themeSelect").value,
-    fontSize: $("fontSizeSelect").value,
-    voiceReplies: $("voiceEnabled").value,
-    speechRate: $("speechRate").value
-  };
-
-  writeStorage(STORAGE.settings, settings);
-  applySettings();
-}
-
-[
-  "themeSelect",
-  "fontSizeSelect",
-  "voiceEnabled",
-  "speechRate"
-].forEach(id => {
-  $(id).addEventListener("change", saveSettings);
-});
-
-$("voiceReplies").addEventListener("change", () => {
-  $("voiceEnabled").value =
-    $("voiceReplies").checked ? "on" : "off";
-
-  saveSettings();
-});
-
-applySettings();
-
-
-/* =========================================
-   CHAT DISPLAY
-========================================= */
-
-function addMessage(role, content) {
-  const log = $("chatLog");
-  const message = document.createElement("div");
-
-  message.className =
-    role === "user"
-      ? "message user"
-      : "message assistant";
-
-  message.textContent = content;
-
-  log.appendChild(message);
-  log.scrollTop = log.scrollHeight;
-
-  return message;
-}
-
-function setStatus(message) {
-  $("chatStatus").textContent = message;
-}
-
-
-/* =========================================
-   FILE READER
-========================================= */
-
-function readImageFile(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => resolve(reader.result);
-
-    reader.onerror = () => {
-      reject(new Error("Could not read image."));
-    };
-
-    reader.readAsDataURL(file);
-  });
-}
-
-function readPDFFile(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = () => resolve(reader.result);
-
-    reader.onerror = () => {
-      reject(new Error("Could not read PDF."));
-    };
-
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-
-/* =========================================
-   ATTACHMENT SELECTION
-========================================= */
-
-$("attachImageButton").addEventListener("click", () => {
-  $("imageInput").click();
-});
-
-$("attachPdfButton").addEventListener("click", () => {
-  $("pdfInput").click();
-});
-
-$("imageInput").addEventListener("change", async event => {
-  const files = Array.from(event.target.files || []);
-
-  for (const file of files) {
-    if (!file.type.startsWith("image/")) {
-      continue;
+    const selectedScreen =
+      document.getElementById(screenName + "Screen");
+
+    if (selectedScreen) {
+      selectedScreen.classList.add("active");
     }
 
-    if (selectedImages.length >= 3) {
-      setStatus("Maximum of three images allowed.");
-      break;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setStatus("Each image must be 5 MB or smaller.");
-      continue;
-    }
-
-    try {
-      const data = await readImageFile(file);
-
-      selectedImages.push({
-        name: file.name,
-        data: data
-      });
-    } catch (error) {
-      setStatus(error.message);
-    }
-  }
-
-  event.target.value = "";
-  displayAttachments();
-});
-
-$("pdfInput").addEventListener("change", event => {
-  const files = Array.from(event.target.files || []);
-
-  for (const file of files) {
-    if (
-      file.type !== "application/pdf" &&
-      !file.name.toLowerCase().endsWith(".pdf")
-    ) {
-      continue;
-    }
-
-    if (selectedPDFs.length >= 2) {
-      setStatus("Maximum of two PDFs allowed.");
-      break;
-    }
-
-    if (file.size > 10 * 1024 * 1024) {
-      setStatus("Each PDF must be 10 MB or smaller.");
-      continue;
-    }
-
-    selectedPDFs.push(file);
-  }
-
-  event.target.value = "";
-  displayAttachments();
-});
-
-
-/* =========================================
-   ATTACHMENT PREVIEW
-========================================= */
-
-function displayAttachments() {
-  const preview = $("attachmentPreview");
-
-  preview.innerHTML = "";
-
-  const allAttachments = [
-    ...selectedImages.map((item, index) => ({
-      name: item.name,
-      type: "image",
-      index: index
-    })),
-
-    ...selectedPDFs.map((item, index) => ({
-      name: item.name,
-      type: "pdf",
-      index: index
-    }))
-  ];
-
-  allAttachments.forEach(item => {
-    const row = document.createElement("div");
-    row.className = "attachment-item";
-
-    const name = document.createElement("span");
-
-    name.textContent =
-      (item.type === "image" ? "📷 " : "📄 ") +
-      item.name;
-
-    const remove = document.createElement("button");
-
-    remove.type = "button";
-    remove.textContent = "×";
-    remove.setAttribute("aria-label", "Remove attachment");
-
-    remove.addEventListener("click", () => {
-      if (item.type === "image") {
-        selectedImages.splice(item.index, 1);
-      } else {
-        selectedPDFs.splice(item.index, 1);
-      }
-
-      displayAttachments();
+    document.querySelectorAll(".navigation button").forEach(button => {
+      button.classList.toggle(
+        "selected",
+        button.dataset.screen === screenName
+      );
     });
 
-    row.appendChild(name);
-    row.appendChild(remove);
-
-    preview.appendChild(row);
-  });
-}
-
-</script>
-
-<!-- PDF TEXT EXTRACTION LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-<!-- WORLDWIDE COUNTRY AND TIMEZONE DATABASE -->
-<script src="https://cdn.jsdelivr.net/gh/manuelmhtr/countries-and-timezones@v3.11.0/dist/index.min.js"></script>
-
-<!-- BRIANIAC NEW FEATURES -->
-<script src="features.js"></script>
-
-  <script>
-
-/* =========================================
-   PDF.JS CONFIGURATION
-========================================= */
-
-if (window.pdfjsLib) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-}
-
-
-/* =========================================
-   BRIANIAC AI PERSONALITY
-========================================= */
-
-const SYSTEM_PROMPT = `
-You are BRIANIAC AI.
-
-Your purpose is to help people learn, explore,
-create, solve problems and understand the world.
-
-PERSONALITY:
-- Be friendly, respectful and patient.
-- Be intelligent and helpful.
-- Explain difficult ideas clearly.
-- Never be unnecessarily rude or dismissive.
-- Do not pretend to know something you do not know.
-- Admit uncertainty when necessary.
-- Give complete answers.
-- Follow the user's instructions carefully.
-
-IDENTITY:
-Your name is BRIANIAC AI.
-You are an AI assistant.
-You should never claim to be human.
-
-VISION:
-When image analysis is provided, use the analysis
-to answer questions about the attached image.
-
-DOCUMENTS:
-When PDF text is provided, use its contents
-to answer the user's questions.
-
-Be accurate, clear and helpful.
-`;
-
-
-/* =========================================
-   RESPONSE EXTRACTION
-========================================= */
-
-function extractResponse(data) {
-  if (
-    data &&
-    data.choices &&
-    data.choices[0] &&
-    data.choices[0].message
-  ) {
-    const content = data.choices[0].message.content;
-
-    if (typeof content === "string") {
-      return content;
-    }
-
-    if (Array.isArray(content)) {
-      return content
-        .map(item => item.text || "")
-        .join("\n");
-    }
+    document.getElementById("mainNavigation").style.display = "grid";
   }
 
-  if (data && data.error) {
-    throw new Error(
-      typeof data.error === "string"
-        ? data.error
-        : data.error.message || "AI service error."
-    );
-  }
-
-  throw new Error("The AI returned an unexpected response.");
-}
-
-
-/* =========================================
-   NETLIFY REQUEST HANDLER
-========================================= */
-
-async function sendRequest(url, body) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_PUBLISHABLE_KEY
-    },
-    body: JSON.stringify(body)
+  navigationButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      showScreen(this.dataset.screen);
+    });
   });
 
-  const raw = await response.text();
+  document.getElementById("menuButton").addEventListener("click", function () {
+    const navigation = document.getElementById("mainNavigation");
 
-  let data;
+    navigation.style.display =
+      navigation.style.display === "none" ? "grid" : "none";
+  });
 
-  try {
-    data = JSON.parse(raw);
-  } catch (error) {
-    throw new Error(
-      "The server returned an invalid response."
-    );
+  const characterColor =
+    document.getElementById("characterColor");
+
+  characterColor.addEventListener("input", function () {
+    document.getElementById("character").style.background =
+      `radial-gradient(circle at 35% 30%, #43eaff, ${this.value} 60%, #063b91)`;
+  });
+
+  document.getElementById("assistantName").value =
+    localStorage.getItem("brianiacAssistantName") || "BRIANIAC AI";
+
+  document.getElementById("savePersonalisationButton")
+    .addEventListener("click", function () {
+
+      localStorage.setItem(
+        "brianiacAssistantName",
+        document.getElementById("assistantName").value
+      );
+
+      localStorage.setItem(
+        "brianiacCharacterColor",
+        characterColor.value
+      );
+
+      document.getElementById("personalisationStatus").textContent =
+        "Your preferences have been saved.";
+    });
+
+  document.getElementById("resetPersonalisationButton")
+    .addEventListener("click", function () {
+
+      localStorage.removeItem("brianiacAssistantName");
+      localStorage.removeItem("brianiacCharacterColor");
+
+      document.getElementById("assistantName").value = "BRIANIAC AI";
+      characterColor.value = "#0875df";
+
+      document.getElementById("character").style.background =
+        "radial-gradient(circle at 35% 30%, #43eaff, #0875df 60%, #063b91)";
+
+      document.getElementById("personalisationStatus").textContent =
+        "Personalisation has been reset.";
+    });
+
+  const savedColor =
+    localStorage.getItem("brianiacCharacterColor");
+
+  if (savedColor) {
+    characterColor.value = savedColor;
+
+    document.getElementById("character").style.background =
+      `radial-gradient(circle at 35% 30%, #43eaff, ${savedColor} 60%, #063b91)`;
   }
 
-  if (!response.ok) {
-    const message =
-      data.error?.message ||
-      data.error ||
-      data.message ||
-      "Request failed.";
+  const memoryInput = document.getElementById("memoryInput");
 
-    throw new Error(
-      typeof message === "string"
-        ? message
-        : "The AI service returned an error."
-    );
-  }
+  memoryInput.value =
+    localStorage.getItem("brianiacMemory") || "";
 
-  return data;
-}
+  document.getElementById("saveMemoryButton")
+    .addEventListener("click", function () {
 
+      localStorage.setItem(
+        "brianiacMemory",
+        memoryInput.value
+      );
 
-/* =========================================
-   IMAGE ANALYSIS — MOLMO 2
-========================================= */
+      document.getElementById("memoryStatus").textContent =
+        "Memory saved on this device.";
+    });
 
-async function analyseImage(imageData, prompt) {
+  document.getElementById("clearMemoryButton")
+    .addEventListener("click", function () {
 
-  const data = await sendRequest(
-    VISION_URL,
-    {
-      image: imageData,
-      prompt: prompt || "Describe this image in detail."
-    }
-  );
+      localStorage.removeItem("brianiacMemory");
+      memoryInput.value = "";
 
-  return extractResponse(data);
-}
+      document.getElementById("memoryStatus").textContent =
+        "Memory cleared.";
+    });
 
+  document.getElementById("voiceEnabled").addEventListener("change", function () {
+    localStorage.setItem("brianiacVoiceEnabled", this.value);
+  });
 
-/* =========================================
-   PDF TEXT EXTRACTION
-========================================= */
+  document.getElementById("voiceReplies").addEventListener("change", function () {
+    localStorage.setItem("brianiacVoiceReplies", this.value);
+  });
 
-async function extractPDFText(file) {
+  document.getElementById("assistantLanguage").addEventListener("change", function () {
+    localStorage.setItem("brianiacLanguage", this.value);
+  });
 
-  if (!window.pdfjsLib) {
-    throw new Error(
-      "PDF reader could not load. Check your internet connection."
-    );
-  }
+  document.getElementById("voiceEnabled").value =
+    localStorage.getItem("brianiacVoiceEnabled") || "true";
 
-  const buffer = await readPDFFile(file);
+  document.getElementById("voiceReplies").value =
+    localStorage.getItem("brianiacVoiceReplies") || "true";
 
-  const pdf = await pdfjsLib.getDocument({
-    data: new Uint8Array(buffer)
-  }).promise;
+  document.getElementById("assistantLanguage").value =
+    localStorage.getItem("brianiacLanguage") || "en-US";
 
-  let extractedText = "";
+  showScreen("home");
 
-  for (let pageNumber = 1;
-       pageNumber <= pdf.numPages;
-       pageNumber++) {
-
-    const page = await pdf.getPage(pageNumber);
-
-    const content = await page.getTextContent();
-
-    const pageText = content.items
-      .map(item => item.str)
-      .join(" ");
-
-    extractedText +=
-      "\n\nPage " + pageNumber + ":\n" + pageText;
-  }
-
-  if (!extractedText.trim()) {
-    throw new Error(
-      "No readable text found in this PDF. It may contain scanned pages."
-    );
-  }
-
-  return extractedText;
-}
-
-
-/* =========================================
-   CHAT REQUEST — GROQ
-========================================= */
-
-async function askGroq(userMessage) {
-
-  let timeContext = "";
-
-  const isTimeQuestion =
-    /\b(time|date|timezone|time zone|clock|time difference)\b/i
-      .test(userMessage);
-
-  if (
-    isTimeQuestion &&
-    window.ct &&
-    window.BRIANIAC_FEATURES
-  ) {
-
-    const countries = Object.values(
-      window.ct.getAllCountries()
-    );
-
-    const matchedCountry = countries
-      .filter(country => {
-        const escapedName = country.name.replace(
-          /[.*+?^${}()|[\]\\]/g,
-          "\\$&"
-        );
-
-        return new RegExp(
-          "(^|[^a-z])" +
-          escapedName +
-          "([^a-z]|$)",
-          "i"
-        ).test(userMessage);
-      })
-      .sort((a, b) => b.name.length - a.name.length)[0];
-
-    if (matchedCountry) {
-
-      const result =
-        window.BRIANIAC_FEATURES.getTimeForCountry(
-          matchedCountry.name
-        );
-
-      timeContext =
-        "\n\nVERIFIED TIME AND DATE INFORMATION:\n" +
-        JSON.stringify(result) +
-        "\nUse this information to answer accurately. " +
-        "Do not guess or invent a time.";
-
-    } else {
-
-      timeContext =
-        "\n\nThe user is asking about time or date, " +
-        "but the location has not been identified. " +
-        "Ask for the country, city or region. Do not guess.";
-
-    }
-  }
-
-  const messages = [
-    {
-      role: "system",
-      content: SYSTEM_PROMPT + "\n\n" +
-        (window.BRIANIAC_FEATURES?.identity || "")
-    },
-
-    ...conversationHistory,
-
-    {
-      role: "user",
-      content: userMessage + timeContext
-    }
-  ];
-
-  const data = await sendRequest(
-    WORKER_URL,
-    {
-      messages: messages
-    }
-  );
-
-  return extractResponse(data);
-    }         
-
-
-/* =========================================
-   VOICE REPLIES
-========================================= */
-
-function speakResponse(text) {
-
-  if (!("speechSynthesis" in window)) {
-    return;
-  }
-
-  if (settings.voiceReplies !== "on") {
-    return;
-  }
-
-  window.speechSynthesis.cancel();
-
-  const speech = new SpeechSynthesisUtterance(text);
-
-  speech.rate = Number(settings.speechRate) || 1;
-  speech.pitch = 1;
-  speech.lang = "en-US";
-
-  window.speechSynthesis.speak(speech);
-}
-
-
-/* =========================================
-   VOICE INPUT
-========================================= */
-
-let recognition = null;
-
-const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
-
-if (SpeechRecognition) {
-
-  recognition = new SpeechRecognition();
-
-  recognition.lang = "en-US";
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  recognition.onresult = event => {
-
-    const transcript =
-      event.results[0][0].transcript;
-
-    $("chatInput").value = transcript;
-
-    setStatus("Speech recognised. Press Send to continue.");
-  };
-
-  recognition.onerror = event => {
-
-    setStatus(
-      "Voice input error: " + event.error
-    );
-  };
-
-  recognition.onend = () => {
-
-    $("voiceInputButton").textContent = "🎙️ Speak";
-  };
-
-} else {
-
-  $("voiceInputButton").disabled = true;
-
-  $("voiceInputButton").textContent =
-    "Voice input unavailable";
-}
-
-$("voiceInputButton").addEventListener("click", () => {
-
-  if (!recognition) {
-    setStatus("Your browser does not support voice input.");
-    return;
-  }
-
-  try {
-
-    recognition.start();
-
-    $("voiceInputButton").textContent =
-      "🎙️ Listening...";
-
-    setStatus("Listening. Speak now.");
-
-  } catch (error) {
-
-    setStatus("Voice input is already active.");
-  }
 });
-
-
-/* =========================================
-   SEND MESSAGE
-========================================= */
-
-async function handleChatSubmit(event) {
-
-  event.preventDefault();
-
-  if (isSending) {
-    return;
-  }
-
-  const input = $("chatInput");
-
-  const question = input.value.trim();
-
-  const images = [...selectedImages];
-
-  const pdfs = [...selectedPDFs];
-
-  if (!question && images.length === 0 && pdfs.length === 0) {
-    setStatus("Please type a message or attach a file.");
-    return;
-  }
-
-  isSending = true;
-
-  $("sendButton").disabled = true;
-
-  $("sendButton").textContent = "Thinking...";
-
-  input.value = "";
-
-  const attachmentNames = [
-    ...images.map(item => item.name),
-    ...pdfs.map(item => item.name)
-  ];
-
-  let displayText = question;
-
-  if (attachmentNames.length > 0) {
-
-    displayText +=
-      (displayText ? "\n\n" : "") +
-      "Attachments: " +
-      attachmentNames.join(", ");
-  }
-
-  addMessage("user", displayText);
-
-  selectedImages = [];
-  selectedPDFs = [];
-
-  displayAttachments();
-
-  let visionResults = [];
-  let pdfResults = [];
-
-  try {
-
-    /* IMAGE ANALYSIS */
-
-    for (let i = 0; i < images.length; i++) {
-
-      setStatus(
-        "Analysing image " +
-        (i + 1) +
-        " of " +
-        images.length +
-        " with Molmo 2..."
-      );
-
-      const analysis = await analyseImage(
-        images[i].data,
-        question || "Describe this image in detail."
-      );
-
-      visionResults.push(
-        "IMAGE " +
-        (i + 1) +
-        " (" +
-        images[i].name +
-        "):\n" +
-        analysis
-      );
-    }
-
-
-    /* PDF EXTRACTION */
-
-    for (let i = 0; i < pdfs.length; i++) {
-
-      setStatus(
-        "Reading PDF " +
-        (i + 1) +
-        " of " +
-        pdfs.length +
-        "..."
-      );
-
-      const text = await extractPDFText(pdfs[i]);
-
-      pdfResults.push(
-        "PDF DOCUMENT " +
-        (i + 1) +
-        " (" +
-        pdfs[i].name +
-        "):\n" +
-        text
-      );
-    }
-
-
-    /* PREPARE GROQ MESSAGE */
-
-    let finalMessage = question;
-
-    if (visionResults.length > 0) {
-
-      finalMessage +=
-        "\n\nIMAGE ANALYSIS RESULTS:\n" +
-        visionResults.join("\n\n");
-    }
-
-    if (pdfResults.length > 0) {
-
-      finalMessage +=
-        "\n\nPDF DOCUMENT CONTENTS:\n" +
-        pdfResults.join("\n\n");
-    }
-
-    if (!finalMessage.trim()) {
-
-      finalMessage =
-        "Please describe and explain the attached files.";
-    }
-
-
-    /* SEND TO GROQ */
-
-    setStatus("BRIANIAC AI is preparing your answer...");
-
-    const answer = await askGroq(finalMessage);
-
-    addMessage("assistant", answer);
-
-    conversationHistory.push(
-      {
-        role: "user",
-        content: finalMessage
-      },
-      {
-        role: "assistant",
-        content: answer
-      }
-    );
-
-    /* LIMIT CONVERSATION HISTORY */
-
-    if (conversationHistory.length > 20) {
-
-      conversationHistory =
-        conversationHistory.slice(-20);
-    }
-
-    setStatus("Ready.");
-
-    speakResponse(answer);
-
-  } catch (error) {
-
-    console.error("BRIANIAC AI error:", error);
-
-    addMessage(
-      "assistant",
-      "I'm sorry, something went wrong: " +
-      error.message
-    );
-
-    setStatus("Request failed. See the error above.");
-
-  } finally {
-
-    isSending = false;
-
-    $("sendButton").disabled = false;
-
-    $("sendButton").textContent = "Send";
-  }
-}
-
-
-/* =========================================
-   CHAT FORM CONNECTION
-========================================= */
-
-$("chatForm").addEventListener(
-  "submit",
-  handleChatSubmit
-);
-
-
-/* =========================================
-   CLEAR CONVERSATION
-========================================= */
-
-$("clearChat").addEventListener("click", () => {
-
-  if (!confirm("Clear this conversation?")) {
-    return;
-  }
-
-  conversationHistory = [];
-
-  $("chatLog").innerHTML = "";
-
-  addMessage(
-    "assistant",
-    "Hello! I'm BRIANIAC AI. What would you like to explore today?"
-  );
-
-  setStatus("Conversation cleared.");
-
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-  }
-});
-
-
-/* =========================================
-   INITIALISE BRIANIAC AI
-========================================= */
-
-showScreen("home");
-
-console.log("BRIANIAC AI initialised.");
-
 </script>
 
 </body>
-  </html>
+</html>
