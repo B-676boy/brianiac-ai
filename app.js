@@ -65,71 +65,147 @@
   // CHAT API CONNECTION
   // ==========================================
 
-  async function askBRIANIAC(userText) {
-    const memory = getSavedMemory();
+async function askBRIANIAC(userText) {
+  const memory = getSavedMemory();
 
-    const systemMessage = {
-      role: "system",
-      content:
-        "You are BRIANIAC AI, a friendly, intelligent and respectful assistant. " +
-        "Answer clearly and helpfully. " +
-        "Your creators are Brian Amankona and Boafo Addison. " +
-        "Do not volunteer technical details about your underlying models, APIs, " +
-        "hosting or implementation. If directly asked, answer honestly. " +
-        "\n\n" + getTimeContext() +
-        "\n\nSaved user memory:\n" + memory
-    };
+  // DETECT QUESTIONS THAT NEED INTERNET RESEARCH
+  const searchPatterns = [
+    /\b(latest|currently|current|today|tonight|yesterday|recent|recently)\b/i,
+    /\b(news|headlines|breaking news|weather|forecast)\b/i,
+    /\b(price|prices|cost|exchange rate|stock market|bitcoin|crypto)\b/i,
+    /\b(score|scores|standings|fixtures|results of today's)\b/i,
+    /\b(this week|this month|this year|right now|at the moment)\b/i,
+    /\b(search the web|search online|look up|find online|internet search)\b/i,
+    /\b(who won|who is winning|what happened|what is happening)\b/i,
+    /\b(latest version|new release|release date|recent developments)\b/i,
+    /\b(open now|opening hours|available now)\b/i
+  ];
 
-    const messages = [
-      systemMessage,
-      ...conversation,
-      {
-        role: "user",
-        content: userText
-      }
-    ];
+  const needsInternetSearch = searchPatterns.some(
+    pattern => pattern.test(userText)
+  );
 
-    const response = await fetch(CHAT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        messages: messages
-      })
-    });
+  let searchContext = "";
 
-    const data = await response.json();
+  // TAVILY INTERNET SEARCH
+  if (needsInternetSearch) {
+    if (
+      !window.BRIANIAC_FEATURES ||
+      typeof window.BRIANIAC_FEATURES.searchWeb !== "function"
+    ) {
+      throw new Error("Internet search is not connected.");
+    }
 
-    if (!response.ok) {
+    console.log("BRIANIAC: Searching the internet...");
+
+    const searchData =
+      await window.BRIANIAC_FEATURES.searchWeb(userText);
+
+    if (searchData.error) {
       throw new Error(
-        data.error || "The chat service could not respond."
+        "Internet search failed: " + searchData.error
       );
     }
 
-    const answer =
-      data.choices?.[0]?.message?.content ||
-      data.answer ||
-      data.message ||
-      data.response;
+    const results = searchData.results || [];
 
-    if (!answer) {
-      throw new Error("I did not receive a valid answer.");
+    searchContext =
+      "\n\nINTERNET SEARCH RESULTS FROM TAVILY:\n" +
+      "Use these search results to answer the user's question. " +
+      "Prioritise the information in these results over outdated knowledge. " +
+      "Do not invent facts. If the results are insufficient, say so.\n\n";
+
+    if (searchData.answer) {
+      searchContext +=
+        "TAVILY SUMMARY:\n" +
+        searchData.answer + "\n\n";
     }
 
-    conversation.push(
-      {
-        role: "user",
-        content: userText
-      },
-      {
-        role: "assistant",
-        content: answer
-      }
-    );
+    results.forEach((result, index) => {
+      searchContext +=
+        "SOURCE " + (index + 1) + ":\n" +
+        "Title: " + (result.title || "Untitled") + "\n" +
+        "URL: " + (result.url || "Unavailable") + "\n" +
+        "Information: " + (result.content || "") + "\n\n";
+    });
 
-    return answer;
+    console.log(
+      "BRIANIAC: Received",
+      results.length,
+      "search results."
+    );
   }
+
+  // SYSTEM INSTRUCTIONS
+  const systemMessage = {
+    role: "system",
+    content:
+      "You are BRIANIAC AI, a friendly, intelligent and respectful assistant. " +
+      "Answer clearly and helpfully. " +
+      "Your creators are Brian Amankona and Boafo Addison. " +
+      "Do not volunteer technical details about your underlying models, APIs, " +
+      "hosting or implementation. If directly asked, answer honestly. " +
+      "\n\n" + getTimeContext() +
+      "\n\nSaved user memory:\n" + memory +
+      (needsInternetSearch
+        ? "\n\nThe user's question requires fresh internet information. " +
+          "Use the Tavily search results provided with the question. " +
+          "Do not pretend to have searched if the results are insufficient."
+        : "")
+  };
+
+  // BUILD THE MESSAGE
+  const messages = [
+    systemMessage,
+    ...conversation,
+    {
+      role: "user",
+      content: userText + searchContext
+    }
+  ];
+
+  // SEND TO GROQ
+  const response = await fetch(CHAT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      messages: messages
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.error || "The chat service could not respond."
+    );
+  }
+
+  const answer =
+    data.choices?.[0]?.message?.content ||
+    data.answer ||
+    data.message ||
+    data.response;
+
+  if (!answer) {
+    throw new Error("I did not receive a valid answer.");
+  }
+
+  conversation.push(
+    {
+      role: "user",
+      content: userText
+    },
+    {
+      role: "assistant",
+      content: answer
+    }
+  );
+
+  return answer;
+}
 
   // ==========================================
   // IMAGE UNDERSTANDING
