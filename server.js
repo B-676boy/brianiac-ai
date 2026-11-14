@@ -163,4 +163,3 @@ app.post("/.netlify/functions/search", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`BRIANIAC AI backend running on port ${PORT}`);
 });
-Add BRIANIAC AI backend server
