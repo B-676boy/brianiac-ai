@@ -54,24 +54,43 @@ app.post("/.netlify/functions/chat", async (req, res) => {
   }
 });
 
-// VISION - GEMMA 4
+// VISION - GEMINI 3.8 FLASH
 app.post("/.netlify/functions/vision", async (req, res) => {
+  const totalStartTime = Date.now();
+
   try {
     if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({ error: "Vision API key is missing" });
+      return res.status(500).json({
+        error: "Vision API key is missing"
+      });
     }
 
     const { image, prompt } = req.body;
 
     if (!image || !image.startsWith("data:")) {
-      return res.status(400).json({ error: "A valid image is required" });
+      return res.status(400).json({
+        error: "A valid image is required"
+      });
     }
 
-    const match = image.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+    const match = image.match(
+      /^data:(image\/[a-zA-Z0-9.+-]+);base64,([\s\S]+)$/
+    );
 
     if (!match) {
-      return res.status(400).json({ error: "Unsupported image format" });
+      return res.status(400).json({
+        error: "Unsupported image format"
+      });
     }
+
+    const imageSizeKB = Math.round(
+      Buffer.byteLength(image, "utf8") / 1024
+    );
+
+    console.log("BRIANIAC: Starting Gemini vision request.");
+    console.log("Image size:", imageSizeKB, "KB");
+
+    const googleStartTime = Date.now();
 
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
@@ -100,10 +119,20 @@ app.post("/.netlify/functions/vision", async (req, res) => {
       }
     );
 
+    const googleResponseTime =
+      (Date.now() - googleStartTime) / 1000;
+
+    console.log(
+      "Google API response time:",
+      googleResponseTime.toFixed(2),
+      "seconds"
+    );
+
     const data = await response.json();
 
     if (!response.ok) {
       console.error("Vision API error:", data);
+
       return res.status(response.status).json({
         error: "Image understanding failed"
       });
@@ -113,14 +142,33 @@ app.post("/.netlify/functions/vision", async (req, res) => {
       ?.map(part => part.text || "")
       .join("") || "I couldn't understand this image.";
 
+    const totalTime =
+      (Date.now() - totalStartTime) / 1000;
+
+    console.log(
+      "Total vision processing time:",
+      totalTime.toFixed(2),
+      "seconds"
+    );
+
     res.json({
       answer,
       description: answer
     });
 
   } catch (error) {
-    console.error("Vision error:", error.message);
-    res.status(500).json({ error: "Vision service failed" });
+    console.error("Vision error:", error);
+
+    console.log(
+      "Failed after:",
+      ((Date.now() - totalStartTime) / 1000).toFixed(2),
+      "seconds"
+    );
+
+    res.status(500).json({
+      error: "Vision service failed",
+      details: error.message
+    });
   }
 });
 
