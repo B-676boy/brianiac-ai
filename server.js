@@ -254,7 +254,8 @@ app.get("/gemini-test", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Gemini text test failed:", error.message);
+    console.error("Gemini text test failed:", error);
+console.error("Underlying network cause:", error.cause);
     res.status(500).json({ error: error.message });
   }
 });
