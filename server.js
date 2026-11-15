@@ -100,24 +100,27 @@ app.post("/.netlify/functions/vision", async (req, res) => {
           "x-goog-api-key": process.env.GEMINI_API_KEY,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          contents: [{
-            role: "user",
-            parts: [
-              {
-                inline_data: {
-                  mime_type: match[1],
-                  data: match[2]
-                }
-              },
-              {
-                text: prompt || "Describe this image in detail."
-              }
-            ]
-          }]
-        })
+body: JSON.stringify({
+  contents: [{
+    role: "user",
+    parts: [
+      {
+        inline_data: {
+          mime_type: match[1],
+          data: match[2]
+        }
+      },
+      {
+        text: prompt || "Describe this image in detail."
       }
-    );
+    ]
+  }],
+  generationConfig: {
+    thinkingConfig: {
+      thinkingLevel: "LOW"
+    }
+  }
+})
 
     const googleResponseTime =
       (Date.now() - googleStartTime) / 1000;
