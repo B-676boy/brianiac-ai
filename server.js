@@ -121,6 +121,8 @@ body: JSON.stringify({
     }
   }
 })
+  }
+    );
 
     const googleResponseTime =
       (Date.now() - googleStartTime) / 1000;
