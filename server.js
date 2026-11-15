@@ -212,6 +212,53 @@ app.post("/.netlify/functions/search", async (req, res) => {
   }
 });
 
+// GEMINI TEXT SPEED TEST
+app.get("/gemini-test", async (req, res) => {
+  try {
+    const startTime = Date.now();
+
+    console.log("BRIANIAC: Starting Gemini text test.");
+
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+      {
+        method: "POST",
+        headers: {
+          "x-goog-api-key": process.env.GEMINI_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: "Reply with only the words: Gemini is working."
+            }]
+          }],
+          generationConfig: {
+            thinkingConfig: {
+              thinkingLevel: "LOW"
+            }
+          }
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    const seconds = (Date.now() - startTime) / 1000;
+
+    console.log("Gemini text test time:", seconds, "seconds");
+
+    res.status(response.status).json({
+      seconds,
+      result: data.candidates?.[0]?.content?.parts?.[0]?.text || data
+    });
+
+  } catch (error) {
+    console.error("Gemini text test failed:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // START SERVER
 app.listen(PORT, () => {
   console.log(`BRIANIAC AI backend running on port ${PORT}`);
