@@ -322,9 +322,16 @@ if (asksForTime || asksForDate) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(
-      data.error || "The chat service could not respond."
-    );
+
+  const errorMessage =
+    typeof data.error === "string"
+      ? data.error
+      : data.error?.message ||
+        data.message ||
+        JSON.stringify(data.error) ||
+        "The chat service could not respond.";
+
+  throw new Error(errorMessage);
   }
 
   const answer =
