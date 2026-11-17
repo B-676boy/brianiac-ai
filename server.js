@@ -38,12 +38,15 @@ app.post("/.netlify/functions/chat", async (req, res) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "openai/gpt-oss-20b",
-          messages: req.body.messages,
-          temperature: 0.7
-        })
-      }
-    );
+  model: "openai/gpt-oss-20b",
+
+  messages: (req.body.messages || []).map(message => ({
+    role: message.role,
+    content: message.content
+  })),
+
+  temperature: 0.7
+})
 
     const data = await response.json();
     return res.status(response.status).json(data);
