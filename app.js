@@ -23,21 +23,79 @@
   // ==========================================
 
   function addMessage(text, sender) {
+
+  const chat = $("chatMessages");
+  const message = document.createElement("div");
+
+  message.className =
+    "message " +
+    (sender === "user" ? "user-message" : "ai-message");
+
+  message.textContent = text;
+
+  chat.appendChild(message);
+  chat.scrollTop = chat.scrollHeight;
+
+  // AUTOMATICALLY SAVE CONVERSATION
+  conversation.push({
+    role: sender === "user" ? "user" : "assistant",
+    content: text,
+    timestamp: new Date().toISOString()
+  });
+
+  localStorage.setItem(
+    "brianiacCurrentChat",
+    JSON.stringify(conversation)
+  );
+
+  return message;
+  }
+// RESTORE SAVED CONVERSATION
+
+function loadSavedConversation() {
+
+  const savedChat = localStorage.getItem(
+    "brianiacCurrentChat"
+  );
+
+  if (!savedChat) return;
+
+  try {
+
+    conversation = JSON.parse(savedChat);
+
     const chat = $("chatMessages");
-    const message = document.createElement("div");
 
-    message.className =
-      "message " +
-      (sender === "user" ? "user-message" : "ai-message");
+    chat.innerHTML = "";
 
-    message.textContent = text;
+    conversation.forEach(message => {
 
-    chat.appendChild(message);
+      const element = document.createElement("div");
+
+      element.className =
+        "message " +
+        (message.role === "user"
+          ? "user-message"
+          : "ai-message");
+
+      element.textContent = message.content;
+
+      chat.appendChild(element);
+
+    });
+
     chat.scrollTop = chat.scrollHeight;
 
-    return message;
+  } catch (error) {
+
+    console.error(
+      "Could not restore saved conversation:",
+      error
+    );
+
   }
 
+}
   function setStatus(text) {
     const status = $("chatStatus");
 
