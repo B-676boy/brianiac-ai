@@ -733,13 +733,11 @@ async function sendMessage() {
   function initialise() {
     loadSettings();
 
+    loadSavedConversation();
+
     updateAttachmentPreview();
 
     setStatus("BRIANIAC AI is ready.");
 
     console.log("BRIANIAC AI application loaded.");
   }
-
-  initialise();
-
-})(); 
