@@ -86,6 +86,37 @@ async function askBRIANIAC(userText) {
   );
 
   let searchContext = "";
+    // BRIANIAC AUTOMATIC TIME AND DATE INTELLIGENCE
+
+  let timeContext = "";
+
+  const timeFeatures = window.BRIANIAC_FEATURES;
+
+  const asksForTime = /\b(time|clock|timezone|time zone)\b/i.test(userText);
+
+  const asksForDate = /\b(today's date|current date|what date|what day is it|date today)\b/i.test(userText);
+
+  if (asksForTime || asksForDate) {
+
+    if (timeFeatures && typeof timeFeatures.getTime === "function") {
+
+      const result = timeFeatures.getTime("Africa/Accra");
+
+      if (!result.error) {
+
+        timeContext =
+          "\n\nACCURATE CURRENT TIME AND DATE:" +
+          "\nGhana date: " + result.date +
+          "\nGhana time: " + result.time +
+          "\nTimezone: " + result.timezone +
+          "\nTimestamp: " + result.timestamp +
+          "\n\nUse these calculated values. Never guess or invent the current time.";
+
+      }
+
+    }
+
+  }
 
   // TAVILY INTERNET SEARCH
   if (needsInternetSearch) {
@@ -146,6 +177,7 @@ async function askBRIANIAC(userText) {
       "Do not volunteer technical details about your underlying models, APIs, " +
       "hosting or implementation. If directly asked, answer honestly. " +
       "\n\n" + getTimeContext() +
+      timeContext +
       "\n\nSaved user memory:\n" + memory +
       (needsInternetSearch
         ? "\n\nThe user's question requires fresh internet information. " +
