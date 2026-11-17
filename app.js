@@ -731,3 +731,6 @@ async function sendMessage() {
 
     console.log("BRIANIAC AI application loaded.");
   }
+  
+  initialise();
+})();
