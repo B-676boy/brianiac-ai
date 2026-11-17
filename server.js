@@ -26,8 +26,16 @@ app.get("/", (req, res) => {
 app.post("/.netlify/functions/chat", async (req, res) => {
   try {
     if (!process.env.GROQ_API_KEY) {
-      return res.status(500).json({ error: "Chat API key is missing" });
+      return res.status(500).json({
+        error: "Chat API key is missing"
+      });
     }
+
+    // REMOVE UNSUPPORTED MESSAGE PROPERTIES
+    const cleanMessages = (req.body.messages || []).map(message => ({
+      role: message.role,
+      content: message.content
+    }));
 
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
@@ -38,22 +46,23 @@ app.post("/.netlify/functions/chat", async (req, res) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-  model: "openai/gpt-oss-20b",
-
-  messages: (req.body.messages || []).map(message => ({
-    role: message.role,
-    content: message.content
-  })),
-
-  temperature: 0.7
-})
+          model: "openai/gpt-oss-20b",
+          messages: cleanMessages,
+          temperature: 0.7
+        })
+      }
+    );
 
     const data = await response.json();
+
     return res.status(response.status).json(data);
 
   } catch (error) {
-    console.error("Chat error:", error.message);
-    res.status(500).json({ error: "Chat service failed" });
+    console.error("Chat error:", error);
+
+    return res.status(500).json({
+      error: error.message || "Chat service failed"
+    });
   }
 });
 
