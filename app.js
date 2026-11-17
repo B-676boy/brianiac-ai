@@ -86,38 +86,92 @@ async function askBRIANIAC(userText) {
   );
 
   let searchContext = "";
-    // BRIANIAC AUTOMATIC TIME AND DATE INTELLIGENCE
+// BRIANIAC AUTOMATIC WORLDWIDE TIME AND DATE INTELLIGENCE
 
-  let timeContext = "";
+let timeContext = "";
 
-  const timeFeatures = window.BRIANIAC_FEATURES;
+const timeFeatures = window.BRIANIAC_FEATURES;
 
-  const asksForTime = /\b(time|clock|timezone|time zone)\b/i.test(userText);
+const asksForTime =
+  /\b(time|clock|timezone|time zone)\b/i.test(userText);
 
-  const asksForDate = /\b(today's date|current date|what date|what day is it|date today)\b/i.test(userText);
+const asksForDate =
+  /\b(today's date|current date|what date|what day is it|date today)\b/i.test(userText);
 
-  if (asksForTime || asksForDate) {
+if (asksForTime || asksForDate) {
 
-    if (timeFeatures && typeof timeFeatures.getTime === "function") {
+  if (timeFeatures) {
 
-      const result = timeFeatures.getTime("Africa/Accra");
+    // FIND THE COUNTRY MENTIONED BY THE USER
+    const locationMatch = userText.match(
+      /\b(?:in|for)\s+(.+?)(?:[?.!,]|$)/i
+    );
 
-      if (!result.error) {
+    let requestedCountry = locationMatch
+      ? locationMatch[1].trim()
+      : "Ghana";
 
-        timeContext =
-          "\n\nACCURATE CURRENT TIME AND DATE:" +
-          "\nGhana date: " + result.date +
-          "\nGhana time: " + result.time +
-          "\nTimezone: " + result.timezone +
-          "\nTimestamp: " + result.timestamp +
-          "\n\nUse these calculated values. Never guess or invent the current time.";
+    // REMOVE EXTRA WORDS AFTER THE COUNTRY
+    requestedCountry = requestedCountry.replace(
+      /\b(right now|currently|today|now)\b.*$/i,
+      ""
+    ).trim();
 
-      }
+    let result;
+
+    // USE THE WORLDWIDE COUNTRY DATABASE
+    if (
+      typeof timeFeatures.getTimeForCountry === "function"
+    ) {
+
+      result = timeFeatures.getTimeForCountry(
+        requestedCountry
+      );
+
+    } else {
+
+      result = timeFeatures.getTime("Africa/Accra");
+
+    }
+
+    // HANDLE COUNTRIES WITH MULTIPLE TIMEZONES
+    if (result && result.multipleTimezones) {
+
+      timeContext =
+        "\n\nTIME INFORMATION:" +
+        "\nThe country " + requestedCountry +
+        " has multiple timezones." +
+        "\nAvailable timezones: " +
+        result.availableTimezones.join(", ") +
+        "\nAsk the user which city or region they mean.";
+
+    }
+
+    // PROVIDE THE CALCULATED TIME
+    else if (result && !result.error && result.time) {
+
+      timeContext =
+        "\n\nACCURATE CALCULATED TIME AND DATE:" +
+        "\nCountry: " + (result.country || requestedCountry) +
+        "\nDate: " + result.date +
+        "\nTime: " + result.time +
+        "\nTimezone: " + result.timezone +
+        "\nTimestamp: " + result.timestamp +
+        "\n\nUse these calculated values. Never guess or invent the current time.";
+
+    }
+
+    else {
+
+      timeContext =
+        "\n\nThe requested country or timezone could not be identified. " +
+        "Ask the user to clarify the country or city. Do not invent a time.";
 
     }
 
   }
 
+}
   // TAVILY INTERNET SEARCH
   if (needsInternetSearch) {
     if (
