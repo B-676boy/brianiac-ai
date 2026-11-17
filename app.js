@@ -337,16 +337,6 @@ if (asksForTime || asksForDate) {
     throw new Error("I did not receive a valid answer.");
   }
 
-  conversation.push(
-    {
-      role: "user",
-      content: userText
-    },
-    {
-      role: "assistant",
-      content: answer
-    }
-  );
 
   return answer;
 }
