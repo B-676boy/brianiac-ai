@@ -484,6 +484,8 @@ async function sendMessage() {
 
   } catch (error) {
   console.error("BRIANIAC AI error:", error);
+    console.error("ERROR DETAILS:", JSON.stringify(error, null, 2));
+console.error("ERROR TYPE:", typeof error);
 
   const errorMessage =
     typeof error === "string"
