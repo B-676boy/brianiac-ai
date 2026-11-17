@@ -476,14 +476,21 @@ async function sendMessage() {
     speakReply();
 
   } catch (error) {
-    console.error("BRIANIAC AI error:", error);
+  console.error("BRIANIAC AI error:", error);
 
-    addMessage(
-      "I'm sorry, something went wrong: " + error.message,
-      "assistant"
-    );
+  const errorMessage =
+    typeof error === "string"
+      ? error
+      : error?.message ||
+        error?.error?.message ||
+        JSON.stringify(error);
 
-    setStatus("An error occurred.");
+  addMessage(
+    "I'm sorry, something went wrong: " + errorMessage,
+    "assistant"
+  );
+
+  setStatus("An error occurred.");
 
   } finally {
     isSending = false;
