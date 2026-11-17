@@ -300,13 +300,18 @@ if (asksForTime || asksForDate) {
 
   // BUILD THE MESSAGE
   const messages = [
-    systemMessage,
-    ...conversation,
-    {
-      role: "user",
-      content: userText + searchContext
-    }
-  ];
+  systemMessage,
+
+  ...conversation.map(message => ({
+    role: message.role,
+    content: message.content
+  })),
+
+  {
+    role: "user",
+    content: userText + searchContext
+  }
+];
 
   // SEND TO GROQ
   const response = await fetch(CHAT_URL, {
