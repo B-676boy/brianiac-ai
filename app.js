@@ -269,6 +269,30 @@ function deleteConversation(id) {
   renderConversationList();
 
 }
+  // ==========================================
+// START A NEW CONVERSATION
+// ==========================================
+
+function newConversation() {
+
+  // PRESERVE THE CURRENT CONVERSATION
+  if (conversation.length > 0) {
+    saveCurrentConversation();
+  }
+
+  // RESET THE CURRENT CHAT
+  currentConversationId = null;
+  conversation = [];
+
+  $("chatMessages").innerHTML = "";
+
+  localStorage.removeItem("brianiacCurrentChat");
+
+  renderConversationList();
+
+  setStatus("Started a new conversation.");
+
+}
 
 // ==========================================
 // CHAT DISPLAY
@@ -796,6 +820,10 @@ console.error("ERROR TYPE:", typeof error);
   // ==========================================
 
   $("sendButton").addEventListener("click", sendMessage);
+  $("newConversationButton").addEventListener(
+  "click",
+    newConversation
+);
 
   $("chatInput").addEventListener("keydown", event => {
     if (
