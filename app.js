@@ -155,12 +155,126 @@ function renderConversationList() {
 
   });
 }
-
   // ==========================================
-  // CHAT DISPLAY
-  // ==========================================
+// OPEN PREVIOUS CONVERSATION
+// ==========================================
 
-  function addMessage(text, sender) {
+function openConversation(id) {
+
+  const history = getChatHistory();
+
+  const chat = history.find(
+    item => item.id === id
+  );
+
+  if (!chat) return;
+
+  currentConversationId = chat.id;
+
+  conversation = [...chat.messages];
+
+  const chatDisplay = $("chatMessages");
+
+  chatDisplay.innerHTML = "";
+
+  conversation.forEach(message => {
+
+    const element = document.createElement("div");
+
+    element.className =
+      "message " +
+      (message.role === "user"
+        ? "user-message"
+        : "ai-message");
+
+    element.textContent = message.content;
+
+    chatDisplay.appendChild(element);
+
+  });
+
+  chatDisplay.scrollTop = chatDisplay.scrollHeight;
+
+  localStorage.setItem(
+    "brianiacCurrentChat",
+    JSON.stringify(conversation)
+  );
+
+  setStatus("Previous conversation opened.");
+
+}
+
+
+// ==========================================
+// RENAME CONVERSATION
+// ==========================================
+
+function renameConversation(id) {
+
+  const history = getChatHistory();
+
+  const chat = history.find(
+    item => item.id === id
+  );
+
+  if (!chat) return;
+
+  const newTitle = prompt(
+    "Enter a new conversation name:",
+    chat.title
+  );
+
+  if (!newTitle || !newTitle.trim()) return;
+
+  chat.title = newTitle.trim();
+
+  saveChatHistory(history);
+
+  renderConversationList();
+
+}
+
+
+// ==========================================
+// DELETE CONVERSATION
+// ==========================================
+
+function deleteConversation(id) {
+
+  const confirmed = confirm(
+    "Are you sure you want to delete this conversation?"
+  );
+
+  if (!confirmed) return;
+
+  let history = getChatHistory();
+
+  history = history.filter(
+    chat => chat.id !== id
+  );
+
+  saveChatHistory(history);
+
+  if (currentConversationId === id) {
+
+    currentConversationId = null;
+    conversation = [];
+
+    $("chatMessages").innerHTML = "";
+
+    localStorage.removeItem("brianiacCurrentChat");
+
+  }
+
+  renderConversationList();
+
+}
+
+// ==========================================
+// CHAT DISPLAY
+// ==========================================
+
+function addMessage(text, sender) {
 
   const chat = $("chatMessages");
   const message = document.createElement("div");
@@ -174,65 +288,23 @@ function renderConversationList() {
   chat.appendChild(message);
   chat.scrollTop = chat.scrollHeight;
 
-  // AUTOMATICALLY SAVE CONVERSATION
+  // ADD MESSAGE TO CURRENT CONVERSATION
   conversation.push({
     role: sender === "user" ? "user" : "assistant",
     content: text,
     timestamp: new Date().toISOString()
   });
 
+  // SAVE CURRENT CONVERSATION
   localStorage.setItem(
     "brianiacCurrentChat",
     JSON.stringify(conversation)
   );
 
+  // SAVE TO MULTIPLE-CONVERSATION HISTORY
+  saveCurrentConversation();
+
   return message;
-  }
-// RESTORE SAVED CONVERSATION
-
-function loadSavedConversation() {
-
-  const savedChat = localStorage.getItem(
-    "brianiacCurrentChat"
-  );
-
-  if (!savedChat) return;
-
-  try {
-
-    conversation = JSON.parse(savedChat);
-
-    const chat = $("chatMessages");
-
-    chat.innerHTML = "";
-
-    conversation.forEach(message => {
-
-      const element = document.createElement("div");
-
-      element.className =
-        "message " +
-        (message.role === "user"
-          ? "user-message"
-          : "ai-message");
-
-      element.textContent = message.content;
-
-      chat.appendChild(element);
-
-    });
-
-    chat.scrollTop = chat.scrollHeight;
-
-  } catch (error) {
-
-    console.error(
-      "Could not restore saved conversation:",
-      error
-    );
-
-  }
-
 }
   function setStatus(text) {
     const status = $("chatStatus");
