@@ -58,6 +58,10 @@ function saveCurrentConversation() {
     currentConversationId =
       Date.now().toString();
   }
+  localStorage.setItem(
+  "brianiacCurrentConversationId",
+  currentConversationId
+);
 
   const history = getChatHistory();
 
