@@ -13,6 +13,11 @@
   const $ = (id) => document.getElementById(id);
 
   let conversation = [];
+  // BRIANIAC CHAT HISTORY SYSTEM
+
+const CHAT_HISTORY_KEY = "brianiacConversations";
+
+let currentConversationId = null;
   let selectedImage = null;
   let selectedPDFs = [];
   let recognition = null;
