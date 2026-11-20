@@ -291,6 +291,9 @@ function newConversation() {
   $("chatMessages").innerHTML = "";
 
   localStorage.removeItem("brianiacCurrentChat");
+  localStorage.removeItem(
+  "brianiacCurrentConversationId"
+);
 
   renderConversationList();
 
@@ -978,7 +981,87 @@ console.error("ERROR TYPE:", typeof error);
       $("assistantLanguage").value = language;
     }
   }
+// ==========================================
+// RESTORE SAVED CONVERSATION
+// ==========================================
 
+function loadSavedConversation() {
+
+  try {
+
+    const history = getChatHistory();
+
+    const savedId = localStorage.getItem(
+      "brianiacCurrentConversationId"
+    );
+
+    let savedChat = history.find(
+      chat => chat.id === savedId
+    );
+
+    // RESTORE THE LAST OPENED CONVERSATION
+    if (savedChat) {
+
+      currentConversationId = savedChat.id;
+      conversation = savedChat.messages || [];
+
+    } else {
+
+      // RESTORE OLDER SAVED CHAT
+      const oldSavedChat = localStorage.getItem(
+        "brianiacCurrentChat"
+      );
+
+      conversation = oldSavedChat
+        ? JSON.parse(oldSavedChat)
+        : [];
+
+      if (!Array.isArray(conversation)) {
+        conversation = [];
+      }
+
+      currentConversationId = null;
+
+      // MOVE AN EXISTING CHAT INTO CHAT HISTORY
+      if (conversation.length > 0) {
+        saveCurrentConversation();
+      }
+
+    }
+
+    // DISPLAY RESTORED MESSAGES
+    const chat = $("chatMessages");
+
+    chat.innerHTML = "";
+
+    conversation.forEach(message => {
+
+      const element = document.createElement("div");
+
+      element.className =
+        "message " +
+        (message.role === "user"
+          ? "user-message"
+          : "ai-message");
+
+      element.textContent = message.content;
+
+      chat.appendChild(element);
+
+    });
+
+    chat.scrollTop = chat.scrollHeight;
+
+  } catch (error) {
+
+    console.error(
+      "Could not restore saved conversation:",
+      error
+    );
+
+  }
+
+}
   // ==========================================
   // INITIALISE BRIANIAC AI
   // ==========================================
