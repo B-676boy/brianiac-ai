@@ -984,6 +984,8 @@ console.error("ERROR TYPE:", typeof error);
 
     loadSavedConversation();
 
+    renderConversationList();
+
     updateAttachmentPreview();
 
     setStatus("BRIANIAC AI is ready.");
