@@ -22,6 +22,139 @@ let currentConversationId = null;
   let selectedPDFs = [];
   let recognition = null;
   let isSending = false;
+  // ==========================================
+// BRIANIAC CHAT HISTORY MANAGEMENT
+// ==========================================
+
+// LOAD ALL SAVED CONVERSATIONS
+
+function getChatHistory() {
+  try {
+    return JSON.parse(
+      localStorage.getItem(CHAT_HISTORY_KEY)
+    ) || [];
+  } catch (error) {
+    console.error("Chat history loading error:", error);
+    return [];
+  }
+}
+
+
+// SAVE ALL CONVERSATIONS
+
+function saveChatHistory(history) {
+  localStorage.setItem(
+    CHAT_HISTORY_KEY,
+    JSON.stringify(history)
+  );
+}
+
+
+// SAVE THE CURRENT CONVERSATION
+
+function saveCurrentConversation() {
+
+  if (!currentConversationId) {
+    currentConversationId =
+      Date.now().toString();
+  }
+
+  const history = getChatHistory();
+
+  let chat = history.find(
+    item => item.id === currentConversationId
+  );
+
+  if (!chat) {
+    chat = {
+      id: currentConversationId,
+      title: "New Conversation",
+      messages: [],
+      createdAt: new Date().toISOString()
+    };
+
+    history.unshift(chat);
+  }
+
+  chat.messages = conversation;
+
+  const firstUserMessage = conversation.find(
+    message => message.role === "user"
+  );
+
+  if (
+    firstUserMessage &&
+    chat.title === "New Conversation"
+  ) {
+    chat.title =
+      firstUserMessage.content.slice(0, 35);
+  }
+
+  chat.updatedAt = new Date().toISOString();
+
+  saveChatHistory(history);
+
+  renderConversationList();
+}
+
+
+// DISPLAY PREVIOUS CONVERSATIONS
+
+function renderConversationList() {
+
+  const list = $("conversationList");
+
+  if (!list) return;
+
+  const history = getChatHistory();
+
+  list.innerHTML = "";
+
+  if (history.length === 0) {
+    list.textContent = "No previous conversations yet.";
+    return;
+  }
+
+  history.forEach(chat => {
+
+    const row = document.createElement("div");
+
+    row.className = "conversation-item";
+
+    const title = document.createElement("span");
+
+    title.textContent = chat.title;
+
+    const openButton = document.createElement("button");
+    openButton.textContent = "Open";
+
+    openButton.onclick = () => {
+      openConversation(chat.id);
+    };
+
+    const renameButton = document.createElement("button");
+    renameButton.textContent = "Rename";
+
+    renameButton.onclick = () => {
+      renameConversation(chat.id);
+    };
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+
+    deleteButton.onclick = () => {
+      deleteConversation(chat.id);
+    };
+
+    row.appendChild(title);
+    row.appendChild(openButton);
+    row.appendChild(renameButton);
+    row.appendChild(deleteButton);
+
+    list.appendChild(row);
+
+  });
+}
 
   // ==========================================
   // CHAT DISPLAY
